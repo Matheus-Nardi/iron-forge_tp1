@@ -1,0 +1,128 @@
+@startuml diagram
+
+
+
+class WheyProtein{
+    - nome: String
+    - preco: Double
+}
+
+
+class Lote{
+    - codigo: String 
+    - quantidade: Integer
+    - dataFabricacao: LocalDate
+}
+
+class Fabricante{
+    -cnpj: String
+    -nome: String
+}
+
+enum Sabor{
+    + CHOCOLATE: int 
+    + MORANGO: int
+    + BAUNILHA: int
+    + NATURAL: int
+    + BANANA: int
+    + DOCE_LEITE: int
+    + COOKIES_AND_CREAM: int
+    + CARAMELO: int
+    + TORTA_LIMAO: int
+}
+
+enum TipoWhey{
+    + CONCETRADO: int
+    + ISOLADO: int
+    + HIDROLISADO: int
+}
+
+class TabelaNutricional{
+    - quantidadePorcao: Integer
+    - unidadePorcao: String
+    - pesoPorcaoGramas: Double
+    - calorias: Double
+    - gorduras: Double
+    - gordurasSaturadas: Double
+    - colesterol: Double
+    - sodio: Double
+    - fibras: Double
+    - acucares: Double
+
+}
+
+class Cliente{
+    - nome: String
+    - cpf: String
+}
+
+class Pedido{
+    - dataPedido: LocalDateTime
+    - valorTotal: Double
+}
+
+class ItemPedido{
+    - quantidade:Integer
+    - preco: Double
+}
+
+class Endereco{
+    -logradouro: String
+}
+
+class EnderecoEntrega{
+    - logradouro:String
+    - cidade:String
+    - estado:String
+    - cep:String
+}
+
+
+abstract Pagamento{
+    - valor: Double
+}
+
+class PIX{
+   -chavePix: String
+}
+
+class Boleto{
+    -codigo:String
+}
+
+class Cartao{
+    - nomeTitular: String
+    - numero: String
+    - codigoSecuranca: String
+    - validade: LocalDate
+}
+
+enum TipoCartao{
+    DEBITO: int
+    CREDITO: int
+}
+
+Pedido *--> Pagamento
+Cartao "*" --> "1" TipoCartao
+PIX --|> Pagamento
+Boleto --|> Pagamento
+Cartao --|> Pagamento
+
+Pedido "1" *--> "*"ItemPedido
+ItemPedido "*" -left-> "1" Lote
+' Não faz sentido Cliente ter Pedido , se não teria que inserir pedido em cliente
+Pedido  "*" --> "1" Cliente  
+Pedido "1" *--> "1" EnderecoEntrega
+
+' Se a modelagem fosse de 1 para 1 , eu teria produtos únicos
+WheyProtein "*" --> "1" Sabor 
+WheyProtein "*" --> "1" TipoWhey
+WheyProtein "1" *--> "1" TabelaNutricional
+
+
+WheyProtein "*"--> "1" Fabricante
+Lote "*" --> "1" WheyProtein
+
+Cliente "*" --> "*" WheyProtein : listaDesejos
+Cliente "1" --> "*" Endereco
+

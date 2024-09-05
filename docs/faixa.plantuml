@@ -1,0 +1,73 @@
+@startuml diagram
+
+class Faixa{
+    - nome: String
+    - preco: Double
+}
+
+
+class Lote{
+    - codigo: String 
+    - quantidade: Integer
+    - dataFabricacao: LocalDate
+}
+
+class Fabricante{
+    -nome: String
+}
+
+class Tamanho {
+    -nome: String 
+    -comprimento: Integer
+}
+
+enum Cor{
+    + BRANCA: int 
+    + AZUL: int
+    // mais cores
+}
+
+class Cliente{
+    - nome: String
+    - cpf: String
+}
+
+class Pedido{
+    - dataPedido: LocalDateTime
+    - valorTotal: Double
+}
+
+class ItemPedido{
+    - quantidade:Integer
+    - preco: Double
+}
+
+class Endereco{
+    -logradouro: String
+}
+
+class EnderecoEntrega{
+    - logradouro:String
+    - cidade:String
+    - estado:String
+    - cep:String
+}
+
+Pedido "1" *--> "*"ItemPedido
+ItemPedido "*" -left-> "1" Lote
+' Não faz sentido Cliente ter Pedido , se não teria que inserir pedido em cliente
+Pedido  "*" --> "1" Cliente  
+Pedido "1" *--> "1" EnderecoEntrega
+' Se a modelagem fosse de 1 para 1 , eu teria produtos únicos
+Faixa "*" --> "1" Cor 
+Faixa "*" --> "1" Tamanho 
+
+Faixa "*"--> "1" Fabricante
+Lote "*" --> "1" Faixa
+
+Cliente "*" --> "*" Faixa : listaDesejos
+Cliente "1" --> "*" Endereco
+
+' Anotaçoes
+note right of Tamanho: Comprimento em cm
+@enduml
