@@ -3,8 +3,11 @@
 
 
 class WheyProtein{
+    - id: Long
     - nome: String
+    - descricao: String
     - preco: Double
+    - peso: Integer
 }
 
 
@@ -15,8 +18,10 @@ class Lote{
 }
 
 class Fabricante{
+    -id: Long
     -cnpj: String
     -nome: String
+    -email: String
 }
 
 enum Sabor{
@@ -52,18 +57,43 @@ class TabelaNutricional{
 }
 
 class Cliente{
+    - id: Long
     - nome: String
     - cpf: String
+    - email: String
+}
+
+class Telefone{
+    - id: Long
+    - codigoArea: String
+    - numero: String
+ 
 }
 
 class Pedido{
-    - dataPedido: LocalDateTime
+     -id: Long
+    - data: LocalDateTime
     - valorTotal: Double
 }
 
 class ItemPedido{
+    - id: Long
     - quantidade:Integer
     - preco: Double
+}
+
+class Avaliacao{
+    - id: Long
+    - comentario: String
+    - data: LocalDate
+}
+
+enum Nota{
+    + ESTRELA_1
+    + ESTRELA_2
+    + ESTRELA_3
+    + ESTRELA_4
+    + ESTRELA_5
 }
 
 class Endereco{
@@ -79,15 +109,26 @@ class EnderecoEntrega{
 
 
 abstract Pagamento{
+     -id: Long
     - valor: Double
+    - dataPagamento: LocalDateTime
+     -dataVencimento: LocalDateTime
 }
 
+enum Status{
+    + PENDENTE: int
+    + PAGO: int
+    + VENCIDO: int
+}
+
+
+
 class PIX{
-   -chavePix: String
+   -chave: String
 }
 
 class Boleto{
-    -codigo:String
+    -codigoBarras:String
 }
 
 class Cartao{
@@ -98,18 +139,19 @@ class Cartao{
 }
 
 enum TipoCartao{
-    DEBITO: int
-    CREDITO: int
+    + DEBITO: int
+    + CREDITO: int
 }
 
 Pedido *--> Pagamento
+Pagamento "*" -down-> "1" Status
 Cartao "*" --> "1" TipoCartao
 PIX --|> Pagamento
 Boleto --|> Pagamento
 Cartao --|> Pagamento
 
 Pedido "1" *--> "*"ItemPedido
-ItemPedido "*" -left-> "1" Lote
+ItemPedido "*" --> "1" Lote
 ' Não faz sentido Cliente ter Pedido , se não teria que inserir pedido em cliente
 Pedido  "*" --> "1" Cliente  
 Pedido "1" *--> "1" EnderecoEntrega
@@ -125,4 +167,14 @@ Lote "*" --> "1" WheyProtein
 
 Cliente "*" --> "*" WheyProtein : listaDesejos
 Cliente "1" --> "*" Endereco
+Cliente "1" --> "*" Telefone
+Fabricante "1" --> "*" Telefone
+
+
+Avaliacao "*" --> "1" Cliente
+Avaliacao "*" --> "1" WheyProtein
+Avaliacao "*" -right-> "1" Nota
+
+' Anotações
+note left of WheyProtein: Peso em gramas
 
