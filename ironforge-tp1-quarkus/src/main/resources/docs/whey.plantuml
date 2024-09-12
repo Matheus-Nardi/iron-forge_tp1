@@ -63,7 +63,6 @@ class Cliente{
 class Telefone{
     - codigoArea: String
     - numero: String
- 
 }
 
 class Pedido{
@@ -188,8 +187,8 @@ Lote "*" --> "1" WheyProtein
 
 Cliente "*" --> "*" WheyProtein : listaDesejos
 Cliente "1" --> "*" Endereco
-Cliente "1" --> "*" Telefone
-Fabricante "1" --> "*" Telefone
+Cliente "1" *--> "1" Telefone
+Fabricante "1" *--> "1" Telefone
 
 
 Avaliacao "*" --> "1" Cliente
