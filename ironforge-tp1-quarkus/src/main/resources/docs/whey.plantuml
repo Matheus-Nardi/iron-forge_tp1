@@ -55,10 +55,22 @@ class TabelaNutricional{
 }
 
 class Cliente{
+
+}
+
+abstract Usuario{
     - nome: String
     - cpf: String
     - email: String
+    - senha: String
+    - dataNascimento: LocalDate
 }
+
+class Funcionario{
+    - salario: Double
+}
+
+
 
 class Telefone{
     - codigoArea: String
@@ -186,8 +198,11 @@ WheyProtein "*"--> "1" Fabricante
 Lote "*" --> "1" WheyProtein
 
 Cliente "*" --> "*" WheyProtein : listaDesejos
-Cliente "1" --> "*" Endereco
-Cliente "1" *--> "1" Telefone
+Usuario "1" --> "*" Endereco
+Usuario "1" *--> "1" Telefone
+
+Cliente "1"--> "1" Usuario
+Funcionario "1" --> "1" Usuario
 Fabricante "1" *--> "1" Telefone
 
 
