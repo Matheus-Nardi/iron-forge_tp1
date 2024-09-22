@@ -1,5 +1,6 @@
 package br.unitins.tp1.ironforge.model;
 
+import br.unitins.tp1.ironforge.dto.whey.WheyProteinDTO;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,7 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class WheyProtein extends PanacheEntityBase{
+public class WheyProtein extends PanacheEntityBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,6 +17,17 @@ public class WheyProtein extends PanacheEntityBase{
     private String descricao;
     private Double preco;
     private Integer peso;
+
+    public WheyProtein() {
+
+    }
+
+    public WheyProtein(WheyProteinDTO whey) {
+        this.nome = whey.nome();
+        this.descricao = whey.descricao();
+        this.preco = whey.preco();
+        this.peso = whey.peso();
+    }
 
     public Long getId() {
         return id;
