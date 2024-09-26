@@ -2,6 +2,7 @@ package br.unitins.tp1.ironforge.resource;
 
 import java.util.List;
 
+import br.unitins.tp1.ironforge.dto.estado.EstadoRequestDTO;
 import br.unitins.tp1.ironforge.model.Estado;
 import br.unitins.tp1.ironforge.service.EstadoService;
 import jakarta.inject.Inject;
@@ -41,14 +42,14 @@ public class EstadoResource {
     }
 
     @POST
-    public Estado create(Estado estado) {
+    public Estado create(EstadoRequestDTO estado) {
         return estadoService.create(estado);
     }
 
     @PUT
     @Path("/{id}")
-    public void update(@PathParam("id") Long id, Estado estado) {
-        estadoService.update(estado);
+    public void update(@PathParam("id") Long id, EstadoRequestDTO estado) {
+        estadoService.update(id, estado);
     }
 
     @DELETE

@@ -11,7 +11,7 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
 @ApplicationScoped
-public class WheyProteinImpl implements WheyProteinService {
+public class WheyProteinServiceImpl implements WheyProteinService {
 
     @Inject
     public WheyProteinRepository wheyRepository;
