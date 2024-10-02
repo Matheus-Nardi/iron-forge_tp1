@@ -1,10 +1,7 @@
 package br.unitins.tp1.ironforge.resource;
 
-import java.util.List;
-
-import br.unitins.tp1.ironforge.dto.cidade.CidadeRequestDTO;
-import br.unitins.tp1.ironforge.model.Cidade;
-import br.unitins.tp1.ironforge.service.CidadeService;
+import br.unitins.tp1.ironforge.dto.cidade.CidadeDTO;
+import br.unitins.tp1.ironforge.service.cidade.CidadeService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -15,6 +12,8 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 @Path("/cidades")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -26,36 +25,38 @@ public class CidadeResource {
 
     @GET
     @Path("/{id}")
-    public Cidade findById(@PathParam("id") Long id) {
-        return cidadeService.findById(id);
+    public Response findById(@PathParam("id") Long id) {
+        return Response.ok(cidadeService.findById(id)).build();
     }
 
     @GET
     @Path("/search/{nome}")
-    public List<Cidade> findByNome(@PathParam("nome") String nome) {
-        return cidadeService.findByNome(nome);
+    public Response findByNome(@PathParam("nome") String nome) {
+        return Response.ok(cidadeService.findByNome(nome)).build();
     }
 
     @GET
-    public List<Cidade> findAll() {
-        return cidadeService.findAll();
+    public Response findAll() {
+        return Response.ok(cidadeService.findAll()).build();
     }
 
     @POST
-    public Cidade create(CidadeRequestDTO cidade) {
-        return cidadeService.create(cidade);
+    public Response create(CidadeDTO cidade) {
+        return Response.status(Status.CREATED).entity(cidadeService.create(cidade)).build();
     }
 
     @PUT
     @Path("/{id}")
-    public void update(@PathParam("id") Long id, CidadeRequestDTO cidade) {
+    public Response update(@PathParam("id") Long id, CidadeDTO cidade) {
         cidadeService.update(id, cidade);
+        return Response.noContent().build();
     }
 
     @DELETE
     @Path("/{id}")
-    public void delete(@PathParam("id") Long id) {
+    public Response delete(@PathParam("id") Long id) {
         cidadeService.delete(id);
+        return Response.noContent().build();
     }
 
 }
