@@ -3,7 +3,7 @@ package br.unitins.tp1.ironforge.service.whey;
 import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.whey.WheyProteinRequestDTO;
-import br.unitins.tp1.ironforge.model.WheyProtein;
+import br.unitins.tp1.ironforge.model.whey.WheyProtein;
 
 public interface WheyProteinService {
 

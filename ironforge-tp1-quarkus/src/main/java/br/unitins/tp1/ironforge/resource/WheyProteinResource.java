@@ -4,7 +4,7 @@ import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.whey.WheyProteinRequestDTO;
 import br.unitins.tp1.ironforge.dto.whey.WheyProteinResponseDTO;
-import br.unitins.tp1.ironforge.model.WheyProtein;
+import br.unitins.tp1.ironforge.model.whey.WheyProtein;
 import br.unitins.tp1.ironforge.service.whey.WheyProteinService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;

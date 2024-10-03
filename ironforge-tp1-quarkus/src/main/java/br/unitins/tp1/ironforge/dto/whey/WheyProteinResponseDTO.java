@@ -1,19 +1,24 @@
 package br.unitins.tp1.ironforge.dto.whey;
 
-import br.unitins.tp1.ironforge.model.WheyProtein;
+import br.unitins.tp1.ironforge.dto.FabricanteResponseDTO;
+import br.unitins.tp1.ironforge.model.whey.WheyProtein;
 
 public record WheyProteinResponseDTO(
         Long id,
         String nome,
         String descricao,
+        SaborResponseDTO sabor,
         Double preco,
-        Integer peso) {
+        Integer peso,
+        FabricanteResponseDTO fabricante) {
 
     public static WheyProteinResponseDTO valueOf(WheyProtein whey) {
         return new WheyProteinResponseDTO(whey.getId(),
                 whey.getNome(),
                 whey.getDescricao(),
+                SaborResponseDTO.valueOf(whey.getSabor()),
                 whey.getPreco(),
-                whey.getPeso());
+                whey.getPeso(),
+                FabricanteResponseDTO.valueOf(whey.getFabricante()));
     }
 }

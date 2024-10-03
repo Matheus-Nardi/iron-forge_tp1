@@ -22,16 +22,9 @@ class Fabricante{
     -email: String
 }
 
-enum Sabor{
-    + CHOCOLATE: int 
-    + MORANGO: int
-    + BAUNILHA: int
-    + NATURAL: int
-    + BANANA: int
-    + DOCE_LEITE: int
-    + COOKIES_AND_CREAM: int
-    + CARAMELO: int
-    + TORTA_LIMAO: int
+class Sabor{
+    - id: Long 
+    - nome: String
 }
 
 enum TipoWhey{

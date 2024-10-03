@@ -6,6 +6,6 @@ import jakarta.validation.constraints.Size;
 
 public record CidadeRequestDTO(
         @NotEmpty(message = "O campo nome deve ser informado.") @Size(max = 60, message = "O campo nome deve conter no máximo 60 caracteres.") String nome,
-        @NotNull(message = "O campo idEstado nao pode ser nulo.") Long idEstado) {
+        @NotNull(message = "O campo idEstado não pode ser nulo.") Long idEstado) {
 
 }
