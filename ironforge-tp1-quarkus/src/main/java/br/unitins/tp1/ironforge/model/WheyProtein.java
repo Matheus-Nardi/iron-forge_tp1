@@ -1,6 +1,6 @@
 package br.unitins.tp1.ironforge.model;
 
-import br.unitins.tp1.ironforge.dto.whey.WheyProteinDTO;
+import br.unitins.tp1.ironforge.dto.whey.WheyProteinRequestDTO;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,7 +22,7 @@ public class WheyProtein extends PanacheEntityBase {
 
     }
 
-    public WheyProtein(WheyProteinDTO whey) {
+    public WheyProtein(WheyProteinRequestDTO whey) {
         this.nome = whey.nome();
         this.descricao = whey.descricao();
         this.preco = whey.preco();

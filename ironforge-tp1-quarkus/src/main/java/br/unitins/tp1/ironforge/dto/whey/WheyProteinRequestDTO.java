@@ -1,6 +1,6 @@
 package br.unitins.tp1.ironforge.dto.whey;
 
-public record WheyProteinDTO(
+public record WheyProteinRequestDTO(
         String nome,
         String descricao,
         Double preco,

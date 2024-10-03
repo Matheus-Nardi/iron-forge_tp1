@@ -2,8 +2,9 @@ package br.unitins.tp1.ironforge.resource;
 
 import java.util.List;
 
-import br.unitins.tp1.ironforge.dto.whey.WheyProteinDTO;
+import br.unitins.tp1.ironforge.dto.whey.WheyProteinRequestDTO;
 import br.unitins.tp1.ironforge.dto.whey.WheyProteinResponseDTO;
+import br.unitins.tp1.ironforge.model.WheyProtein;
 import br.unitins.tp1.ironforge.service.whey.WheyProteinService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -29,40 +30,39 @@ public class WheyProteinResource {
 
     @GET
     public Response getAll() {
-        List<WheyProteinResponseDTO> wheys = wheyService.findAll();
-        return Response.ok(wheys).build();
+        List<WheyProtein> wheys = wheyService.findAll();
+        return Response.ok(wheys.stream().map(WheyProteinResponseDTO::valueOf)).build();
     }
 
     @GET
     @Path("/{id}")
     public Response findById(@PathParam("id") Long id) {
-        WheyProteinResponseDTO whey = wheyService.findById(id);
-        return Response.ok(whey).build();
+        return Response.ok(WheyProteinResponseDTO.valueOf(wheyService.findById(id))).build();
     }
 
     @GET
     @Path("/search/nome")
     public Response findByNome(@QueryParam("nome") String nome) {
-        List<WheyProteinResponseDTO> wheys = wheyService.findByNome(nome);
-        return Response.ok(wheys).build();
+        List<WheyProtein> wheys = wheyService.findByNome(nome);
+        return Response.ok(wheys.stream().map(WheyProteinResponseDTO::valueOf).toList()).build();
     }
 
     @GET
     @Path("/search/preco")
     public Response findByPreco(@QueryParam("preco") Double preco) {
-        List<WheyProteinResponseDTO> wheys = wheyService.findByPreco(preco);
-        return Response.ok(wheys).build();
+        List<WheyProtein> wheys = wheyService.findByPreco(preco);
+        return Response.ok(wheys.stream().map(WheyProteinResponseDTO::valueOf).toList()).build();
     }
 
     @POST
-    public Response create(WheyProteinDTO wheyProteinDTO) {
-        WheyProteinResponseDTO whey = wheyService.create(wheyProteinDTO);
-        return Response.status(Status.CREATED).entity(whey).build();
+    public Response create(WheyProteinRequestDTO wheyProteinDTO) {
+        WheyProtein whey = wheyService.create(wheyProteinDTO);
+        return Response.status(Status.CREATED).entity(WheyProteinResponseDTO.valueOf(whey)).build();
     }
 
     @PUT
     @Path("/{id}")
-    public Response update(@PathParam("id") Long id, WheyProteinDTO wheyToUpdate) {
+    public Response update(@PathParam("id") Long id, WheyProteinRequestDTO wheyToUpdate) {
         wheyService.update(id, wheyToUpdate);
         return Response.noContent().build();
     }

@@ -2,8 +2,7 @@ package br.unitins.tp1.ironforge.service.estado;
 
 import java.util.List;
 
-import br.unitins.tp1.ironforge.dto.estado.EstadoDTO;
-import br.unitins.tp1.ironforge.dto.estado.EstadoResponseDTO;
+import br.unitins.tp1.ironforge.dto.estado.EstadoRequestDTO;
 import br.unitins.tp1.ironforge.model.Estado;
 import br.unitins.tp1.ironforge.repository.EstadoRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -17,32 +16,32 @@ public class EstadoServiceImpl implements EstadoService {
     public EstadoRepository estadoRepository;
 
     @Override
-    public EstadoResponseDTO findById(Long id) {
-        Estado estado = estadoRepository.findById(id);
-        return EstadoResponseDTO.valueOf(estado);
+    public Estado findById(Long id) {
+        return estadoRepository.findById(id);
     }
 
     @Override
-    public List<EstadoResponseDTO> findByNome(String nome) {
-        List<Estado> estados = estadoRepository.findByNome(nome);
-        return estados.stream().map(EstadoResponseDTO::valueOf).toList();
+    public List<Estado> findByNome(String nome) {
+        return estadoRepository.findByNome(nome);
     }
 
     @Override
     @Transactional
-    public EstadoResponseDTO create(EstadoDTO dto) {
-        Estado estado = EstadoDTO.valueOf(dto);
+    public Estado create(EstadoRequestDTO dto) {
+        Estado estado = new Estado();
+        estado.setNome(dto.nome());
+        estado.setSigla(dto.sigla());
         estadoRepository.persist(estado);
-        return EstadoResponseDTO.valueOf(estado);
+        return estado;
     }
 
     @Override
     @Transactional
-    public EstadoResponseDTO update(Long id, EstadoDTO dto) {
+    public Estado update(Long id, EstadoRequestDTO dto) {
         Estado estado = estadoRepository.findById(id);
         estado.setNome(dto.nome());
         estado.setSigla(dto.sigla());
-        return EstadoResponseDTO.valueOf(estado);
+        return estado;
     }
 
     @Override
@@ -52,9 +51,8 @@ public class EstadoServiceImpl implements EstadoService {
     }
 
     @Override
-    public List<EstadoResponseDTO> findAll() {
-        List<Estado> estados = estadoRepository.findAll().list();
-        return estados.stream().map(EstadoResponseDTO::valueOf).toList();
+    public List<Estado> findAll() {
+        return estadoRepository.findAll().list();
     }
 
 }

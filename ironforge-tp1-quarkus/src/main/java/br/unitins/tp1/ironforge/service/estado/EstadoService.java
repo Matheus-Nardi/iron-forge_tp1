@@ -2,20 +2,20 @@ package br.unitins.tp1.ironforge.service.estado;
 
 import java.util.List;
 
-import br.unitins.tp1.ironforge.dto.estado.EstadoDTO;
-import br.unitins.tp1.ironforge.dto.estado.EstadoResponseDTO;
+import br.unitins.tp1.ironforge.dto.estado.EstadoRequestDTO;
+import br.unitins.tp1.ironforge.model.Estado;
 
 public interface EstadoService {
 
-    EstadoResponseDTO findById(Long id);
+    Estado findById(Long id);
 
-    List<EstadoResponseDTO> findByNome(String nome);
+    List<Estado> findByNome(String nome);
 
-    List<EstadoResponseDTO> findAll();
+    List<Estado> findAll();
 
-    EstadoResponseDTO create(EstadoDTO dto);
+    Estado create(EstadoRequestDTO dto);
 
-    EstadoResponseDTO update(Long id, EstadoDTO dto);
+    Estado update(Long id, EstadoRequestDTO dto);
 
     void delete(Long id);
 

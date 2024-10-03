@@ -2,8 +2,7 @@ package br.unitins.tp1.ironforge.service.whey;
 
 import java.util.List;
 
-import br.unitins.tp1.ironforge.dto.whey.WheyProteinDTO;
-import br.unitins.tp1.ironforge.dto.whey.WheyProteinResponseDTO;
+import br.unitins.tp1.ironforge.dto.whey.WheyProteinRequestDTO;
 import br.unitins.tp1.ironforge.model.WheyProtein;
 import br.unitins.tp1.ironforge.repository.WheyProteinRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -17,44 +16,37 @@ public class WheyProteinServiceImpl implements WheyProteinService {
     public WheyProteinRepository wheyRepository;
 
     @Override
-    public WheyProteinResponseDTO findById(Long id) {
-        WheyProtein whey = wheyRepository.findById(id);
-        return WheyProteinResponseDTO.valueOf(whey);
+    public WheyProtein findById(Long id) {
+        return wheyRepository.findById(id);
+
     }
 
     @Override
-    public List<WheyProteinResponseDTO> findByNome(String nome) {
-        List<WheyProtein> wheys = wheyRepository.findByNome(nome);
-        return wheys.stream()
-                .map(whey -> WheyProteinResponseDTO.valueOf(whey)).toList();
+    public List<WheyProtein> findByNome(String nome) {
+        return wheyRepository.findByNome(nome);
     }
 
     @Override
-    public List<WheyProteinResponseDTO> findByPreco(Double preco) {
-        List<WheyProtein> wheys = wheyRepository.findByPreco(preco);
-        return wheys.stream()
-                .map(whey -> WheyProteinResponseDTO.valueOf(whey)).toList();
+    public List<WheyProtein> findByPreco(Double preco) {
+        return wheyRepository.findByPreco(preco);
     }
 
     @Override
-    public List<WheyProteinResponseDTO> findAll() {
-        List<WheyProtein> wheys = wheyRepository.listAll();
-        return wheys.stream()
-                .map(whey -> WheyProteinResponseDTO.valueOf(whey)).toList();
+    public List<WheyProtein> findAll() {
+        return wheyRepository.listAll();
     }
 
     @Override
     @Transactional
-    public WheyProteinResponseDTO create(WheyProteinDTO wheyProtein) {
+    public WheyProtein create(WheyProteinRequestDTO wheyProtein) {
         WheyProtein whey = new WheyProtein(wheyProtein);
-
         wheyRepository.persist(whey);
-        return WheyProteinResponseDTO.valueOf(whey);
+        return whey;
     }
 
     @Override
     @Transactional
-    public void update(Long id, WheyProteinDTO wheyProtein) {
+    public void update(Long id, WheyProteinRequestDTO wheyProtein) {
         WheyProtein wheyToUpdate = wheyRepository.findById(id);
         if (wheyToUpdate == null)
             throw new IllegalArgumentException("Whey não encontrado!");

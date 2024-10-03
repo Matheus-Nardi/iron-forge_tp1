@@ -1,8 +1,13 @@
 package br.unitins.tp1.ironforge.resource;
 
-import br.unitins.tp1.ironforge.dto.estado.EstadoDTO;
+import java.util.List;
+
+import br.unitins.tp1.ironforge.dto.estado.EstadoRequestDTO;
+import br.unitins.tp1.ironforge.dto.estado.EstadoResponseDTO;
+import br.unitins.tp1.ironforge.model.Estado;
 import br.unitins.tp1.ironforge.service.estado.EstadoService;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -26,28 +31,30 @@ public class EstadoResource {
     @GET
     @Path("/{id}")
     public Response findById(@PathParam("id") Long id) {
-        return Response.ok(estadoService.findById(id)).build();
+        return Response.ok(EstadoResponseDTO.valueOf(estadoService.findById(id))).build();
     }
 
     @GET
     @Path("/search/{nome}")
     public Response findByNome(@PathParam("nome") String nome) {
-        return Response.ok(estadoService.findByNome(nome)).build();
+        List<Estado> estados = estadoService.findByNome(nome);
+        return Response.ok(estados.stream().map(EstadoResponseDTO::valueOf).toList()).build();
     }
 
     @GET
     public Response findAll() {
-        return Response.ok(estadoService.findAll()).build();
+        List<Estado> estados = estadoService.findAll();
+        return Response.ok(estados.stream().map(EstadoResponseDTO::valueOf).toList()).build();
     }
 
     @POST
-    public Response create(EstadoDTO estado) {
-        return Response.status(Status.CREATED).entity(estadoService.create(estado)).build();
+    public Response create(@Valid EstadoRequestDTO estado) {
+        return Response.status(Status.CREATED).entity(EstadoResponseDTO.valueOf(estadoService.create(estado))).build();
     }
 
     @PUT
     @Path("/{id}")
-    public Response update(@PathParam("id") Long id, EstadoDTO estado) {
+    public Response update(@PathParam("id") Long id, @Valid EstadoRequestDTO estado) {
         estadoService.update(id, estado);
         return Response.noContent().build();
     }

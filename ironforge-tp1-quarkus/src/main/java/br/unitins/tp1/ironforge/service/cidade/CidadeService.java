@@ -2,20 +2,20 @@ package br.unitins.tp1.ironforge.service.cidade;
 
 import java.util.List;
 
-import br.unitins.tp1.ironforge.dto.cidade.CidadeDTO;
-import br.unitins.tp1.ironforge.dto.cidade.CidadeResponseDTO;
+import br.unitins.tp1.ironforge.dto.cidade.CidadeRequestDTO;
+import br.unitins.tp1.ironforge.model.Cidade;
 
 public interface CidadeService {
 
-    CidadeResponseDTO findById(Long id);
+    Cidade findById(Long id);
 
-    List<CidadeResponseDTO> findByNome(String nome);
+    List<Cidade> findByNome(String nome);
 
-    List<CidadeResponseDTO> findAll();
+    List<Cidade> findAll();
 
-    CidadeResponseDTO create(CidadeDTO dto);
+    Cidade create(CidadeRequestDTO dto);
 
-    CidadeResponseDTO update(Long id, CidadeDTO dto);
+    Cidade update(Long id, CidadeRequestDTO dto);
 
     void delete(Long id);
 

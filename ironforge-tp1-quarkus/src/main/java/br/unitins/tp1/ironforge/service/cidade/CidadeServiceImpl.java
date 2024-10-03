@@ -2,11 +2,10 @@ package br.unitins.tp1.ironforge.service.cidade;
 
 import java.util.List;
 
-import br.unitins.tp1.ironforge.dto.cidade.CidadeDTO;
-import br.unitins.tp1.ironforge.dto.cidade.CidadeResponseDTO;
+import br.unitins.tp1.ironforge.dto.cidade.CidadeRequestDTO;
 import br.unitins.tp1.ironforge.model.Cidade;
 import br.unitins.tp1.ironforge.repository.CidadeRepository;
-import br.unitins.tp1.ironforge.repository.EstadoRepository;
+import br.unitins.tp1.ironforge.service.estado.EstadoService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -18,37 +17,36 @@ public class CidadeServiceImpl implements CidadeService {
     public CidadeRepository cidadeRepository;
 
     @Inject
-    public EstadoRepository estadoRepository;
+    public EstadoService estadoService;
 
     @Override
-    public CidadeResponseDTO findById(Long id) {
-        Cidade cidade = cidadeRepository.findById(id);
-        return CidadeResponseDTO.valueOf(cidade);
+    public Cidade findById(Long id) {
+        return cidadeRepository.findById(id);
     }
 
     @Override
-    public List<CidadeResponseDTO> findByNome(String nome) {
+    public List<Cidade> findByNome(String nome) {
         List<Cidade> cidades = cidadeRepository.findByNome(nome);
-        return cidades.stream().map(CidadeResponseDTO::valueOf).toList();
+        return cidades;
     }
 
     @Override
     @Transactional
-    public CidadeResponseDTO create(CidadeDTO dto) {
+    public Cidade create(CidadeRequestDTO dto) {
         Cidade cidade = new Cidade();
         cidade.setNome(dto.nome());
-        cidade.setEstado(estadoRepository.findById(dto.idEstado()));
+        cidade.setEstado(estadoService.findById(dto.idEstado()));
         cidadeRepository.persist(cidade);
-        return CidadeResponseDTO.valueOf(cidade);
+        return cidade;
     }
 
     @Override
     @Transactional
-    public CidadeResponseDTO update(Long id, CidadeDTO dto) {
+    public Cidade update(Long id, CidadeRequestDTO dto) {
         Cidade cidade = cidadeRepository.findById(id);
         cidade.setNome(dto.nome());
-        cidade.setEstado(estadoRepository.findById(dto.idEstado()));
-        return CidadeResponseDTO.valueOf(cidade);
+        cidade.setEstado(estadoService.findById(dto.idEstado()));
+        return cidade;
     }
 
     @Override
@@ -58,9 +56,9 @@ public class CidadeServiceImpl implements CidadeService {
     }
 
     @Override
-    public List<CidadeResponseDTO> findAll() {
+    public List<Cidade> findAll() {
         List<Cidade> cidades = cidadeRepository.findAll().list();
-        return cidades.stream().map(CidadeResponseDTO::valueOf).toList();
+        return cidades;
     }
 
 }

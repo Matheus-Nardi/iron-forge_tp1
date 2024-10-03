@@ -2,22 +2,22 @@ package br.unitins.tp1.ironforge.service.whey;
 
 import java.util.List;
 
-import br.unitins.tp1.ironforge.dto.whey.WheyProteinDTO;
-import br.unitins.tp1.ironforge.dto.whey.WheyProteinResponseDTO;
+import br.unitins.tp1.ironforge.dto.whey.WheyProteinRequestDTO;
+import br.unitins.tp1.ironforge.model.WheyProtein;
 
 public interface WheyProteinService {
 
-    WheyProteinResponseDTO findById(Long id);
+    WheyProtein findById(Long id);
 
-    List<WheyProteinResponseDTO> findByNome(String nome);
+    List<WheyProtein> findByNome(String nome);
 
-    List<WheyProteinResponseDTO> findByPreco(Double preco);
+    List<WheyProtein> findByPreco(Double preco);
 
-    List<WheyProteinResponseDTO> findAll();
+    List<WheyProtein> findAll();
 
-    WheyProteinResponseDTO create(WheyProteinDTO wheyProtein);
+    WheyProtein create(WheyProteinRequestDTO wheyProtein);
 
-    void update(Long id, WheyProteinDTO wheyProtein);
+    void update(Long id, WheyProteinRequestDTO wheyProtein);
 
     void delete(Long id);
 }
