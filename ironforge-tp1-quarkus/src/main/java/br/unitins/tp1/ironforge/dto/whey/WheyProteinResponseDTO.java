@@ -1,6 +1,6 @@
 package br.unitins.tp1.ironforge.dto.whey;
 
-import br.unitins.tp1.ironforge.dto.FabricanteResponseDTO;
+import br.unitins.tp1.ironforge.dto.fabricante.FabricanteResponseDTO;
 import br.unitins.tp1.ironforge.model.whey.WheyProtein;
 
 public record WheyProteinResponseDTO(

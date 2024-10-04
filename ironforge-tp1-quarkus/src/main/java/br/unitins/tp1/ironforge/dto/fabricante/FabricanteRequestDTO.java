@@ -1,4 +1,4 @@
-package br.unitins.tp1.ironforge.dto;
+package br.unitins.tp1.ironforge.dto.fabricante;
 
 import org.hibernate.validator.constraints.br.CNPJ;
 

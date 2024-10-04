@@ -2,8 +2,8 @@ package br.unitins.tp1.ironforge.resource;
 
 import java.util.List;
 
-import br.unitins.tp1.ironforge.dto.FabricanteRequestDTO;
-import br.unitins.tp1.ironforge.dto.FabricanteResponseDTO;
+import br.unitins.tp1.ironforge.dto.fabricante.FabricanteRequestDTO;
+import br.unitins.tp1.ironforge.dto.fabricante.FabricanteResponseDTO;
 import br.unitins.tp1.ironforge.model.Fabricante;
 import br.unitins.tp1.ironforge.service.fabricante.FabricanteService;
 import jakarta.inject.Inject;

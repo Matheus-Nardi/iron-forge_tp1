@@ -2,7 +2,7 @@ package br.unitins.tp1.ironforge.service.fabricante;
 
 import java.util.List;
 
-import br.unitins.tp1.ironforge.dto.FabricanteRequestDTO;
+import br.unitins.tp1.ironforge.dto.fabricante.FabricanteRequestDTO;
 import br.unitins.tp1.ironforge.model.Fabricante;
 
 public interface FabricanteService {

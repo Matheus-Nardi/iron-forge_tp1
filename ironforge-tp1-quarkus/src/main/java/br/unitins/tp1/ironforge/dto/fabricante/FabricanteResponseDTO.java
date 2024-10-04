@@ -1,4 +1,4 @@
-package br.unitins.tp1.ironforge.dto;
+package br.unitins.tp1.ironforge.dto.fabricante;
 
 import br.unitins.tp1.ironforge.model.Fabricante;
 

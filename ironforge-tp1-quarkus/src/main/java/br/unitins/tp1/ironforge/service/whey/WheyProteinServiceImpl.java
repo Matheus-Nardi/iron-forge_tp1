@@ -48,7 +48,8 @@ public class WheyProteinServiceImpl implements WheyProteinService {
     public WheyProtein create(WheyProteinRequestDTO dto) {
         WheyProtein whey = new WheyProtein();
         whey.setNome(dto.nome());
-        whey.setDescricao(String.format("Whey de %d da %s" , dto.peso() , fabricanteService.findById(dto.idFabricante()).getNome()));
+        whey.setDescricao(String.format("Whey de %d da %s", dto.peso(),
+                fabricanteService.findById(dto.idFabricante()).getNome()));
         whey.setPeso(dto.peso());
         whey.setPreco(dto.preco());
         whey.setSabor(saborService.findById(dto.idSabor()));
@@ -68,6 +69,7 @@ public class WheyProteinServiceImpl implements WheyProteinService {
         wheyToUpdate.setPreco(dto.preco());
         wheyToUpdate.setPeso(dto.peso());
         wheyToUpdate.setSabor(saborService.findById(dto.idSabor()));
+
         wheyToUpdate.setFabricante(fabricanteService.findById(dto.idFabricante()));
     }
 
