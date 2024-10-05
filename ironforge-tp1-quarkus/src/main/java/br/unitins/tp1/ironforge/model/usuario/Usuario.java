@@ -3,13 +3,16 @@ package br.unitins.tp1.ironforge.model.usuario;
 import java.time.LocalDate;
 
 import br.unitins.tp1.ironforge.model.DefaultEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 
 @Entity
 public class Usuario extends DefaultEntity {
 
     private String nome;
+    @Column(unique = true)
     private String cpf;
+    @Column(unique = true)
     private String email;
     private String senha;
     private LocalDate dataNascimento;
