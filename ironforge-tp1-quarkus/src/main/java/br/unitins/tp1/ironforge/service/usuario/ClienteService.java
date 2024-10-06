@@ -2,7 +2,7 @@ package br.unitins.tp1.ironforge.service.usuario;
 
 import java.util.List;
 
-import br.unitins.tp1.ironforge.dto.usuario.UsuarioRequestDTO;
+import br.unitins.tp1.ironforge.dto.usuario.cliente.ClienteRequestDTO;
 import br.unitins.tp1.ironforge.model.usuario.Cliente;
 
 public interface ClienteService {
@@ -13,9 +13,9 @@ public interface ClienteService {
 
     List<Cliente> findAll();
 
-    Cliente create(UsuarioRequestDTO dto);
+    Cliente create(ClienteRequestDTO dto);
 
-    void update(Long id, UsuarioRequestDTO dto);
+    void update(Long id, ClienteRequestDTO dto);
 
     void delete(Long id);
 

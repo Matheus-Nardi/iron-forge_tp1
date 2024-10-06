@@ -14,6 +14,11 @@ public class UsuarioRepository implements PanacheRepository<Usuario> {
                 "%" + nome + "%").list();
     }
 
+    public List<Usuario> findFuncionarioByNome(String nome) {
+        return find("SELECT u FROM Usuario u JOIN Funcionario f ON f.usuario.id = u.id WHERE u.nome LIKE ?1",
+                "%" + nome + "%").list();
+    }
+
     public boolean existByCpf(String cpf) {
         return find("cpf", cpf).firstResultOptional().isPresent();
     }

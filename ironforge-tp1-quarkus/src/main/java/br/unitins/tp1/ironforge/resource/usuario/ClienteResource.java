@@ -2,8 +2,8 @@ package br.unitins.tp1.ironforge.resource.usuario;
 
 import java.util.List;
 
-import br.unitins.tp1.ironforge.dto.usuario.UsuarioRequestDTO;
-import br.unitins.tp1.ironforge.dto.usuario.UsuarioResponseDTO;
+import br.unitins.tp1.ironforge.dto.usuario.cliente.ClienteRequestDTO;
+import br.unitins.tp1.ironforge.dto.usuario.cliente.ClienteResponseDTO;
 import br.unitins.tp1.ironforge.model.usuario.Cliente;
 import br.unitins.tp1.ironforge.service.usuario.ClienteService;
 import jakarta.inject.Inject;
@@ -31,31 +31,31 @@ public class ClienteResource {
     @GET
     @Path("/{id}")
     public Response findById(@PathParam("id") Long id) {
-        return Response.ok(UsuarioResponseDTO.valueOfCliente(clienteService.findById(id))).build();
+        return Response.ok(ClienteResponseDTO.valueOf(clienteService.findById(id))).build();
     }
 
     @GET
     @Path("/search/{nome}")
     public Response findByNome(@PathParam("nome") String nome) {
         List<Cliente> clientes = clienteService.findByNome(nome);
-        return Response.ok(clientes.stream().map(UsuarioResponseDTO::valueOfCliente).toList()).build();
+        return Response.ok(clientes.stream().map(ClienteResponseDTO::valueOf).toList()).build();
     }
 
     @GET
     public Response findAll() {
         List<Cliente> clientes = clienteService.findAll();
-        return Response.ok(clientes.stream().map(UsuarioResponseDTO::valueOfCliente).toList()).build();
+        return Response.ok(clientes.stream().map(ClienteResponseDTO::valueOf).toList()).build();
     }
 
     @POST
-    public Response create(@Valid UsuarioRequestDTO usuario) {
-        return Response.status(Status.CREATED).entity(clienteService.create(usuario)).build();
+    public Response create(@Valid ClienteRequestDTO dto) {
+        return Response.status(Status.CREATED).entity(ClienteResponseDTO.valueOf(clienteService.create(dto))).build();
     }
 
     @PUT
     @Path("/{id}")
-    public Response update(@PathParam("id") Long id, @Valid UsuarioRequestDTO usuario) {
-        clienteService.update(id, usuario);
+    public Response update(@PathParam("id") Long id, @Valid ClienteRequestDTO dto) {
+        clienteService.update(id, dto);
         return Response.noContent().build();
     }
 

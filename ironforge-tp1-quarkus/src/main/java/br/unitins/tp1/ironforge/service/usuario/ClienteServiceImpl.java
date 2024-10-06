@@ -2,7 +2,7 @@ package br.unitins.tp1.ironforge.service.usuario;
 
 import java.util.List;
 
-import br.unitins.tp1.ironforge.dto.usuario.UsuarioRequestDTO;
+import br.unitins.tp1.ironforge.dto.usuario.cliente.ClienteRequestDTO;
 import br.unitins.tp1.ironforge.model.usuario.Cliente;
 import br.unitins.tp1.ironforge.model.usuario.Usuario;
 import br.unitins.tp1.ironforge.repository.ClienteRepository;
@@ -37,9 +37,9 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     @Transactional
-    public Cliente create(UsuarioRequestDTO dto) {
+    public Cliente create(ClienteRequestDTO dto) {
         validateCredentials(dto);
-        Cliente cliente = UsuarioRequestDTO.toCliente(dto);
+        Cliente cliente = ClienteRequestDTO.toEntity(dto);
         usuarioRepository.persist(cliente.getUsuario());
         clienteRepository.persist(cliente);
         return cliente;
@@ -47,15 +47,15 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     @Transactional
-    public void update(Long id, UsuarioRequestDTO dto) {
+    public void update(Long id, ClienteRequestDTO dto) {
         validateCredentials(dto);
         Cliente cliente = clienteRepository.findById(id);
         Usuario usuario = cliente.getUsuario();
-        usuario.setNome(dto.nome());
-        usuario.setCpf(dto.cpf());
-        usuario.setEmail(dto.email());
-        usuario.setSenha(dto.senha());
-        usuario.setDataNascimento(dto.dataNascimento());
+        usuario.setNome(dto.usuario().nome());
+        usuario.setCpf(dto.usuario().cpf());
+        usuario.setEmail(dto.usuario().email());
+        usuario.setSenha(dto.usuario().senha());
+        usuario.setDataNascimento(dto.usuario().dataNascimento());
 
         cliente.setUsuario(usuario);
     }
@@ -72,12 +72,12 @@ public class ClienteServiceImpl implements ClienteService {
         return c;
     }
 
-    private void validateCredentials(UsuarioRequestDTO usuario) {
-        if (usuarioRepository.existByCpf(usuario.cpf()))
-            throw new IllegalArgumentException("Já existe um usuário cadastrado com esse CPF");
+    private void validateCredentials(ClienteRequestDTO cliente) {
+        if (usuarioRepository.existByCpf(cliente.usuario().cpf()))
+            throw new IllegalArgumentException("Já existe um cliente cadastrado com esse CPF");
 
-        if (usuarioRepository.existByEmail(usuario.email()))
-            throw new IllegalArgumentException("Já existe um usuário cadastrado com esse email");
+        if (usuarioRepository.existByEmail(cliente.usuario().email()))
+            throw new IllegalArgumentException("Já existe um cliente cadastrado com esse email");
     }
 
 }
