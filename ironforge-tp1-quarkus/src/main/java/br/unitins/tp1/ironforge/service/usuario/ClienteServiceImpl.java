@@ -68,16 +68,17 @@ public class ClienteServiceImpl implements ClienteService {
 
     private Cliente valueOf(Usuario usuario) {
         Cliente c = new Cliente();
+        c.setId(usuario.getId());
         c.setUsuario(usuario);
         return c;
     }
 
     private void validateCredentials(ClienteRequestDTO cliente) {
         if (usuarioRepository.existByCpf(cliente.usuario().cpf()))
-            throw new IllegalArgumentException("Já existe um cliente cadastrado com esse CPF");
+            throw new IllegalArgumentException("Já existe um usuário cadastrado com esse CPF");
 
         if (usuarioRepository.existByEmail(cliente.usuario().email()))
-            throw new IllegalArgumentException("Já existe um cliente cadastrado com esse email");
+            throw new IllegalArgumentException("Já existe um usuário cadastrado com esse email");
     }
 
 }

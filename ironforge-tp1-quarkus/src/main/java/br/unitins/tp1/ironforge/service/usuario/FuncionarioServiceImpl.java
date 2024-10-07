@@ -69,17 +69,18 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     }
 
     private Funcionario valueOf(Usuario usuario) {
-        Funcionario c = new Funcionario();
-        c.setUsuario(usuario);
-        return c;
+        Funcionario f = new Funcionario();
+        f.setId(usuario.getId());
+        f.setUsuario(usuario);
+        return f;
     }
 
     private void validateCredentials(FuncionarioRequestDTO funcionario) {
         if (usuarioRepository.existByCpf(funcionario.usuario().cpf()))
-            throw new IllegalArgumentException("Já existe um funcionário cadastrado com esse CPF");
+            throw new IllegalArgumentException("Já existe um usuário cadastrado com esse CPF");
 
         if (usuarioRepository.existByEmail(funcionario.usuario().email()))
-            throw new IllegalArgumentException("Já existe um funcionário cadastrado com esse email");
+            throw new IllegalArgumentException("Já existe um usuário cadastrado com esse email");
     }
 
 }
