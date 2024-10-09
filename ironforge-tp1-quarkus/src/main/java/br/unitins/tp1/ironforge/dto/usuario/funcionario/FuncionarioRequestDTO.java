@@ -3,8 +3,8 @@ package br.unitins.tp1.ironforge.dto.usuario.funcionario;
 import java.math.BigDecimal;
 
 import br.unitins.tp1.ironforge.dto.usuario.UsuarioRequestDTO;
+import br.unitins.tp1.ironforge.model.Telefone;
 import br.unitins.tp1.ironforge.model.usuario.Funcionario;
-import br.unitins.tp1.ironforge.model.usuario.Telefone;
 import br.unitins.tp1.ironforge.model.usuario.Usuario;
 
 public record FuncionarioRequestDTO(

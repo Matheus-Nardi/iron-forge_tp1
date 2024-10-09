@@ -1,6 +1,5 @@
-package br.unitins.tp1.ironforge.model.usuario;
+package br.unitins.tp1.ironforge.model;
 
-import br.unitins.tp1.ironforge.model.DefaultEntity;
 import jakarta.persistence.Entity;
 
 @Entity

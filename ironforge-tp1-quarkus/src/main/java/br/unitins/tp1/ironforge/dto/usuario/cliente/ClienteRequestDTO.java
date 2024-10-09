@@ -1,8 +1,8 @@
 package br.unitins.tp1.ironforge.dto.usuario.cliente;
 
 import br.unitins.tp1.ironforge.dto.usuario.UsuarioRequestDTO;
+import br.unitins.tp1.ironforge.model.Telefone;
 import br.unitins.tp1.ironforge.model.usuario.Cliente;
-import br.unitins.tp1.ironforge.model.usuario.Telefone;
 import br.unitins.tp1.ironforge.model.usuario.Usuario;
 
 public record ClienteRequestDTO(
@@ -12,7 +12,7 @@ public record ClienteRequestDTO(
         Usuario usuario = new Usuario();
         Cliente cliente = new Cliente();
         Telefone telefone = new Telefone();
-
+    
         telefone.setCodigoArea(dto.usuario.telefone().codigoArea());
         telefone.setNumero(dto.usuario.telefone().numero());
 

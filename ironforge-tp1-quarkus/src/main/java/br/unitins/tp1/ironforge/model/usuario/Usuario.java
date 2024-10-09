@@ -3,6 +3,8 @@ package br.unitins.tp1.ironforge.model.usuario;
 import java.time.LocalDate;
 
 import br.unitins.tp1.ironforge.model.DefaultEntity;
+import br.unitins.tp1.ironforge.model.Endereco;
+import br.unitins.tp1.ironforge.model.Telefone;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,6 +25,10 @@ public class Usuario extends DefaultEntity {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_telefone")
     private Telefone telefone;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_endereco")
+    private Endereco endereco;
 
     public String getNome() {
         return nome;
@@ -71,5 +77,15 @@ public class Usuario extends DefaultEntity {
     public void setTelefone(Telefone telefone) {
         this.telefone = telefone;
     }
+
+    public Endereco getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(Endereco endereco) {
+        this.endereco = endereco;
+    }
+
+    
 
 }

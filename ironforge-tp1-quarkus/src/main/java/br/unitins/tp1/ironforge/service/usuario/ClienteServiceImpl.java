@@ -3,10 +3,12 @@ package br.unitins.tp1.ironforge.service.usuario;
 import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.usuario.cliente.ClienteRequestDTO;
+import br.unitins.tp1.ironforge.model.Endereco;
 import br.unitins.tp1.ironforge.model.usuario.Cliente;
 import br.unitins.tp1.ironforge.model.usuario.Usuario;
 import br.unitins.tp1.ironforge.repository.ClienteRepository;
 import br.unitins.tp1.ironforge.repository.UsuarioRepository;
+import br.unitins.tp1.ironforge.service.cidade.CidadeService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -18,6 +20,9 @@ public class ClienteServiceImpl implements ClienteService {
     public ClienteRepository clienteRepository;
     @Inject
     public UsuarioRepository usuarioRepository;
+
+    @Inject
+    public CidadeService cidadeService;
 
     @Override
     public Cliente findById(Long id) {
@@ -39,7 +44,9 @@ public class ClienteServiceImpl implements ClienteService {
     @Transactional
     public Cliente create(ClienteRequestDTO dto) {
         validateCredentials(dto);
+        Endereco endereco = buildEndereco(dto);
         Cliente cliente = ClienteRequestDTO.toEntity(dto);
+        cliente.getUsuario().setEndereco(endereco);
         usuarioRepository.persist(cliente.getUsuario());
         clienteRepository.persist(cliente);
         return cliente;
@@ -79,6 +86,18 @@ public class ClienteServiceImpl implements ClienteService {
 
         if (usuarioRepository.existByEmail(cliente.usuario().email()))
             throw new IllegalArgumentException("Já existe um usuário cadastrado com esse email");
+    }
+
+    private Endereco buildEndereco(ClienteRequestDTO dto){
+        Endereco endereco = new Endereco();
+        endereco.setCidade(cidadeService.findById(dto.usuario().endereco().idCidade()));
+        endereco.setLogradouro(dto.usuario().endereco().logradouro());
+        endereco.setBairro(dto.usuario().endereco().bairro());
+        endereco.setNumero(dto.usuario().endereco().numero());
+        endereco.setComplemento(dto.usuario().endereco().complemento());
+        endereco.setCep(dto.usuario().endereco().cep());
+
+        return endereco;
     }
 
 }

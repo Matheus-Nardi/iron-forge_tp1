@@ -2,6 +2,7 @@ package br.unitins.tp1.ironforge.dto.usuario.funcionario;
 
 import java.math.BigDecimal;
 
+import br.unitins.tp1.ironforge.dto.endereco.EnderecoResponseDTO;
 import br.unitins.tp1.ironforge.dto.usuario.TelefoneResponseDTO;
 import br.unitins.tp1.ironforge.dto.usuario.UsuarioResponseDTO;
 import br.unitins.tp1.ironforge.model.usuario.Funcionario;
@@ -16,7 +17,8 @@ public record FuncionarioResponseDTO(
                                 new UsuarioResponseDTO(funcionario.getUsuario().getId(),
                                                 funcionario.getUsuario().getNome(),
                                                 funcionario.getUsuario().getEmail(),
-                                                TelefoneResponseDTO.valueOf(funcionario.getUsuario().getTelefone())),
+                                                TelefoneResponseDTO.valueOf(funcionario.getUsuario().getTelefone()),
+                                                EnderecoResponseDTO.valueOf(funcionario.getUsuario().getEndereco())),
                                 funcionario.getSalario());
         }
 }

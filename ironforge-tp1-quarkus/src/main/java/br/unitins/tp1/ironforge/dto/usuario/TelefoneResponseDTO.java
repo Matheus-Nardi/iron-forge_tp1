@@ -1,6 +1,6 @@
 package br.unitins.tp1.ironforge.dto.usuario;
 
-import br.unitins.tp1.ironforge.model.usuario.Telefone;
+import br.unitins.tp1.ironforge.model.Telefone;
 
 public record TelefoneResponseDTO(
         Long id,

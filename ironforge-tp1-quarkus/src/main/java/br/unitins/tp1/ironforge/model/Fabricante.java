@@ -1,6 +1,5 @@
 package br.unitins.tp1.ironforge.model;
 
-import br.unitins.tp1.ironforge.model.usuario.Telefone;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
