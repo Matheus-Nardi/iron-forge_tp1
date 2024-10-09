@@ -3,6 +3,7 @@ package br.unitins.tp1.ironforge.service.whey;
 import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.whey.WheyProteinRequestDTO;
+import br.unitins.tp1.ironforge.model.whey.TipoWhey;
 import br.unitins.tp1.ironforge.model.whey.WheyProtein;
 import br.unitins.tp1.ironforge.repository.WheyProteinRepository;
 import br.unitins.tp1.ironforge.service.fabricante.FabricanteService;
@@ -46,6 +47,7 @@ public class WheyProteinServiceImpl implements WheyProteinService {
     @Override
     @Transactional
     public WheyProtein create(WheyProteinRequestDTO dto) {
+
         WheyProtein whey = new WheyProtein();
         whey.setNome(dto.nome());
         whey.setDescricao(String.format("Whey de %d da %s", dto.peso(),
@@ -54,6 +56,8 @@ public class WheyProteinServiceImpl implements WheyProteinService {
         whey.setPreco(dto.preco());
         whey.setSabor(saborService.findById(dto.idSabor()));
         whey.setFabricante(fabricanteService.findById(dto.idFabricante()));
+        whey.setTipoWhey(TipoWhey.valueOf(dto.idTipo()));
+
         wheyRepository.persist(whey);
         return whey;
     }
@@ -69,7 +73,6 @@ public class WheyProteinServiceImpl implements WheyProteinService {
         wheyToUpdate.setPreco(dto.preco());
         wheyToUpdate.setPeso(dto.peso());
         wheyToUpdate.setSabor(saborService.findById(dto.idSabor()));
-
         wheyToUpdate.setFabricante(fabricanteService.findById(dto.idFabricante()));
     }
 

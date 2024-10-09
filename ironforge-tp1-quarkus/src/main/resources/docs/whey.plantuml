@@ -198,7 +198,7 @@ Lote "*" --> "1" WheyProtein
 Lote"*" --> "1" Fornecedor
 
 Cliente "*" --> "*" WheyProtein : listaDesejos
-Usuario "1" --> "*" Endereco
+Usuario "1" *--> "*" Endereco
 Usuario "1" *--> "1" Telefone
 
 Cliente "1"--> "1" Usuario

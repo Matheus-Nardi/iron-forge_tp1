@@ -3,6 +3,8 @@ package br.unitins.tp1.ironforge.model.whey;
 import br.unitins.tp1.ironforge.model.DefaultEntity;
 import br.unitins.tp1.ironforge.model.Fabricante;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
@@ -13,6 +15,9 @@ public class WheyProtein extends DefaultEntity {
     private String descricao;
     private Double preco;
     private Integer peso;
+
+    @Enumerated(EnumType.ORDINAL)
+    private TipoWhey tipoWhey;
 
     @ManyToOne
     @JoinColumn(name = "id_sabor")
@@ -68,6 +73,14 @@ public class WheyProtein extends DefaultEntity {
 
     public void setFabricante(Fabricante fabricante) {
         this.fabricante = fabricante;
+    }
+
+    public TipoWhey getTipoWhey() {
+        return tipoWhey;
+    }
+
+    public void setTipoWhey(TipoWhey tipoWhey) {
+        this.tipoWhey = tipoWhey;
     }
 
 }
