@@ -5,7 +5,7 @@ public record WheyProteinRequestDTO(
         String nome,
         String descricao,
         Long idSabor,
-        int idTipo,
+        Integer idTipo,
         Double preco,
         Integer peso,
         Long idFabricante) {

@@ -1,18 +1,22 @@
 package br.unitins.tp1.ironforge.model.whey;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+
+@JsonFormat(shape = Shape.OBJECT)
 public enum TipoWhey {
 
     CONCENTRADO(1, "Concentrado"), ISOLADO(2, "Isolado"), HIDROLISADO(3, "Hidrolisado");
 
-    public int id;
-    public String label;
+    private final Integer id;
+    private final String label;
 
-    private TipoWhey(int id, String label) {
+    private TipoWhey(Integer id, String label) {
         this.id = id;
         this.label = label;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -20,9 +24,11 @@ public enum TipoWhey {
         return label;
     }
 
-    public static TipoWhey valueOf(int id) {
+    public static TipoWhey valueOf(Integer id) {
+        if (id.equals(null))
+            return null;
         for (TipoWhey tipo : values()) {
-            if (tipo.getId() == id)
+            if (tipo.getId().equals(id))
                 return tipo;
         }
 

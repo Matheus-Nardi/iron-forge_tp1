@@ -18,8 +18,12 @@ public class FuncionarioServiceImpl implements FuncionarioService {
 
     @Inject
     public FuncionarioRepository funcionarioRepository;
+
     @Inject
     public UsuarioRepository usuarioRepository;
+
+    @Inject
+    public UsuarioService usuarioService;
 
     @Inject
     public CidadeService cidadeService;
@@ -43,7 +47,7 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     @Override
     @Transactional
     public Funcionario create(FuncionarioRequestDTO dto) {
-        validateCredentials(dto);
+        usuarioService.validateCredentials(dto.usuario().cpf(), dto.usuario().email());
         Funcionario funcionario = FuncionarioRequestDTO.toEntity(dto);
         Endereco endereco = buildEndereco(dto);
         funcionario.getUsuario().setEndereco(endereco);
@@ -55,7 +59,7 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     @Override
     @Transactional
     public void update(Long id, FuncionarioRequestDTO dto) {
-        validateCredentials(dto);
+        usuarioService.validateCredentials(dto.usuario().cpf(), dto.usuario().email());
         Funcionario funcionario = funcionarioRepository.findById(id);
         Usuario usuario = funcionario.getUsuario();
 
@@ -80,14 +84,6 @@ public class FuncionarioServiceImpl implements FuncionarioService {
         f.setId(usuario.getId());
         f.setUsuario(usuario);
         return f;
-    }
-
-    private void validateCredentials(FuncionarioRequestDTO funcionario) {
-        if (usuarioRepository.existByCpf(funcionario.usuario().cpf()))
-            throw new IllegalArgumentException("Já existe um usuário cadastrado com esse CPF");
-
-        if (usuarioRepository.existByEmail(funcionario.usuario().email()))
-            throw new IllegalArgumentException("Já existe um usuário cadastrado com esse email");
     }
 
     private Endereco buildEndereco(FuncionarioRequestDTO dto) {

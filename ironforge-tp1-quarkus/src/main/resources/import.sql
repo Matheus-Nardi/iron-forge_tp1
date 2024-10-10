@@ -64,6 +64,7 @@ INSERT INTO
         preco,
         peso,
         id_sabor,
+        tipoWhey,
         id_fabricante
     )
 VALUES
@@ -73,9 +74,10 @@ VALUES
         88.90,
         1000,
         1,
+        1,
         2
     ),
-    ('Whey da Growth', 'whey de 1kg', 110, 1000, 2, 2),
-    ('Whey da Growth', 'whey de 1kg', 70, 1000, 4, 2),
-    ('Whey da Max', 'whey de 900g', 100.90, 900, 3, 1),
-    ('Whey da Max', 'whey de 900g', 130.90, 900, 5, 1);
+    ('Whey da Growth', 'whey de 1kg', 110, 1000, 2,1,2),
+    ('Whey da Growth', 'whey de 1kg', 70, 1000, 4, 2,2),
+    ('Whey da Max', 'whey de 900g', 100.90, 900, 3, 3,1),
+    ('Whey da Max', 'whey de 900g', 130.90, 900, 5, 1,1);

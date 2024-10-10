@@ -18,8 +18,12 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Inject
     public ClienteRepository clienteRepository;
+
     @Inject
     public UsuarioRepository usuarioRepository;
+
+    @Inject
+    public UsuarioService usuarioService;
 
     @Inject
     public CidadeService cidadeService;
@@ -43,7 +47,7 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     @Transactional
     public Cliente create(ClienteRequestDTO dto) {
-        validateCredentials(dto);
+        usuarioService.validateCredentials(dto.usuario().cpf(), dto.usuario().email());
         Endereco endereco = buildEndereco(dto);
         Cliente cliente = ClienteRequestDTO.toEntity(dto);
         cliente.getUsuario().setEndereco(endereco);
@@ -55,7 +59,7 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     @Transactional
     public void update(Long id, ClienteRequestDTO dto) {
-        validateCredentials(dto);
+        usuarioService.validateCredentials(dto.usuario().cpf(), dto.usuario().email());
         Cliente cliente = clienteRepository.findById(id);
         Usuario usuario = cliente.getUsuario();
         usuario.setNome(dto.usuario().nome());
@@ -80,15 +84,7 @@ public class ClienteServiceImpl implements ClienteService {
         return c;
     }
 
-    private void validateCredentials(ClienteRequestDTO cliente) {
-        if (usuarioRepository.existByCpf(cliente.usuario().cpf()))
-            throw new IllegalArgumentException("Já existe um usuário cadastrado com esse CPF");
-
-        if (usuarioRepository.existByEmail(cliente.usuario().email()))
-            throw new IllegalArgumentException("Já existe um usuário cadastrado com esse email");
-    }
-
-    private Endereco buildEndereco(ClienteRequestDTO dto){
+    private Endereco buildEndereco(ClienteRequestDTO dto) {
         Endereco endereco = new Endereco();
         endereco.setCidade(cidadeService.findById(dto.usuario().endereco().idCidade()));
         endereco.setLogradouro(dto.usuario().endereco().logradouro());
