@@ -3,7 +3,7 @@ package br.unitins.tp1.ironforge.dto.fabricante;
 import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.endereco.EnderecoResponseDTO;
-import br.unitins.tp1.ironforge.dto.usuario.TelefoneResponseDTO;
+import br.unitins.tp1.ironforge.dto.telefone.TelefoneResponseDTO;
 import br.unitins.tp1.ironforge.model.Fabricante;
 
 public record FabricanteResponseDTO(

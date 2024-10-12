@@ -1,4 +1,4 @@
-package br.unitins.tp1.ironforge.dto.usuario;
+package br.unitins.tp1.ironforge.dto.telefone;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

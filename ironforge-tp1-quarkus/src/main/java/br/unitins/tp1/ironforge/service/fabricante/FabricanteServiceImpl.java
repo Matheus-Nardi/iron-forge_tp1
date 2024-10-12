@@ -5,7 +5,7 @@ import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
 import br.unitins.tp1.ironforge.dto.fabricante.FabricanteRequestDTO;
-import br.unitins.tp1.ironforge.dto.usuario.TelefoneRequestDTO;
+import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
 import br.unitins.tp1.ironforge.model.Endereco;
 import br.unitins.tp1.ironforge.model.Fabricante;
 import br.unitins.tp1.ironforge.model.Telefone;
