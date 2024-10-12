@@ -1,6 +1,7 @@
 package br.unitins.tp1.ironforge.model.usuario;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import br.unitins.tp1.ironforge.model.DefaultEntity;
 import br.unitins.tp1.ironforge.model.Endereco;
@@ -9,7 +10,8 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Usuario extends DefaultEntity {
@@ -22,13 +24,13 @@ public class Usuario extends DefaultEntity {
     private String senha;
     private LocalDate dataNascimento;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_telefone")
-    private Telefone telefone;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinTable(name = "usuario_telefone", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_telefone", unique = true))
+    private List<Telefone> telefones;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_endereco")
-    private Endereco endereco;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinTable(name = "usuario_endereco", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_endereco", unique = true))
+    private List<Endereco> enderecos;
 
     public String getNome() {
         return nome;
@@ -70,22 +72,20 @@ public class Usuario extends DefaultEntity {
         this.dataNascimento = dataNascimento;
     }
 
-    public Telefone getTelefone() {
-        return telefone;
+    public List<Telefone> getTelefones() {
+        return telefones;
     }
 
-    public void setTelefone(Telefone telefone) {
-        this.telefone = telefone;
+    public void setTelefones(List<Telefone> telefone) {
+        this.telefones = telefone;
     }
 
-    public Endereco getEndereco() {
-        return endereco;
+    public List<Endereco> getEnderecos() {
+        return enderecos;
     }
 
-    public void setEndereco(Endereco endereco) {
-        this.endereco = endereco;
+    public void setEnderecos(List<Endereco> enderecos) {
+        this.enderecos = enderecos;
     }
-
-    
 
 }

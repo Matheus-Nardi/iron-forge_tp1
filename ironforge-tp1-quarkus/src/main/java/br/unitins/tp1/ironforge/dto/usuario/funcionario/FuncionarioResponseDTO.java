@@ -17,8 +17,10 @@ public record FuncionarioResponseDTO(
                                 new UsuarioResponseDTO(funcionario.getUsuario().getId(),
                                                 funcionario.getUsuario().getNome(),
                                                 funcionario.getUsuario().getEmail(),
-                                                TelefoneResponseDTO.valueOf(funcionario.getUsuario().getTelefone()),
-                                                EnderecoResponseDTO.valueOf(funcionario.getUsuario().getEndereco())),
+                                                funcionario.getUsuario().getTelefones().stream()
+                                                                .map(TelefoneResponseDTO::valueOf).toList(),
+                                                funcionario.getUsuario().getEnderecos().stream()
+                                                                .map(EnderecoResponseDTO::valueOf).toList()),
                                 funcionario.getSalario());
         }
 }

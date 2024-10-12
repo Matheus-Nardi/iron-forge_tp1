@@ -3,11 +3,9 @@ package br.unitins.tp1.ironforge.service.usuario;
 import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.usuario.funcionario.FuncionarioRequestDTO;
-import br.unitins.tp1.ironforge.model.Endereco;
 import br.unitins.tp1.ironforge.model.usuario.Funcionario;
 import br.unitins.tp1.ironforge.model.usuario.Usuario;
 import br.unitins.tp1.ironforge.repository.FuncionarioRepository;
-import br.unitins.tp1.ironforge.repository.UsuarioRepository;
 import br.unitins.tp1.ironforge.service.cidade.CidadeService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -18,9 +16,6 @@ public class FuncionarioServiceImpl implements FuncionarioService {
 
     @Inject
     public FuncionarioRepository funcionarioRepository;
-
-    @Inject
-    public UsuarioRepository usuarioRepository;
 
     @Inject
     public UsuarioService usuarioService;
@@ -35,7 +30,7 @@ public class FuncionarioServiceImpl implements FuncionarioService {
 
     @Override
     public List<Funcionario> findByNome(String nome) {
-        List<Usuario> usuarios = usuarioRepository.findFuncionarioByNome(nome);
+        List<Usuario> usuarios = usuarioService.findFuncionarioByNome(nome);
         return usuarios.stream().map(u -> valueOf(u)).toList();
     }
 
@@ -48,10 +43,8 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     @Transactional
     public Funcionario create(FuncionarioRequestDTO dto) {
         usuarioService.validateCredentials(dto.usuario().cpf(), dto.usuario().email());
-        Funcionario funcionario = FuncionarioRequestDTO.toEntity(dto);
-        Endereco endereco = buildEndereco(dto);
-        funcionario.getUsuario().setEndereco(endereco);
-        usuarioRepository.persist(funcionario.getUsuario());
+        Funcionario funcionario = toEntity(dto);
+        usuarioService.create(funcionario.getUsuario());
         funcionarioRepository.persist(funcionario);
         return funcionario;
     }
@@ -86,16 +79,19 @@ public class FuncionarioServiceImpl implements FuncionarioService {
         return f;
     }
 
-    private Endereco buildEndereco(FuncionarioRequestDTO dto) {
-        Endereco endereco = new Endereco();
-        endereco.setCidade(cidadeService.findById(dto.usuario().endereco().idCidade()));
-        endereco.setLogradouro(dto.usuario().endereco().logradouro());
-        endereco.setBairro(dto.usuario().endereco().bairro());
-        endereco.setNumero(dto.usuario().endereco().numero());
-        endereco.setComplemento(dto.usuario().endereco().complemento());
-        endereco.setCep(dto.usuario().endereco().cep());
-
-        return endereco;
+    private Funcionario toEntity(FuncionarioRequestDTO dto) {
+        Usuario usuario = new Usuario();
+        Funcionario funcionario = new Funcionario();
+        usuario.setNome(dto.usuario().nome());
+        usuario.setCpf(dto.usuario().cpf());
+        usuario.setEmail(dto.usuario().email());
+        usuario.setSenha(dto.usuario().senha());
+        usuario.setDataNascimento(dto.usuario().dataNascimento());
+        usuario.setTelefones(usuarioService.getTelefones(dto.usuario()));
+        usuario.setEnderecos(usuarioService.getEnderecos(dto.usuario()));
+        funcionario.setSalario(dto.salario());
+        funcionario.setUsuario(usuario);
+        return funcionario;
     }
 
 }

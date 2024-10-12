@@ -13,6 +13,7 @@ public record ClienteResponseDTO(
         return new ClienteResponseDTO(cliente.getId(),
                 new UsuarioResponseDTO(cliente.getUsuario().getId(), cliente.getUsuario().getNome(),
                         cliente.getUsuario().getEmail(),
-                        TelefoneResponseDTO.valueOf(cliente.getUsuario().getTelefone()) , EnderecoResponseDTO.valueOf(cliente.getUsuario().getEndereco())));
+                        cliente.getUsuario().getTelefones().stream().map(TelefoneResponseDTO::valueOf).toList(),
+                        cliente.getUsuario().getEnderecos().stream().map(EnderecoResponseDTO::valueOf).toList()));
     }
 }

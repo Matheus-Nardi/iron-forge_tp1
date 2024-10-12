@@ -22,14 +22,6 @@ class Fabricante{
     -email: String
 }
 
-class Fornecedor{
-    -cnpj: String
-    -nome: String
-    -email: String
-}
-
-
-
 class Sabor{
     - id: Long 
     - nome: String
@@ -195,15 +187,16 @@ WheyProtein "1" *--> "1" TabelaNutricional
 
 WheyProtein "*"--> "1" Fabricante
 Lote "*" --> "1" WheyProtein
-Lote"*" --> "1" Fornecedor
+
 
 Cliente "*" --> "*" WheyProtein : listaDesejos
 Usuario "1" *--> "*" Endereco
-Usuario "1" *--> "1" Telefone
+Usuario "1" *--> "*" Telefone
 
 Cliente "1"--> "1" Usuario
 Funcionario "1" --> "1" Usuario
-Fabricante "1" *--> "1" Telefone
+Fabricante "1" *--> "*" Telefone
+Fabricante "1" *--> "*" Endereco
 
 
 Avaliacao "*" --> "1" Cliente

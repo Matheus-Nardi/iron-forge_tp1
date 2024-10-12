@@ -11,15 +11,32 @@ INSERT INTO
     cidade (nome, id_estado)
 VALUES
     ('Palmas', 1),
-    ('Campinas', 2);
+    ('Campinas', 2),
+    ('Gurupi', 1),
+    ('São Paulo', 2);
 
 INSERT INTO telefone(codigoArea,numero)
 values('45' , '912344789'), ('85', '958767010') , ('31' , '905071884') , ('63' , '977771234');
 
+INSERT INTO endereco (id_cidade, logradouro, bairro, numero, complemento, cep) 
+VALUES 
+(1, 'Rua das Flores', 'Jardim Primavera', '123', 'Apto 101', '12345-678'),
+(2, 'Avenida Central', 'Centro', '456', NULL, '23456-789'),
+(3, 'Travessa da Paz', 'Vila Nova', '789', 'Bloco B', '34567-890'),
+(4, 'Rua da Harmonia', 'Boa Vista', '101', 'Casa 2', '56789-101'),
+(4, 'Avenida das Palmeiras', 'Jardim Alegre', '567', 'Cobertura', '67890-123');;
 
-INSERT INTO usuario(nome,cpf,email,senha,dataNascimento, id_telefone)
-values('Pedro', '86646618046' , 'pedro@gmail.com', '123', '1999-10-10' , 1) ,
-('Matheus', '49951236014', 'matheu@gmail.com', 'arroz' , '1999-04-06', 2);
+
+INSERT INTO usuario(nome,cpf,email,senha,dataNascimento)
+values('Pedro', '86646618046' , 'pedro@gmail.com', '123', '1999-10-10') ,
+('Matheus', '49951236014', 'matheu@gmail.com', 'arroz' , '1999-04-06');
+
+INSERT INTO usuario_telefone(id_usuario, id_telefone)
+values(1,1), (2,2);
+
+INSERT INTO usuario_endereco(id_usuario, id_endereco)
+values(1,1), (1,3) , (2,2);
+
 
 INSERT INTO cliente(id_usuario)
 values(1);
@@ -31,20 +48,24 @@ values (2, 10000);
 
 -- Inserção de fabricantes
 INSERT INTO
-    fabricante (nome, cnpj, email, id_telefone)
+    fabricante (nome, cnpj, email)
 VALUES
     (
         'Max Titanium',
         '07578713000429',
-        'maxtitanium@maxtitanium.com.br',
-        3
+        'maxtitanium@maxtitanium.com.br'
     ),
     (
         'Growth',
         '0832644000108',
-        'sac@growthsupplements.com.br',
-        4
+        'sac@growthsupplements.com.br'
     );
+
+INSERT INTO fabricante_telefone(id_fabricante, id_telefone)
+values(1,3),(2,4);
+
+INSERT INTO fabricante_endereco(id_fabricante, id_endereco)
+values (1,4),(2,5);
 
 -- Inserção de sabores
 INSERT INTO
