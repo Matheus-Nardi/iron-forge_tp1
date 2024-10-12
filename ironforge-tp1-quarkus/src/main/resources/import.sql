@@ -102,3 +102,10 @@ VALUES
     ('Whey da Growth', 'whey de 1kg', 70, 1000, 4, 2,2),
     ('Whey da Max', 'whey de 900g', 100.90, 900, 3, 3,1),
     ('Whey da Max', 'whey de 900g', 130.90, 900, 5, 1,1);
+
+INSERT INTO lote (quantidade, dataFabricacao, id_whey, codigo)
+VALUES
+(50, CURRENT_DATE, 1, CONCAT('L-', CURRENT_DATE::TEXT, '-WHEY')),
+(100, CURRENT_DATE - INTERVAL '1 week', 2, CONCAT('L-', (CURRENT_DATE - INTERVAL '1 week')::TEXT, '-WHEY')),
+(60, CURRENT_DATE - INTERVAL '2 weeks', 3, CONCAT('L-', (CURRENT_DATE - INTERVAL '2 weeks')::TEXT, '-WHEY'));
+
