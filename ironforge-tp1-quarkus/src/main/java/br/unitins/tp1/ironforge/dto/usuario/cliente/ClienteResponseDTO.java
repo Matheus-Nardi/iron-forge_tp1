@@ -1,7 +1,7 @@
 package br.unitins.tp1.ironforge.dto.usuario.cliente;
 
 import br.unitins.tp1.ironforge.dto.endereco.EnderecoResponseDTO;
-import br.unitins.tp1.ironforge.dto.usuario.TelefoneResponseDTO;
+import br.unitins.tp1.ironforge.dto.telefone.TelefoneResponseDTO;
 import br.unitins.tp1.ironforge.dto.usuario.UsuarioResponseDTO;
 import br.unitins.tp1.ironforge.model.usuario.Cliente;
 

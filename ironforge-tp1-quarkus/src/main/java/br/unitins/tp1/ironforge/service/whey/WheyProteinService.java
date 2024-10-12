@@ -15,9 +15,9 @@ public interface WheyProteinService {
 
     List<WheyProtein> findAll();
 
-    WheyProtein create(WheyProteinRequestDTO wheyProtein);
+    WheyProtein create(WheyProteinRequestDTO dto);
 
-    void update(Long id, WheyProteinRequestDTO wheyProtein);
+    void update(Long id, WheyProteinRequestDTO dto);
 
     void delete(Long id);
 }

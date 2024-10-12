@@ -1,4 +1,4 @@
-package br.unitins.tp1.ironforge.dto.usuario;
+package br.unitins.tp1.ironforge.dto.telefone;
 
 import br.unitins.tp1.ironforge.model.Telefone;
 

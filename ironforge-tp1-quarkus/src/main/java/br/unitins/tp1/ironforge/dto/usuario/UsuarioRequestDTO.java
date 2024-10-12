@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.validator.constraints.br.CPF;
 
 import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
+import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
