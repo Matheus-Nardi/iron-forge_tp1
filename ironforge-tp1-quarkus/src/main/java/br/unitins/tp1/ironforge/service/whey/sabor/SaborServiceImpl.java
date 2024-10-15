@@ -1,4 +1,4 @@
-package br.unitins.tp1.ironforge.service.whey;
+package br.unitins.tp1.ironforge.service.whey.sabor;
 
 import java.util.List;
 

@@ -5,7 +5,7 @@ import java.util.List;
 import br.unitins.tp1.ironforge.dto.whey.SaborRequestDTO;
 import br.unitins.tp1.ironforge.dto.whey.SaborResponseDTO;
 import br.unitins.tp1.ironforge.model.whey.Sabor;
-import br.unitins.tp1.ironforge.service.whey.SaborService;
+import br.unitins.tp1.ironforge.service.whey.sabor.SaborService;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;

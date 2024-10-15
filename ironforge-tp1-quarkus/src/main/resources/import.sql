@@ -67,7 +67,7 @@ values(1,3),(2,4);
 INSERT INTO fabricante_endereco(id_fabricante, id_endereco)
 values (1,4),(2,5);
 
--- Inserção de sabores
+
 INSERT INTO
     sabor (nome)
 VALUES
@@ -108,4 +108,5 @@ VALUES
 (50, CURRENT_DATE, 1, CONCAT('L-', CURRENT_DATE::TEXT, '-WHEY')),
 (100, CURRENT_DATE - INTERVAL '1 week', 2, CONCAT('L-', (CURRENT_DATE - INTERVAL '1 week')::TEXT, '-WHEY')),
 (60, CURRENT_DATE - INTERVAL '2 weeks', 3, CONCAT('L-', (CURRENT_DATE - INTERVAL '2 weeks')::TEXT, '-WHEY'));
+
 

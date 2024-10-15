@@ -2,13 +2,17 @@ package br.unitins.tp1.ironforge.model.whey;
 
 import br.unitins.tp1.ironforge.model.DefaultEntity;
 import br.unitins.tp1.ironforge.model.Fabricante;
+import br.unitins.tp1.ironforge.model.whey.tabelanutricional.Food;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class WheyProtein extends DefaultEntity {
 
+    private String upc;
     private String nome;
     private String descricao;
     private Double preco;
@@ -23,6 +27,10 @@ public class WheyProtein extends DefaultEntity {
     @ManyToOne
     @JoinColumn(name = "id_fabricante")
     private Fabricante fabricante;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_food")
+    private Food food;
 
     public String getNome() {
         return nome;
@@ -78,6 +86,22 @@ public class WheyProtein extends DefaultEntity {
 
     public void setTipoWhey(TipoWhey tipoWhey) {
         this.tipoWhey = tipoWhey;
+    }
+
+    public String getUpc() {
+        return upc;
+    }
+
+    public void setUpc(String upc) {
+        this.upc = upc;
+    }
+
+    public Food getFood() {
+        return food;
+    }
+
+    public void setFood(Food food) {
+        this.food = food;
     }
 
 }

@@ -7,6 +7,8 @@ import br.unitins.tp1.ironforge.model.whey.TipoWhey;
 import br.unitins.tp1.ironforge.model.whey.WheyProtein;
 import br.unitins.tp1.ironforge.repository.WheyProteinRepository;
 import br.unitins.tp1.ironforge.service.fabricante.FabricanteService;
+import br.unitins.tp1.ironforge.service.whey.sabor.SaborService;
+import br.unitins.tp1.ironforge.service.whey.tabelanutricional.TabelaNutricionalService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -22,6 +24,9 @@ public class WheyProteinServiceImpl implements WheyProteinService {
 
     @Inject
     public FabricanteService fabricanteService;
+
+    @Inject
+    public TabelaNutricionalService tabelaNutricionalService;
 
     @Override
     public WheyProtein findById(Long id) {
@@ -57,6 +62,7 @@ public class WheyProteinServiceImpl implements WheyProteinService {
         whey.setSabor(saborService.findById(dto.idSabor()));
         whey.setFabricante(fabricanteService.findById(dto.idFabricante()));
         whey.setTipoWhey(TipoWhey.valueOf(dto.idTipo()));
+        whey.setFood(tabelaNutricionalService.getTabelaNutricional(dto.upc()));
 
         wheyRepository.persist(whey);
         return whey;

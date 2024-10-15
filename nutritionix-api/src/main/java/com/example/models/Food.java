@@ -32,7 +32,7 @@ public class Food {
     public int source;
     public Object ndb_no;
     public Object tags;
-    public Object alt_measures;
+    public String alt_measures;
     public Object lat;
     public Object lng;
     public Photo photo;
