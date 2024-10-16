@@ -162,6 +162,13 @@ enum TipoCartao{
     + CREDITO: int
 }
 
+class Cupom{
+    -codigo: String
+    -percentualDesconto: Double
+    -dataValidade: LocalDateTime
+    -isValido: Boolean
+}
+
 Pedido *--> Pagamento
 Pagamento "*" -down-> "1" Status
 Cartao "*" --> "1" TipoCartao
@@ -171,6 +178,7 @@ Cartao --|> Pagamento
 
 Pedido "1" *--> "*"ItemPedido
 ItemPedido "*" --> "1" Lote
+ItemPedido "*" o--> "1" Cupom
 ' Não faz sentido Cliente ter Pedido , se não teria que inserir pedido em cliente
 Pedido  "*" --> "1" Cliente  
 Pedido "1" *--> "1" EnderecoEntrega
@@ -190,18 +198,20 @@ Lote "*" --> "1" WheyProtein
 
 
 Cliente "*" --> "*" WheyProtein : listaDesejos
-Usuario "1" *--> "*" Endereco
-Usuario "1" *--> "*" Telefone
+Usuario "1" *-up-> "*" Endereco
+Usuario "1" *-up-> "*" Telefone
 
-Cliente "1"--> "1" Usuario
+Cliente "1"-right-> "1" Usuario
 Funcionario "1" --> "1" Usuario
-Fabricante "1" *--> "*" Telefone
+Fabricante "1" *-left-> "*" Telefone
 Fabricante "1" *--> "*" Endereco
+
+Cupom "*" o--> "1" Fabricante
 
 
 Avaliacao "*" --> "1" Cliente
 Avaliacao "*" --> "1" WheyProtein
-Avaliacao "*" -right-> "1" Nota
+Avaliacao "*" --> "1" Nota
 
 ' Anotações
 note left of WheyProtein: Peso em gramas
