@@ -4,6 +4,7 @@ import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.whey.WheyProteinRequestDTO;
 import br.unitins.tp1.ironforge.dto.whey.WheyProteinResponseDTO;
+import br.unitins.tp1.ironforge.model.whey.TipoWhey;
 import br.unitins.tp1.ironforge.model.whey.WheyProtein;
 import br.unitins.tp1.ironforge.service.whey.WheyProteinService;
 import jakarta.inject.Inject;
@@ -48,9 +49,31 @@ public class WheyProteinResource {
     }
 
     @GET
+    @Path("/search/sabor")
+    public Response findBySabor(@QueryParam("sabor") String sabor) {
+        List<WheyProtein> wheys = wheyService.findBySabor(sabor);
+        return Response.ok(wheys.stream().map(WheyProteinResponseDTO::valueOf).toList()).build();
+    }
+
+    @GET
+    @Path("/search/tipo")
+    public Response findByTipoWhey(@QueryParam("tipo") TipoWhey tipo) {
+        List<WheyProtein> wheys = wheyService.findByTipoWhey(tipo);
+        return Response.ok(wheys.stream().map(WheyProteinResponseDTO::valueOf).toList()).build();
+    }
+
+    @GET
     @Path("/search/preco")
     public Response findByPreco(@QueryParam("preco") Double preco) {
         List<WheyProtein> wheys = wheyService.findByPreco(preco);
+        return Response.ok(wheys.stream().map(WheyProteinResponseDTO::valueOf).toList()).build();
+    }
+
+    @GET
+    @Path("/search/preco/min/{precoMin}/max/{precoMax}")
+    public Response findByPrecoMinAndMax(@PathParam("precoMin") Double precoMin,
+            @PathParam("precoMax") Double precoMax) {
+        List<WheyProtein> wheys = wheyService.findByPrecoMinAndMax(precoMin, precoMax);
         return Response.ok(wheys.stream().map(WheyProteinResponseDTO::valueOf).toList()).build();
     }
 

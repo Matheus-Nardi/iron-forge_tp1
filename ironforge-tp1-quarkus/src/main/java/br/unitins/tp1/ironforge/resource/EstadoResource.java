@@ -40,6 +40,13 @@ public class EstadoResource {
         List<Estado> estados = estadoService.findByNome(nome);
         return Response.ok(estados.stream().map(EstadoResponseDTO::valueOf).toList()).build();
     }
+    
+    @GET
+    @Path("/search/{sigla}")
+    public Response findBySigla(@PathParam("sigla") String sigla) {
+        List<Estado> estados = estadoService.findBySigla(sigla);
+        return Response.ok(estados.stream().map(EstadoResponseDTO::valueOf).toList()).build();
+    }
 
     @GET
     public Response findAll() {

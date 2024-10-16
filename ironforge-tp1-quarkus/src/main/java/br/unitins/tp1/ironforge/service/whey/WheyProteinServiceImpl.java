@@ -91,4 +91,19 @@ public class WheyProteinServiceImpl implements WheyProteinService {
         wheyRepository.delete(wheyToDelete);
     }
 
+    @Override
+    public List<WheyProtein> findByPrecoMinAndMax(Double precoMin, Double precoMax) {
+        return wheyRepository.findByPrecoMinAndMax(precoMin, precoMax);
+    }
+
+    @Override
+    public List<WheyProtein> findBySabor(String sabor) {
+        return wheyRepository.findBySabor(sabor);
+    }
+
+    @Override
+    public List<WheyProtein> findByTipoWhey(TipoWhey tipo) {
+        return wheyRepository.findByTipo(tipo);
+    }
+
 }
