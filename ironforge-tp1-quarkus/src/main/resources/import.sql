@@ -109,4 +109,11 @@ VALUES
 (100, CURRENT_DATE - INTERVAL '1 week', 2, CONCAT('L-', (CURRENT_DATE - INTERVAL '1 week')::TEXT, '-WHEY')),
 (60, CURRENT_DATE - INTERVAL '2 weeks', 3, CONCAT('L-', (CURRENT_DATE - INTERVAL '2 weeks')::TEXT, '-WHEY'));
 
-
+INSERT INTO cupom ( id_fabricante, codigo, percentualdesconto, datavalidade, ativo) VALUES
+( 1, 'WHEY10', 10.0, '2024-12-31T23:59:59', true), 
+( 2, 'WHEY20', 20.0, '2024-11-30T23:59:59', false), 
+( 1, 'FRETEWHEY', 0.0, '2024-10-31T23:59:59', true), 
+( 2, 'WHEY30', 30.0, '2024-12-15T23:59:59', false), 
+( 1, 'WHEYBLACK', 25.0, '2024-09-01T23:59:59', true),
+( 1, 'MAXW20', 5.0, '2024-12-01T23:59:59', true), 
+( 2, 'GROWTH20', 50.0, '2024-02-20T23:59:59', true); 

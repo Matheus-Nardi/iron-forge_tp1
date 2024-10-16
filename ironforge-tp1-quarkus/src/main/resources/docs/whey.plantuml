@@ -166,7 +166,7 @@ class Cupom{
     -codigo: String
     -percentualDesconto: Double
     -dataValidade: LocalDateTime
-    -isValido: Boolean
+    -ativo: Boolean
 }
 
 Pedido *--> Pagamento
