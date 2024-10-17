@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.lote.LoteRequestDTO;
-
+import br.unitins.tp1.ironforge.infra.exception.NotFoundException;
 import br.unitins.tp1.ironforge.model.Lote;
 
 import br.unitins.tp1.ironforge.repository.LoteRepository;
@@ -26,7 +26,11 @@ public class LoteServiceImpl implements LoteService {
 
     @Override
     public Lote findById(Long id) {
-        return loteRepository.findById(id);
+        Lote lote =  loteRepository.findById(id);
+        if(lote == null)
+            throw new NotFoundException("Lote não encontrado");
+        return lote;
+        
 
     }
     @Override
@@ -51,7 +55,7 @@ public class LoteServiceImpl implements LoteService {
     public void update(Long id, LoteRequestDTO dto) {
         Lote lote = loteRepository.findById(id);
         if (lote == null)
-            throw new IllegalArgumentException("Lote não encontrado!");
+            throw new NotFoundException("Lote não encontrado!");
 
         lote.setCodigo(generateCode(dto.dataFabricacao()));
         lote.setDataFabricacao(dto.dataFabricacao());
@@ -64,7 +68,7 @@ public class LoteServiceImpl implements LoteService {
     public void delete(Long id) {
         Lote lote = loteRepository.findById(id);
         if (lote == null)
-            throw new IllegalArgumentException("Lote não encontrado!");
+            throw new NotFoundException("Lote não encontrado!");
         loteRepository.delete(lote);
     }
 
@@ -77,6 +81,7 @@ public class LoteServiceImpl implements LoteService {
         String data = dataFabricacao.toString();
         return "L" + "-" + data + "-" + "WHEY";
     }
+    
     @Override
     public List<Lote> findByWhey(Long idWhey) {
         return loteRepository.findByWhey(idWhey);

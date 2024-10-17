@@ -3,6 +3,7 @@ package br.unitins.tp1.ironforge.service.cidade;
 import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.cidade.CidadeRequestDTO;
+import br.unitins.tp1.ironforge.infra.exception.NotFoundException;
 import br.unitins.tp1.ironforge.model.Cidade;
 import br.unitins.tp1.ironforge.repository.CidadeRepository;
 import br.unitins.tp1.ironforge.service.estado.EstadoService;
@@ -21,7 +22,10 @@ public class CidadeServiceImpl implements CidadeService {
 
     @Override
     public Cidade findById(Long id) {
-        return cidadeRepository.findById(id);
+        Cidade cidade = cidadeRepository.findById(id);
+        if (cidade != null)
+            return cidade;
+        throw new NotFoundException("Cidade não encontrada.");
     }
 
     @Override
@@ -44,6 +48,8 @@ public class CidadeServiceImpl implements CidadeService {
     @Transactional
     public Cidade update(Long id, CidadeRequestDTO dto) {
         Cidade cidade = cidadeRepository.findById(id);
+        if (cidade == null)
+            throw new NotFoundException("Cidade não encontrada.");
         cidade.setNome(dto.nome());
         cidade.setEstado(estadoService.findById(dto.idEstado()));
         return cidade;
@@ -52,6 +58,9 @@ public class CidadeServiceImpl implements CidadeService {
     @Override
     @Transactional
     public void delete(Long id) {
+        Cidade cidade = cidadeRepository.findById(id);
+        if (cidade == null)
+            throw new NotFoundException("Cidade não encontrada.");
         cidadeRepository.deleteById(id);
     }
 

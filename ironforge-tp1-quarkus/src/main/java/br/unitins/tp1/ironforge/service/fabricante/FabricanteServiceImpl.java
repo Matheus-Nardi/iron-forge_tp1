@@ -7,6 +7,7 @@ import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
 import br.unitins.tp1.ironforge.dto.fabricante.FabricanteCreateRequestDTO;
 import br.unitins.tp1.ironforge.dto.fabricante.FabricanteUpdateRequestDTO;
 import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
+import br.unitins.tp1.ironforge.infra.exception.NotFoundException;
 import br.unitins.tp1.ironforge.model.Endereco;
 import br.unitins.tp1.ironforge.model.Fabricante;
 import br.unitins.tp1.ironforge.model.Telefone;
@@ -27,7 +28,10 @@ public class FabricanteServiceImpl implements FabricanteService {
 
     @Override
     public Fabricante findById(Long id) {
-        return fabricanteRepository.findById(id);
+        Fabricante fabricante = fabricanteRepository.findById(id);
+        if (fabricante == null)
+            throw new NotFoundException("Fabricante não encontrado!");
+        return fabricante;
 
     }
 
@@ -59,7 +63,7 @@ public class FabricanteServiceImpl implements FabricanteService {
     public void update(Long id, FabricanteUpdateRequestDTO dto) {
         Fabricante fabricante = fabricanteRepository.findById(id);
         if (fabricante == null)
-            throw new IllegalArgumentException("Fabricante não encontrado!");
+            throw new NotFoundException("Fabricante não encontrado!");
 
         fabricante.setNome(dto.nome());
     }
@@ -69,7 +73,7 @@ public class FabricanteServiceImpl implements FabricanteService {
     public void delete(Long id) {
         Fabricante fabricante = fabricanteRepository.findById(id);
         if (fabricante == null)
-            throw new IllegalArgumentException("Fabricante não encontrado!");
+            throw new NotFoundException("Fabricante não encontrado!");
         fabricanteRepository.delete(fabricante);
     }
 
@@ -107,8 +111,10 @@ public class FabricanteServiceImpl implements FabricanteService {
     @Transactional
     public void updateTelefone(Long id, Long idTelefone, TelefoneRequestDTO dto) {
         Fabricante fabricante = fabricanteRepository.findById(id);
+        if (fabricante == null)
+            throw new NotFoundException("Fabricante não encontrado!");
         Telefone telefone = fabricante.getTelefones().stream().filter(t -> t.getId().equals(idTelefone)).findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Telefone não encontrado"));
+                .orElseThrow(() -> new NotFoundException("Telefone não encontrado"));
         telefone.setCodigoArea(dto.codigoArea());
         telefone.setNumero(dto.numero());
     }
@@ -117,8 +123,10 @@ public class FabricanteServiceImpl implements FabricanteService {
     @Transactional
     public void updateEndereco(Long id, Long idEndereco, EnderecoRequestDTO dto) {
         Fabricante fabricante = fabricanteRepository.findById(id);
+        if (fabricante == null)
+            throw new NotFoundException("Fabricante não encontrado!");
         Endereco endereco = fabricante.getEnderecos().stream().filter(e -> e.getId().equals(idEndereco)).findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Endereco não encontrado"));
+                .orElseThrow(() -> new NotFoundException("Endereco não encontrado"));
 
         endereco.setBairro(dto.bairro());
         endereco.setCep(dto.cep());

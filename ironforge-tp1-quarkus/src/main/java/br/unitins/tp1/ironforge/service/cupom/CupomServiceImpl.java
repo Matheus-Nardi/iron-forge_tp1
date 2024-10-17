@@ -3,6 +3,7 @@ package br.unitins.tp1.ironforge.service.cupom;
 import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.cupom.CupomRequestDTO;
+import br.unitins.tp1.ironforge.infra.exception.NotFoundException;
 import br.unitins.tp1.ironforge.model.Cupom;
 import br.unitins.tp1.ironforge.repository.CupomRepository;
 import br.unitins.tp1.ironforge.service.fabricante.FabricanteService;
@@ -21,7 +22,10 @@ public class CupomServiceImpl implements CupomService {
 
     @Override
     public Cupom findById(Long id) {
-        return cupomRepository.findById(id);
+        Cupom cupom = cupomRepository.findById(id);
+        if (cupom == null)
+            throw new NotFoundException("Cupom não encontrado");
+        return cupom;
 
     }
 

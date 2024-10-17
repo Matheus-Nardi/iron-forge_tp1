@@ -6,6 +6,7 @@ import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
 import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
 import br.unitins.tp1.ironforge.dto.usuario.funcionario.FuncionarioCreateRequestDTO;
 import br.unitins.tp1.ironforge.dto.usuario.funcionario.FuncionarioUpdateRequestDTO;
+import br.unitins.tp1.ironforge.infra.exception.NotFoundException;
 import br.unitins.tp1.ironforge.model.Endereco;
 import br.unitins.tp1.ironforge.model.Telefone;
 import br.unitins.tp1.ironforge.model.usuario.Funcionario;
@@ -30,7 +31,12 @@ public class FuncionarioServiceImpl implements FuncionarioService {
 
     @Override
     public Funcionario findById(Long id) {
-        return funcionarioRepository.findById(id);
+        Funcionario funcionario = funcionarioRepository.findById(id);
+        if (funcionario == null)
+            throw new NotFoundException("Funcionario não encontrado.");
+
+        return funcionario;
+
     }
 
     @Override
@@ -59,6 +65,8 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     public void update(Long id, FuncionarioUpdateRequestDTO dto) {
         usuarioService.validateCredentials(dto.usuario().cpf(), dto.usuario().email());
         Funcionario funcionario = funcionarioRepository.findById(id);
+        if (funcionario == null)
+            throw new NotFoundException("Funcionario não encontrado.");
         Usuario usuario = funcionario.getUsuario();
 
         usuario.setNome(dto.usuario().nome());
@@ -74,7 +82,10 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     @Override
     @Transactional
     public void delete(Long id) {
-        funcionarioRepository.deleteById(id);
+        Funcionario funcionario = funcionarioRepository.findById(id);
+        if (funcionario == null)
+            throw new NotFoundException("Funcionario não encontrado.");
+        funcionarioRepository.delete(funcionario);
     }
 
     private Funcionario valueOf(Usuario usuario) {
@@ -103,9 +114,11 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     @Transactional
     public void updateTelefone(Long id, Long idTelefone, TelefoneRequestDTO dto) {
         Funcionario funcionario = funcionarioRepository.findById(id);
+        if (funcionario == null)
+            throw new NotFoundException("Funcionario não encontrado.");
         Telefone telefone = funcionario.getUsuario().getTelefones().stream().filter(t -> t.getId().equals(idTelefone))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Telefone não encontrado"));
+                .orElseThrow(() -> new NotFoundException("Telefone não encontrado"));
         telefone.setCodigoArea(dto.codigoArea());
         telefone.setNumero(dto.numero());
     }
@@ -114,9 +127,11 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     @Transactional
     public void updateEndereco(Long id, Long idEndereco, EnderecoRequestDTO dto) {
         Funcionario funcionario = funcionarioRepository.findById(id);
+        if (funcionario == null)
+            throw new NotFoundException("Funcionario não encontrado.");
         Endereco endereco = funcionario.getUsuario().getEnderecos().stream().filter(e -> e.getId().equals(idEndereco))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Endereco não encontrado"));
+                .orElseThrow(() -> new NotFoundException("Endereco não encontrado"));
 
         endereco.setBairro(dto.bairro());
         endereco.setCep(dto.cep());
@@ -125,6 +140,5 @@ public class FuncionarioServiceImpl implements FuncionarioService {
         endereco.setNumero(dto.numero());
         endereco.setCidade(cidadeService.findById(dto.idCidade()));
     }
-
 
 }
