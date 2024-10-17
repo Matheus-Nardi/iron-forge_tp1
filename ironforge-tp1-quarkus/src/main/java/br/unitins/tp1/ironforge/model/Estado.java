@@ -6,7 +6,7 @@ import jakarta.persistence.Entity;
 @Entity
 public class Estado extends DefaultEntity {
 
-    @Column(length = 60, nullable = false)
+    @Column(length = 60, nullable = false, unique =  true)
     private String nome;
 
     @Column(length = 2, nullable = false)

@@ -24,7 +24,7 @@ VALUES
 (2, 'Avenida Central', 'Centro', '456', NULL, '23456-789'),
 (3, 'Travessa da Paz', 'Vila Nova', '789', 'Bloco B', '34567-890'),
 (4, 'Rua da Harmonia', 'Boa Vista', '101', 'Casa 2', '56789-101'),
-(4, 'Avenida das Palmeiras', 'Jardim Alegre', '567', 'Cobertura', '67890-123');;
+(4, 'Avenida das Palmeiras', 'Jardim Alegre', '567', 'Cobertura', '67890-123');
 
 
 INSERT INTO usuario(nome,cpf,email,senha,dataNascimento)
