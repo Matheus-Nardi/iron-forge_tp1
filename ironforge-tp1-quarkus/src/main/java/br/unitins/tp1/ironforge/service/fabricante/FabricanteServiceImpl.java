@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
-import br.unitins.tp1.ironforge.dto.fabricante.FabricanteRequestDTO;
+import br.unitins.tp1.ironforge.dto.fabricante.FabricanteCreateRequestDTO;
+import br.unitins.tp1.ironforge.dto.fabricante.FabricanteUpdateRequestDTO;
 import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
 import br.unitins.tp1.ironforge.model.Endereco;
 import br.unitins.tp1.ironforge.model.Fabricante;
@@ -42,7 +43,7 @@ public class FabricanteServiceImpl implements FabricanteService {
 
     @Override
     @Transactional
-    public Fabricante create(FabricanteRequestDTO dto) {
+    public Fabricante create(FabricanteCreateRequestDTO dto) {
         Fabricante fabricante = new Fabricante();
         fabricante.setNome(dto.nome());
         fabricante.setCnpj(dto.cnpj());
@@ -55,13 +56,12 @@ public class FabricanteServiceImpl implements FabricanteService {
 
     @Override
     @Transactional
-    public void update(Long id, FabricanteRequestDTO dto) {
+    public void update(Long id, FabricanteUpdateRequestDTO dto) {
         Fabricante fabricante = fabricanteRepository.findById(id);
         if (fabricante == null)
             throw new IllegalArgumentException("Fabricante não encontrado!");
 
         fabricante.setNome(dto.nome());
-        fabricanteRepository.persist(fabricante);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class FabricanteServiceImpl implements FabricanteService {
         fabricanteRepository.delete(fabricante);
     }
 
-    private List<Telefone> getTelefones(FabricanteRequestDTO dto) {
+    private List<Telefone> getTelefones(FabricanteCreateRequestDTO dto) {
         List<Telefone> telefones = new ArrayList<>();
 
         for (int i = 0; i < dto.telefones().size(); i++) {
@@ -86,7 +86,7 @@ public class FabricanteServiceImpl implements FabricanteService {
         return telefones;
     }
 
-    private List<Endereco> getEnderecos(FabricanteRequestDTO dto) {
+    private List<Endereco> getEnderecos(FabricanteCreateRequestDTO dto) {
         List<Endereco> enderecos = new ArrayList<>();
 
         for (int i = 0; i < dto.enderecos().size(); i++) {
@@ -101,6 +101,32 @@ public class FabricanteServiceImpl implements FabricanteService {
             enderecos.add(endereco);
         }
         return enderecos;
+    }
+
+    @Override
+    @Transactional
+    public void updateTelefone(Long id, Long idTelefone, TelefoneRequestDTO dto) {
+        Fabricante fabricante = fabricanteRepository.findById(id);
+        Telefone telefone = fabricante.getTelefones().stream().filter(t -> t.getId().equals(idTelefone)).findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Telefone não encontrado"));
+        telefone.setCodigoArea(dto.codigoArea());
+        telefone.setNumero(dto.numero());
+    }
+
+    @Override
+    @Transactional
+    public void updateEndereco(Long id, Long idEndereco, EnderecoRequestDTO dto) {
+        Fabricante fabricante = fabricanteRepository.findById(id);
+        Endereco endereco = fabricante.getEnderecos().stream().filter(e -> e.getId().equals(idEndereco)).findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Endereco não encontrado"));
+
+        endereco.setBairro(dto.bairro());
+        endereco.setCep(dto.cep());
+        endereco.setComplemento(dto.complemento());
+        endereco.setLogradouro(dto.logradouro());
+        endereco.setNumero(dto.numero());
+        endereco.setCidade(cidadeService.findById(dto.idCidade()));
+
     }
 
 }

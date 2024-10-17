@@ -9,7 +9,7 @@ import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-public record FabricanteRequestDTO(
+public record FabricanteCreateRequestDTO(
 
     @NotBlank(message = "O campo nome deve ser informado.")
     String nome,

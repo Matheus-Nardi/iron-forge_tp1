@@ -2,7 +2,12 @@ package br.unitins.tp1.ironforge.service.usuario;
 
 import java.util.List;
 
-import br.unitins.tp1.ironforge.dto.usuario.cliente.ClienteRequestDTO;
+import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
+import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
+import br.unitins.tp1.ironforge.dto.usuario.cliente.ClienteCreateRequestDTO;
+import br.unitins.tp1.ironforge.dto.usuario.cliente.ClienteUpdateRequestDTO;
+import br.unitins.tp1.ironforge.model.Endereco;
+import br.unitins.tp1.ironforge.model.Telefone;
 import br.unitins.tp1.ironforge.model.usuario.Cliente;
 import br.unitins.tp1.ironforge.model.usuario.Usuario;
 import br.unitins.tp1.ironforge.repository.ClienteRepository;
@@ -41,7 +46,7 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     @Transactional
-    public Cliente create(ClienteRequestDTO dto) {
+    public Cliente create(ClienteCreateRequestDTO dto) {
         usuarioService.validateCredentials(dto.usuario().cpf(), dto.usuario().email());
         Cliente cliente = toEntity(dto);
         usuarioService.create(cliente.getUsuario());
@@ -51,7 +56,7 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     @Transactional
-    public void update(Long id, ClienteRequestDTO dto) {
+    public void update(Long id, ClienteUpdateRequestDTO dto) {
         usuarioService.validateCredentials(dto.usuario().cpf(), dto.usuario().email());
         Cliente cliente = clienteRepository.findById(id);
         Usuario usuario = cliente.getUsuario();
@@ -77,7 +82,7 @@ public class ClienteServiceImpl implements ClienteService {
         return c;
     }
 
-    private Cliente toEntity(ClienteRequestDTO dto) {
+    private Cliente toEntity(ClienteCreateRequestDTO dto) {
         Usuario usuario = new Usuario();
         Cliente cliente = new Cliente();
         usuario.setNome(dto.usuario().nome());
@@ -91,6 +96,33 @@ public class ClienteServiceImpl implements ClienteService {
         cliente.setUsuario(usuario);
         return cliente;
 
+    }
+
+    @Override
+    @Transactional
+    public void updateTelefone(Long id, Long idTelefone, TelefoneRequestDTO dto) {
+        Cliente cliente = clienteRepository.findById(id);
+        Telefone telefone = cliente.getUsuario().getTelefones().stream().filter(t -> t.getId().equals(idTelefone))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Telefone não encontrado"));
+        telefone.setCodigoArea(dto.codigoArea());
+        telefone.setNumero(dto.numero());
+    }
+
+    @Override
+    @Transactional
+    public void updateEndereco(Long id, Long idEndereco, EnderecoRequestDTO dto) {
+        Cliente cliente = clienteRepository.findById(id);
+        Endereco endereco = cliente.getUsuario().getEnderecos().stream().filter(e -> e.getId().equals(idEndereco))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Endereco não encontrado"));
+
+        endereco.setBairro(dto.bairro());
+        endereco.setCep(dto.cep());
+        endereco.setComplemento(dto.complemento());
+        endereco.setLogradouro(dto.logradouro());
+        endereco.setNumero(dto.numero());
+        endereco.setCidade(cidadeService.findById(dto.idCidade()));
     }
 
 }

@@ -11,7 +11,7 @@ INSERT INTO
     cidade (nome, id_estado)
 VALUES
     ('Palmas', 1),
-    ('Campinas', 2),
+    ('Rio de Janeiro', 3),
     ('Gurupi', 1),
     ('São Paulo', 2);
 

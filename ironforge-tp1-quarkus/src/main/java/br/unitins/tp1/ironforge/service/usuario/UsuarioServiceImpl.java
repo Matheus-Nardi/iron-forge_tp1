@@ -5,7 +5,7 @@ import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
 import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
-import br.unitins.tp1.ironforge.dto.usuario.UsuarioRequestDTO;
+import br.unitins.tp1.ironforge.dto.usuario.UsuarioCreateRequestDTO;
 import br.unitins.tp1.ironforge.model.Endereco;
 import br.unitins.tp1.ironforge.model.Telefone;
 import br.unitins.tp1.ironforge.model.usuario.Usuario;
@@ -34,7 +34,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public List<Endereco> getEnderecos(UsuarioRequestDTO dto) {
+    public List<Endereco> getEnderecos(UsuarioCreateRequestDTO dto) {
         List<Endereco> enderecos = new ArrayList<>();
 
         for (int i = 0; i < dto.enderecos().size(); i++) {
@@ -52,7 +52,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public List<Telefone> getTelefones(UsuarioRequestDTO dto) {
+    public List<Telefone> getTelefones(UsuarioCreateRequestDTO dto) {
         List<Telefone> telefones = new ArrayList<>();
 
         for (int i = 0; i < dto.telefones().size(); i++) {

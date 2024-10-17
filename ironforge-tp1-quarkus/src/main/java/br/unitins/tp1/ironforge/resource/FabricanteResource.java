@@ -2,8 +2,11 @@ package br.unitins.tp1.ironforge.resource;
 
 import java.util.List;
 
-import br.unitins.tp1.ironforge.dto.fabricante.FabricanteRequestDTO;
+import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
+import br.unitins.tp1.ironforge.dto.fabricante.FabricanteCreateRequestDTO;
 import br.unitins.tp1.ironforge.dto.fabricante.FabricanteResponseDTO;
+import br.unitins.tp1.ironforge.dto.fabricante.FabricanteUpdateRequestDTO;
+import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
 import br.unitins.tp1.ironforge.model.Fabricante;
 import br.unitins.tp1.ironforge.service.fabricante.FabricanteService;
 import jakarta.inject.Inject;
@@ -11,8 +14,8 @@ import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -48,14 +51,31 @@ public class FabricanteResource {
     }
 
     @POST
-    public Response create(@Valid FabricanteRequestDTO fabricante) {
-        return Response.status(Status.CREATED).entity(FabricanteResponseDTO.valueOf(fabricanteService.create(fabricante))).build();
+    public Response create(@Valid FabricanteCreateRequestDTO fabricante) {
+        return Response.status(Status.CREATED)
+                .entity(FabricanteResponseDTO.valueOf(fabricanteService.create(fabricante))).build();
     }
 
-    @PUT
+    @PATCH
     @Path("/{id}")
-    public Response update(@PathParam("id") Long id, @Valid FabricanteRequestDTO fabricante) {
-        fabricanteService.update(id, fabricante);
+    public Response update(@PathParam("id") Long id, FabricanteUpdateRequestDTO dto) {
+        fabricanteService.update(id, dto);
+        return Response.noContent().build();
+    }
+
+    @PATCH
+    @Path("/{id}/telefones/{idTelefone}")
+    public Response updateTelefones(@PathParam("id") Long id, @PathParam("idTelefone") Long idTelefone,
+            @Valid TelefoneRequestDTO telefone) {
+        fabricanteService.updateTelefone(id, idTelefone, telefone);
+        return Response.noContent().build();
+    }
+
+    @PATCH
+    @Path("/{id}/enderecos/{idEndereco}")
+    public Response updateEnderecos(@PathParam("id") Long id, @PathParam("idEndereco") Long idEndereco,
+            @Valid EnderecoRequestDTO endereco) {
+        fabricanteService.updateEndereco(id, idEndereco, endereco);
         return Response.noContent().build();
     }
 
