@@ -8,7 +8,6 @@ import br.unitins.tp1.ironforge.repository.SaborRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.NotFoundException;
 
 @ApplicationScoped
 public class SaborServiceImpl implements SaborService {
@@ -18,10 +17,8 @@ public class SaborServiceImpl implements SaborService {
 
     @Override
     public Sabor findById(Long id) {
-        Sabor sabor = saborRepository.findById(id);
-       if(sabor == null)
-            throw new NotFoundException("Sabor não encontrado!");
-        return sabor;
+        return saborRepository.findById(id);
+
     }
 
     @Override
@@ -48,7 +45,7 @@ public class SaborServiceImpl implements SaborService {
     public void update(Long id, SaborRequestDTO dto) {
         Sabor sabor = saborRepository.findById(id);
         if (sabor == null)
-            throw new NotFoundException("Sabor não encontrado!");
+            throw new IllegalArgumentException("Sabor não encontrado!");
 
         sabor.setNome(dto.nome());
     }
@@ -58,7 +55,7 @@ public class SaborServiceImpl implements SaborService {
     public void delete(Long id) {
         Sabor sabor = saborRepository.findById(id);
         if (sabor == null)
-            throw new NotFoundException("Sabor não encontrado!");
+            throw new IllegalArgumentException("Sabor não encontrado!");
         saborRepository.delete(sabor);
     }
 

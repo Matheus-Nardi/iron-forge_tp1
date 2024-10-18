@@ -12,7 +12,6 @@ import br.unitins.tp1.ironforge.service.whey.tabelanutricional.TabelaNutricional
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.NotFoundException;
 
 @ApplicationScoped
 public class WheyProteinServiceImpl implements WheyProteinService {
@@ -31,11 +30,8 @@ public class WheyProteinServiceImpl implements WheyProteinService {
 
     @Override
     public WheyProtein findById(Long id) {
-        WheyProtein whey =  wheyRepository.findById(id);
-         if(whey == null)
-            throw new NotFoundException("Whey não encontrado!");
+        return wheyRepository.findById(id);
 
-        return whey;
     }
 
     @Override
@@ -77,7 +73,7 @@ public class WheyProteinServiceImpl implements WheyProteinService {
     public void update(Long id, WheyProteinRequestDTO dto) {
         WheyProtein wheyToUpdate = wheyRepository.findById(id);
         if (wheyToUpdate == null)
-            throw new NotFoundException("Whey não encontrado!");
+            throw new IllegalArgumentException("Whey não encontrado!");
         wheyToUpdate.setNome(dto.nome());
         wheyToUpdate.setDescricao(dto.descricao());
         wheyToUpdate.setPreco(dto.preco());
@@ -91,7 +87,7 @@ public class WheyProteinServiceImpl implements WheyProteinService {
     public void delete(Long id) {
         WheyProtein wheyToDelete = wheyRepository.findById(id);
         if (wheyToDelete == null)
-            throw new NotFoundException("Whey não encontrado!");
+            throw new IllegalArgumentException("Whey não encontrado!");
         wheyRepository.delete(wheyToDelete);
     }
 

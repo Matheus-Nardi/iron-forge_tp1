@@ -6,7 +6,6 @@ import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
 import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
 import br.unitins.tp1.ironforge.dto.usuario.cliente.ClienteCreateRequestDTO;
 import br.unitins.tp1.ironforge.dto.usuario.cliente.ClienteUpdateRequestDTO;
-import br.unitins.tp1.ironforge.infra.exception.NotFoundException;
 import br.unitins.tp1.ironforge.model.Endereco;
 import br.unitins.tp1.ironforge.model.Telefone;
 import br.unitins.tp1.ironforge.model.usuario.Cliente;
@@ -31,10 +30,7 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public Cliente findById(Long id) {
-        Cliente cliente = clienteRepository.findById(id);
-        if (cliente == null)
-            throw new NotFoundException("Cliente não encontrado.");
-        return cliente;
+        return clienteRepository.findById(id);
     }
 
     @Override
@@ -62,10 +58,7 @@ public class ClienteServiceImpl implements ClienteService {
     @Transactional
     public void update(Long id, ClienteUpdateRequestDTO dto) {
         usuarioService.validateCredentials(dto.usuario().cpf(), dto.usuario().email());
-
         Cliente cliente = clienteRepository.findById(id);
-        if (cliente == null)
-            throw new NotFoundException("Cliente não encontrado.");
         Usuario usuario = cliente.getUsuario();
         usuario.setNome(dto.usuario().nome());
         usuario.setCpf(dto.usuario().cpf());
@@ -79,10 +72,7 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     @Transactional
     public void delete(Long id) {
-        Cliente cliente = clienteRepository.findById(id);
-        if(cliente == null)
-            throw new NotFoundException("Cliente não encontrado.");
-        clienteRepository.delete(cliente);
+        clienteRepository.deleteById(id);
     }
 
     private Cliente valueOf(Usuario usuario) {
@@ -112,11 +102,9 @@ public class ClienteServiceImpl implements ClienteService {
     @Transactional
     public void updateTelefone(Long id, Long idTelefone, TelefoneRequestDTO dto) {
         Cliente cliente = clienteRepository.findById(id);
-        if (cliente == null)
-            throw new NotFoundException("Cliente não encontrado.");
         Telefone telefone = cliente.getUsuario().getTelefones().stream().filter(t -> t.getId().equals(idTelefone))
                 .findFirst()
-                .orElseThrow(() -> new NotFoundException("Telefone não encontrado"));
+                .orElseThrow(() -> new IllegalArgumentException("Telefone não encontrado"));
         telefone.setCodigoArea(dto.codigoArea());
         telefone.setNumero(dto.numero());
     }
@@ -125,11 +113,9 @@ public class ClienteServiceImpl implements ClienteService {
     @Transactional
     public void updateEndereco(Long id, Long idEndereco, EnderecoRequestDTO dto) {
         Cliente cliente = clienteRepository.findById(id);
-        if (cliente == null)
-            throw new NotFoundException("Cliente não encontrado.");
         Endereco endereco = cliente.getUsuario().getEnderecos().stream().filter(e -> e.getId().equals(idEndereco))
                 .findFirst()
-                .orElseThrow(() -> new NotFoundException("Endereco não encontrado"));
+                .orElseThrow(() -> new IllegalArgumentException("Endereco não encontrado"));
 
         endereco.setBairro(dto.bairro());
         endereco.setCep(dto.cep());
