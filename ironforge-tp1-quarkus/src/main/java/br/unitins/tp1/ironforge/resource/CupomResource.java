@@ -36,23 +36,23 @@ public class CupomResource {
     }
 
     @GET
-    @Path("/search/{nome}")
+    @Path("/search/{codigo}")
     public Response findByCodigo(@PathParam("codigo") String codigo) {
-        List<Cupom> cupomes = cupomService.findByCodigo(codigo);
-        return Response.ok(cupomes.stream().map(CupomResponseDTO::valueOf).toList()).build();
+        List<Cupom> cupons = cupomService.findByCodigo(codigo);
+        return Response.ok(cupons.stream().map(CupomResponseDTO::valueOf).toList()).build();
     }
 
     @GET
     @Path("/search/{idFabricante}")
     public Response findByFabricante(@PathParam("idFabricante") Long idFabricante) {
-        List<Cupom> cupomes = cupomService.findByFabricante(idFabricante);
-        return Response.ok(cupomes.stream().map(CupomResponseDTO::valueOf).toList()).build();
+        List<Cupom> cupons = cupomService.findByFabricante(idFabricante);
+        return Response.ok(cupons.stream().map(CupomResponseDTO::valueOf).toList()).build();
     }
 
     @GET
     public Response findAll() {
-        List<Cupom> cupomes = cupomService.findAll();
-        return Response.ok(cupomes.stream().map(CupomResponseDTO::valueOf).toList()).build();
+        List<Cupom> cupons = cupomService.findAll();
+        return Response.ok(cupons.stream().map(CupomResponseDTO::valueOf).toList()).build();
     }
 
     @POST
