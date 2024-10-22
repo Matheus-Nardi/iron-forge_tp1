@@ -13,7 +13,7 @@ public class Cupom extends DefaultEntity {
     @ManyToOne
     @JoinColumn(name = "id_fabricante")
     private Fabricante fabricante;
-    @Column(unique = true , length = 12)
+    @Column(length = 12)
     private String codigo;
     private Double percentualDesconto;
     private LocalDateTime dataValidade;

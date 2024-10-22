@@ -38,6 +38,7 @@ public class CupomServiceImpl implements CupomService {
         cupom.setPercentualDesconto(dto.percentualDesconto());
         cupom.setDataValidade(dto.dataValidade());
         cupom.setFabricante(fabricanteService.findById(dto.idFabricante()));
+        cupom.setAtivo(dto.ativo());
         cupomRepository.persist(cupom);
         return cupom;
     }
@@ -53,6 +54,7 @@ public class CupomServiceImpl implements CupomService {
         cupom.setPercentualDesconto(dto.percentualDesconto());
         cupom.setDataValidade(dto.dataValidade());
         cupom.setFabricante(fabricanteService.findById(dto.idFabricante()));
+        cupom.setAtivo(dto.ativo());
     }
 
     @Override

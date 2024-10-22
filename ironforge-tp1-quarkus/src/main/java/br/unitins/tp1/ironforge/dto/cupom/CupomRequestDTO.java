@@ -17,7 +17,8 @@ public record CupomRequestDTO(
     Double percentualDesconto,
     @NotNull(message = "O campo data de validade deve ser informado")
     @FutureOrPresent(message = "A data de validade deve ser hoje ou uma data futura")
-    LocalDateTime dataValidade
+    LocalDateTime dataValidade,
+    Boolean ativo
 ) {
 
 }

@@ -27,7 +27,7 @@ public class CupomResourceTest {
 
     @Test
     void testCreate() {
-        CupomRequestDTO dto = new CupomRequestDTO(1L, "CUPOMTEST", 20.0, LocalDateTime.now().plusMonths(2L));
+        CupomRequestDTO dto = new CupomRequestDTO(1L, "CUPOMTEST", 20.0, LocalDateTime.now().plusMonths(2L), true);
 
         given()
                 .contentType(ContentType.JSON)
@@ -39,12 +39,13 @@ public class CupomResourceTest {
                 .body("id", notNullValue())
                 .body("codigo", is("CUPOMTEST"));
 
-        cupomService.delete(8L);
+        cupomService.delete(cupomService.findByCodigo("CUPOMTEST").getFirst().getId());
     }
 
     @Test
     void testDeactive() {
-        Long idExistente = 1L;
+        CupomRequestDTO dto = new CupomRequestDTO(1L, "UPDATE", 10.0, LocalDateTime.now().plusWeeks(1L), true);
+        Long idExistente = cupomService.create(dto).getId();
 
         given()
                 .contentType(ContentType.JSON)
@@ -53,19 +54,15 @@ public class CupomResourceTest {
                 .then()
                 .statusCode(204);
 
-        given()
-                .contentType(ContentType.JSON)
-                .when()
-                .get("/cupons/{id}", idExistente)
-                .then()
-                .statusCode(200)
-                .body("ativo", is(false)); // Verifica se o campo "ativo" agora é false
+        Cupom cupom = cupomService.findById(idExistente);
+        assertFalse(cupom.getAtivo());
+        cupomService.delete(idExistente);
 
     }
 
     @Test
     void testDelete() {
-        CupomRequestDTO dto = new CupomRequestDTO(1L, "DELETE", 10.0, LocalDateTime.now().plusMonths(1L));
+        CupomRequestDTO dto = new CupomRequestDTO(1L, "DELETE", 10.0, LocalDateTime.now().plusMonths(1L), true);
         Long id = cupomService.create(dto).getId();
 
         given()
@@ -89,9 +86,8 @@ public class CupomResourceTest {
 
     @Test
     void testBuscarPorCodigo() {
-        
+
     }
-    
 
     @Test
     void testFindByFabricante() {
@@ -121,11 +117,11 @@ public class CupomResourceTest {
 
     @Test
     void testUpdate() {
-        CupomRequestDTO dto = new CupomRequestDTO(1L, "UPDATE", 10.0, LocalDateTime.now().plusWeeks(1L));
+        CupomRequestDTO dto = new CupomRequestDTO(1L, "UPDATE", 10.0, LocalDateTime.now().plusWeeks(1L), true);
 
         Long id = cupomService.create(dto).getId();
 
-        CupomRequestDTO novoCupom = new CupomRequestDTO(2L, "UPDATE20", 20.0, LocalDateTime.now().plusWeeks(2L));
+        CupomRequestDTO novoCupom = new CupomRequestDTO(2L, "UPDATE20", 20.0, LocalDateTime.now().plusWeeks(2L), true);
 
         given()
                 .contentType(ContentType.JSON)

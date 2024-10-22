@@ -62,6 +62,8 @@ public class FabricanteServiceImpl implements FabricanteService {
             throw new IllegalArgumentException("Fabricante não encontrado!");
 
         fabricante.setNome(dto.nome());
+        fabricante.setCnpj(dto.cnpj());
+        fabricante.setEmail(dto.email());
     }
 
     @Override

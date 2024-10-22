@@ -105,7 +105,7 @@ VALUES
 
 INSERT INTO lote (quantidade, dataFabricacao, id_whey, codigo)
 VALUES
-(50, CURRENT_DATE, 1, CONCAT('L-', CURRENT_DATE::TEXT, '-WHEY')),
+(50, '2024-10-21', 1, 'L-2024-10-21-WHEY'),
 (100, CURRENT_DATE - INTERVAL '1 week', 2, CONCAT('L-', (CURRENT_DATE - INTERVAL '1 week')::TEXT, '-WHEY')),
 (60, CURRENT_DATE - INTERVAL '2 weeks', 3, CONCAT('L-', (CURRENT_DATE - INTERVAL '2 weeks')::TEXT, '-WHEY'));
 
