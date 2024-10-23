@@ -19,6 +19,8 @@ public class UsuarioRepository implements PanacheRepository<Usuario> {
                 "%" + nome + "%").list();
     }
 
+
+
     public boolean existByCpf(String cpf) {
         return find("cpf", cpf).firstResultOptional().isPresent();
     }

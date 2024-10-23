@@ -1,5 +1,6 @@
 package br.unitins.tp1.ironforge.service.usuario;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
@@ -14,6 +15,7 @@ import br.unitins.tp1.ironforge.repository.ClienteRepository;
 import br.unitins.tp1.ironforge.service.cidade.CidadeService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @ApplicationScoped
@@ -36,7 +38,20 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     public List<Cliente> findByNome(String nome) {
         List<Usuario> usuarios = usuarioService.findClienteByNome(nome);
-        return usuarios.stream().map(u -> valueOf(u)).toList();
+        List<Cliente> clientes = new ArrayList<>();
+
+        valueOf(usuarios, clientes);
+
+        return clientes;
+    }
+
+    private void valueOf(List<Usuario> usuarios, List<Cliente> clientes) {
+        for (Usuario usuario : usuarios) {
+            Cliente cliente = new Cliente();
+            cliente.setId(clienteRepository.findClienteByUsuario(usuario.getId()).getId());
+            cliente.setUsuario(usuario);
+            clientes.add(cliente);
+        }
     }
 
     @Override
@@ -48,8 +63,10 @@ public class ClienteServiceImpl implements ClienteService {
     @Transactional
     public Cliente create(ClienteCreateRequestDTO dto) {
         usuarioService.validateCredentials(dto.usuario().cpf(), dto.usuario().email());
-        Cliente cliente = toEntity(dto);
-        usuarioService.create(cliente.getUsuario());
+
+        Usuario usuario = usuarioService.create(dto.usuario());
+        Cliente cliente = new Cliente();
+        cliente.setUsuario(usuario);
         clienteRepository.persist(cliente);
         return cliente;
     }
@@ -58,44 +75,25 @@ public class ClienteServiceImpl implements ClienteService {
     @Transactional
     public void update(Long id, ClienteUpdateRequestDTO dto) {
         usuarioService.validateCredentials(dto.usuario().cpf(), dto.usuario().email());
-        Cliente cliente = clienteRepository.findById(id);
-        Usuario usuario = cliente.getUsuario();
-        usuario.setNome(dto.usuario().nome());
-        usuario.setCpf(dto.usuario().cpf());
-        usuario.setEmail(dto.usuario().email());
-        usuario.setSenha(dto.usuario().senha());
-        usuario.setDataNascimento(dto.usuario().dataNascimento());
 
-        cliente.setUsuario(usuario);
+        Cliente cliente = clienteRepository.findById(id);
+        Long idUsuario = cliente.getUsuario().getId();
+        usuarioService.update(idUsuario, dto.usuario());
+        cliente.setUsuario(usuarioService.findById(idUsuario));
     }
 
     @Override
     @Transactional
-    public void delete(Long id) {
-        clienteRepository.deleteById(id);
-    }
+    public void delete(Long clienteId) {
 
-    private Cliente valueOf(Usuario usuario) {
-        Cliente c = new Cliente();
-        c.setId(usuario.getId());
-        c.setUsuario(usuario);
-        return c;
-    }
+        Cliente cliente = clienteRepository.findById(clienteId);
+        if (cliente == null) {
+            throw new EntityNotFoundException("Cliente não encontrado para o ID: " + clienteId);
+        }
 
-    private Cliente toEntity(ClienteCreateRequestDTO dto) {
-        Usuario usuario = new Usuario();
-        Cliente cliente = new Cliente();
-        usuario.setNome(dto.usuario().nome());
-        usuario.setCpf(dto.usuario().cpf());
-        usuario.setEmail(dto.usuario().email());
-        usuario.setSenha(dto.usuario().senha());
-        usuario.setTelefones(usuarioService.getTelefones(dto.usuario()));
-        usuario.setEnderecos(usuarioService.getEnderecos(dto.usuario()));
-        usuario.setDataNascimento(dto.usuario().dataNascimento());
-
-        cliente.setUsuario(usuario);
-        return cliente;
-
+        Long usuarioId = cliente.getUsuario().getId();
+        clienteRepository.delete(cliente);
+        usuarioService.delete(usuarioId);
     }
 
     @Override
@@ -123,6 +121,9 @@ public class ClienteServiceImpl implements ClienteService {
         endereco.setLogradouro(dto.logradouro());
         endereco.setNumero(dto.numero());
         endereco.setCidade(cidadeService.findById(dto.idCidade()));
+
+        cliente.getUsuario().setEnderecos(cliente.getUsuario().getEnderecos());
+
     }
 
 }

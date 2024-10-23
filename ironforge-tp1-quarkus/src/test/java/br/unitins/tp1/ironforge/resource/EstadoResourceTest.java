@@ -78,6 +78,16 @@ public class EstadoResourceTest {
                 .body("[0].nome", is("Tocantins"), "[0].sigla", is("TO"));
     }
 
+
+    @Test
+    void testFindBySigla() {
+        given()
+                .when()
+                .get("/estados/search/{sigla}", "To")
+                .then().statusCode(200)
+                .body("[0].nome", is("Tocantins"), "[0].sigla", is("TO"));
+    }
+
     @Test
     void testUpdate() {
         EstadoRequestDTO dto = new EstadoRequestDTO("Mato Grosso do Sul", "MT");

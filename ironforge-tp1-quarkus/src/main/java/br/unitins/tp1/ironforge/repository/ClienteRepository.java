@@ -7,5 +7,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class ClienteRepository implements PanacheRepository<Cliente> {
 
-  
+    public Cliente findClienteByUsuario(Long idUsuario) {
+        return find("usuario.id", idUsuario).firstResult();
+    }
+
 }

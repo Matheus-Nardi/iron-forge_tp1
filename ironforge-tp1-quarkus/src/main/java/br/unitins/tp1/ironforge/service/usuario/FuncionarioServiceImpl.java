@@ -1,5 +1,6 @@
 package br.unitins.tp1.ironforge.service.usuario;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
@@ -14,6 +15,7 @@ import br.unitins.tp1.ironforge.repository.FuncionarioRepository;
 import br.unitins.tp1.ironforge.service.cidade.CidadeService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @ApplicationScoped
@@ -36,7 +38,9 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     @Override
     public List<Funcionario> findByNome(String nome) {
         List<Usuario> usuarios = usuarioService.findFuncionarioByNome(nome);
-        return usuarios.stream().map(u -> valueOf(u)).toList();
+        List<Funcionario> funcionarios = new ArrayList<>();
+        valueOf(usuarios, funcionarios);
+        return funcionarios;
     }
 
     @Override
@@ -48,8 +52,11 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     @Transactional
     public Funcionario create(FuncionarioCreateRequestDTO dto) {
         usuarioService.validateCredentials(dto.usuario().cpf(), dto.usuario().email());
-        Funcionario funcionario = toEntity(dto);
-        usuarioService.create(funcionario.getUsuario());
+
+        Usuario usuario = usuarioService.create(dto.usuario());
+        Funcionario funcionario = new Funcionario();
+        funcionario.setUsuario(usuario);
+        funcionario.setSalario(dto.salario());
         funcionarioRepository.persist(funcionario);
         return funcionario;
     }
@@ -74,41 +81,35 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     @Override
     @Transactional
     public void delete(Long id) {
-        funcionarioRepository.deleteById(id);
-    }
-
-    private Funcionario valueOf(Usuario usuario) {
-        Funcionario f = new Funcionario();
-        f.setId(usuario.getId());
-        f.setUsuario(usuario);
-        return f;
-    }
-
-    private Funcionario toEntity(FuncionarioCreateRequestDTO dto) {
-        Usuario usuario = new Usuario();
-        Funcionario funcionario = new Funcionario();
-        usuario.setNome(dto.usuario().nome());
-        usuario.setCpf(dto.usuario().cpf());
-        usuario.setEmail(dto.usuario().email());
-        usuario.setSenha(dto.usuario().senha());
-        usuario.setDataNascimento(dto.usuario().dataNascimento());
-        usuario.setTelefones(usuarioService.getTelefones(dto.usuario()));
-        usuario.setEnderecos(usuarioService.getEnderecos(dto.usuario()));
-        funcionario.setSalario(dto.salario());
-        funcionario.setUsuario(usuario);
-        return funcionario;
-    }
-
-    @Override
-    @Transactional
-    public void updateTelefone(Long id, Long idTelefone, TelefoneRequestDTO dto) {
         Funcionario funcionario = funcionarioRepository.findById(id);
-        Telefone telefone = funcionario.getUsuario().getTelefones().stream().filter(t -> t.getId().equals(idTelefone))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Telefone não encontrado"));
-        telefone.setCodigoArea(dto.codigoArea());
-        telefone.setNumero(dto.numero());
+        if (funcionario == null) {
+            throw new EntityNotFoundException("Funcionario não encontrado para o ID: " + id);
+        }
+
+        Long usuarioId = funcionario.getUsuario().getId();
+        funcionarioRepository.delete(funcionario);
+        usuarioService.delete(usuarioId);
     }
+
+    private void valueOf(List<Usuario> usuarios, List<Funcionario> funcionarios) {
+        for (Usuario usuario : usuarios) {
+            Funcionario funcionario = new Funcionario();
+            funcionario.setId(funcionarioRepository.findFuncionarioByUsuario(usuario.getId()).getId());
+            funcionario.setUsuario(usuario);
+            funcionarios.add(funcionario);
+        }
+    }
+
+        @Override
+        @Transactional
+        public void updateTelefone(Long id, Long idTelefone, TelefoneRequestDTO dto) {
+            Funcionario funcionario = funcionarioRepository.findById(id);
+            Telefone telefone = funcionario.getUsuario().getTelefones().stream().filter(t -> t.getId().equals(idTelefone))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("Telefone não encontrado"));
+            telefone.setCodigoArea(dto.codigoArea());
+            telefone.setNumero(dto.numero());
+        }
 
     @Override
     @Transactional
@@ -125,6 +126,5 @@ public class FuncionarioServiceImpl implements FuncionarioService {
         endereco.setNumero(dto.numero());
         endereco.setCidade(cidadeService.findById(dto.idCidade()));
     }
-
 
 }

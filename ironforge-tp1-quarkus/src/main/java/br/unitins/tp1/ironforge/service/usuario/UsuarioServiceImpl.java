@@ -6,6 +6,7 @@ import java.util.List;
 import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
 import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
 import br.unitins.tp1.ironforge.dto.usuario.UsuarioCreateRequestDTO;
+import br.unitins.tp1.ironforge.dto.usuario.UsuarioUpdateRequestDTO;
 import br.unitins.tp1.ironforge.model.Endereco;
 import br.unitins.tp1.ironforge.model.Telefone;
 import br.unitins.tp1.ironforge.model.usuario.Usuario;
@@ -13,6 +14,7 @@ import br.unitins.tp1.ironforge.repository.UsuarioRepository;
 import br.unitins.tp1.ironforge.service.cidade.CidadeService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 @ApplicationScoped
 public class UsuarioServiceImpl implements UsuarioService {
@@ -66,9 +68,31 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public Usuario create(Usuario usuario) {
+    @Transactional
+    public Usuario create(UsuarioCreateRequestDTO dto) {
+        Usuario usuario = new Usuario();
+        usuario.setNome(dto.nome());
+        usuario.setCpf(dto.cpf());
+        usuario.setEmail(dto.email());
+        usuario.setSenha(dto.senha());
+        usuario.setTelefones(dto.telefones().stream().map(TelefoneRequestDTO::convert).toList());
+        usuario.setEnderecos(dto.enderecos().stream().map(e -> convertToEndereco(e)).toList());
+        usuario.setDataNascimento(dto.dataNascimento());
         usuarioRepository.persist(usuario);
         return usuario;
+    }
+
+    public Endereco convertToEndereco(EnderecoRequestDTO dto) {
+        Endereco e = new Endereco();
+
+        e.setCep(dto.cep());
+        e.setLogradouro(dto.logradouro());
+        e.setBairro(dto.bairro());
+        e.setNumero(dto.numero());
+        e.setComplemento(dto.complemento());
+        e.setCidade(cidadeService.findById(dto.idCidade()));
+
+        return e;
     }
 
     @Override
@@ -79,6 +103,28 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public List<Usuario> findFuncionarioByNome(String nome) {
         return usuarioRepository.findFuncionarioByNome(nome);
+    }
+
+    @Override
+    @Transactional
+    public void delete(Long id) {
+        usuarioRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void update(Long id, UsuarioUpdateRequestDTO dto) {
+        Usuario usuario = usuarioRepository.findById(id);
+        usuario.setNome(dto.nome());
+        usuario.setCpf(dto.cpf());
+        usuario.setDataNascimento(dto.dataNascimento());
+        usuario.setSenha(dto.senha());
+        usuario.setEmail(dto.email());
+    }
+
+    @Override
+    public Usuario findById(Long id) {
+        return usuarioRepository.findById(id);
     }
 
 }

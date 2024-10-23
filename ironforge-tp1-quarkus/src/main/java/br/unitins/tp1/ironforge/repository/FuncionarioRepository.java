@@ -7,5 +7,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class FuncionarioRepository implements PanacheRepository<Funcionario> {
 
-  
+    public Funcionario findFuncionarioByUsuario(Long idUsuario) {
+        return find("usuario.id", idUsuario).firstResult();
+    }
 }
