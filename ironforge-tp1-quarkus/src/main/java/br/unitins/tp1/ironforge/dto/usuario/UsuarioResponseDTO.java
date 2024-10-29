@@ -1,14 +1,13 @@
 package br.unitins.tp1.ironforge.dto.usuario;
 
-import java.util.List;
-
-import br.unitins.tp1.ironforge.dto.endereco.EnderecoResponseDTO;
-import br.unitins.tp1.ironforge.dto.telefone.TelefoneResponseDTO;
+import br.unitins.tp1.ironforge.model.usuario.Usuario;
 
 public record UsuarioResponseDTO(
-        Long id,
-        String nome,
-        String email,
-        List<TelefoneResponseDTO> telefones,
-        List<EnderecoResponseDTO> enderecos) {
+                Long id,
+                String username,
+                String senha) {
+
+        public static UsuarioResponseDTO valueOf(Usuario usuario) {
+                return new UsuarioResponseDTO(usuario.getId(), usuario.getUsername(), usuario.getSenha());
+        }
 }

@@ -14,6 +14,6 @@ public record WheyLoteResponseDTO(
     public static WheyLoteResponseDTO valueOf(WheyProtein whey) {
         return new WheyLoteResponseDTO(whey.getId(), whey.getNome(), SaborResponseDTO.valueOf(whey.getSabor()),
                 whey.getTipoWhey(), whey.getPreco(),
-                whey.getPeso(), whey.getFabricante().getNome());
+                whey.getPeso(), whey.getFabricante().getPessoaJuridica().getNome());
     }
 }

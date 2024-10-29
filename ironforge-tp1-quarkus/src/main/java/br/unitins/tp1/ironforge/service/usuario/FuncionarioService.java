@@ -3,9 +3,9 @@ package br.unitins.tp1.ironforge.service.usuario;
 import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
+import br.unitins.tp1.ironforge.dto.pessoafisica.FuncionarioRequestDTO;
+import br.unitins.tp1.ironforge.dto.pessoafisica.FuncionarioUpdateRequestDTO;
 import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
-import br.unitins.tp1.ironforge.dto.usuario.funcionario.FuncionarioCreateRequestDTO;
-import br.unitins.tp1.ironforge.dto.usuario.funcionario.FuncionarioUpdateRequestDTO;
 import br.unitins.tp1.ironforge.model.usuario.Funcionario;
 
 public interface FuncionarioService {
@@ -16,9 +16,9 @@ public interface FuncionarioService {
 
     List<Funcionario> findAll();
 
-    Funcionario create(FuncionarioCreateRequestDTO dto);
+    Funcionario create(FuncionarioRequestDTO dto);
 
-    void update(Long id, FuncionarioUpdateRequestDTO dto);
+    void update(Long id,  FuncionarioUpdateRequestDTO dto);
 
     void delete(Long id);
 

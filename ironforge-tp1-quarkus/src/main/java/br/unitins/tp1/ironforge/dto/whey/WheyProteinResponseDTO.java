@@ -1,6 +1,6 @@
 package br.unitins.tp1.ironforge.dto.whey;
 
-import br.unitins.tp1.ironforge.dto.fabricante.FabricanteResponseDTO;
+import br.unitins.tp1.ironforge.dto.pessoajuridica.FabricanteResponseDTO;
 import br.unitins.tp1.ironforge.model.whey.TipoWhey;
 import br.unitins.tp1.ironforge.model.whey.WheyProtein;
 import br.unitins.tp1.ironforge.model.whey.tabelanutricional.Food;

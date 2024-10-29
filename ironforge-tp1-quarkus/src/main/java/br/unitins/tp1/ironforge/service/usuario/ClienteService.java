@@ -3,9 +3,9 @@ package br.unitins.tp1.ironforge.service.usuario;
 import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
+import br.unitins.tp1.ironforge.dto.pessoafisica.ClienteRequestDTO;
+import br.unitins.tp1.ironforge.dto.pessoafisica.ClienteUpdateRequestDTO;
 import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
-import br.unitins.tp1.ironforge.dto.usuario.cliente.ClienteCreateRequestDTO;
-import br.unitins.tp1.ironforge.dto.usuario.cliente.ClienteUpdateRequestDTO;
 import br.unitins.tp1.ironforge.model.usuario.Cliente;
 
 public interface ClienteService {
@@ -16,7 +16,7 @@ public interface ClienteService {
 
     List<Cliente> findAll();
 
-    Cliente create(ClienteCreateRequestDTO dto);
+    Cliente create(ClienteRequestDTO dto);
 
     void update(Long id, ClienteUpdateRequestDTO dto);
 

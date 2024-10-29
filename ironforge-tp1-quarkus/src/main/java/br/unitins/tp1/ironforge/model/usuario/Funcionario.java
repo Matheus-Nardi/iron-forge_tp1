@@ -1,8 +1,10 @@
 package br.unitins.tp1.ironforge.model.usuario;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import br.unitins.tp1.ironforge.model.DefaultEntity;
+import br.unitins.tp1.ironforge.model.PessoaFisica;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
@@ -11,17 +13,18 @@ import jakarta.persistence.OneToOne;
 public class Funcionario extends DefaultEntity {
 
     @OneToOne
-    @JoinColumn(name = "id_usuario")
-    private Usuario usuario;
-
+    @JoinColumn(name = "id_pessoaFisica", unique = true)
+    private PessoaFisica pessoaFisica;
     private BigDecimal salario;
+    private LocalDate dataContratacao;
+    private String cargo;
 
-    public Usuario getUsuario() {
-        return usuario;
+    public PessoaFisica getPessoaFisica() {
+        return pessoaFisica;
     }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setPessoaFisica(PessoaFisica pessoaFisica) {
+        this.pessoaFisica = pessoaFisica;
     }
 
     public BigDecimal getSalario() {
@@ -30,6 +33,22 @@ public class Funcionario extends DefaultEntity {
 
     public void setSalario(BigDecimal salario) {
         this.salario = salario;
+    }
+
+    public LocalDate getDataContratacao() {
+        return dataContratacao;
+    }
+
+    public void setDataContratacao(LocalDate dataContratacao) {
+        this.dataContratacao = dataContratacao;
+    }
+
+    public String getCargo() {
+        return cargo;
+    }
+
+    public void setCargo(String cargo) {
+        this.cargo = cargo;
     }
 
 }

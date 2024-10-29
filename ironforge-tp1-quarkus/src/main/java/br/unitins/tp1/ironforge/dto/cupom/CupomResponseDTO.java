@@ -13,7 +13,8 @@ public record CupomResponseDTO(
         Boolean ativo) {
 
     public static CupomResponseDTO valueOf(Cupom cupom) {
-        return new CupomResponseDTO(cupom.getId(), cupom.getFabricante().getNome(), cupom.getCodigo(),
+        return new CupomResponseDTO(cupom.getId(), cupom.getFabricante().getPessoaJuridica().getNome(),
+                cupom.getCodigo(),
                 cupom.getPercentualDesconto(),
                 cupom.getDataValidade(), cupom.getAtivo());
     }

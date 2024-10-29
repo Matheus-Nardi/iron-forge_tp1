@@ -10,6 +10,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 public class FabricanteRepository implements PanacheRepository<Fabricante> {
 
     public List<Fabricante> findByNome(String nome) {
-        return find("select f from Fabricante f WHERE f.nome LIKE ?1", "%" + nome + "%").list();
+        return find("pessoaJuridica.nome LIKE ?1", "%" + nome + "%").list();
     }
 }

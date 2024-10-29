@@ -55,8 +55,7 @@ public class WheyProteinServiceImpl implements WheyProteinService {
 
         WheyProtein whey = new WheyProtein();
         whey.setNome(dto.nome());
-        whey.setDescricao(String.format("Whey de %d da %s", dto.peso(),
-                fabricanteService.findById(dto.idFabricante()).getNome()));
+        whey.setDescricao(dto.descricao());
         whey.setPeso(dto.peso());
         whey.setPreco(dto.preco());
         whey.setSabor(saborService.findById(dto.idSabor()));

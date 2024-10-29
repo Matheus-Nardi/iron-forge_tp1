@@ -29,6 +29,7 @@ public class LoteServiceImpl implements LoteService {
         return loteRepository.findById(id);
 
     }
+
     @Override
     public List<Lote> findAll() {
         return loteRepository.listAll();
@@ -75,8 +76,9 @@ public class LoteServiceImpl implements LoteService {
 
     private String generateCode(LocalDate dataFabricacao) {
         String data = dataFabricacao.toString();
-        return "L" + "-" + data + "-" + "WHEY";
+        return "L" + data + "WHEY";
     }
+
     @Override
     public List<Lote> findByWhey(Long idWhey) {
         return loteRepository.findByWhey(idWhey);

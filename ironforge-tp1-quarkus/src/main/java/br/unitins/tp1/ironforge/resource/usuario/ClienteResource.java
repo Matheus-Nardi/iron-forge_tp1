@@ -3,10 +3,10 @@ package br.unitins.tp1.ironforge.resource.usuario;
 import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
+import br.unitins.tp1.ironforge.dto.pessoafisica.ClienteRequestDTO;
+import br.unitins.tp1.ironforge.dto.pessoafisica.ClienteResponseDTO;
+import br.unitins.tp1.ironforge.dto.pessoafisica.ClienteUpdateRequestDTO;
 import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
-import br.unitins.tp1.ironforge.dto.usuario.cliente.ClienteCreateRequestDTO;
-import br.unitins.tp1.ironforge.dto.usuario.cliente.ClienteResponseDTO;
-import br.unitins.tp1.ironforge.dto.usuario.cliente.ClienteUpdateRequestDTO;
 import br.unitins.tp1.ironforge.model.usuario.Cliente;
 import br.unitins.tp1.ironforge.service.usuario.ClienteService;
 import jakarta.inject.Inject;
@@ -51,7 +51,7 @@ public class ClienteResource {
     }
 
     @POST
-    public Response create(@Valid ClienteCreateRequestDTO dto) {
+    public Response create(@Valid ClienteRequestDTO dto) {
         return Response.status(Status.CREATED).entity(ClienteResponseDTO.valueOf(clienteService.create(dto))).build();
     }
 

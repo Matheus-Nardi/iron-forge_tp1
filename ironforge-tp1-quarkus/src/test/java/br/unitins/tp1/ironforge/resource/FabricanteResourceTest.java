@@ -11,8 +11,8 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
-import br.unitins.tp1.ironforge.dto.fabricante.FabricanteCreateRequestDTO;
-import br.unitins.tp1.ironforge.dto.fabricante.FabricanteUpdateRequestDTO;
+import br.unitins.tp1.ironforge.dto.pessoajuridica.FabricanteCreateRequestDTO;
+import br.unitins.tp1.ironforge.dto.pessoajuridica.FabricanteUpdateRequestDTO;
 import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
 import br.unitins.tp1.ironforge.model.Fabricante;
 import br.unitins.tp1.ironforge.service.fabricante.FabricanteService;

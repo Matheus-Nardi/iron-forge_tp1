@@ -3,8 +3,8 @@ package br.unitins.tp1.ironforge.service.fabricante;
 import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
-import br.unitins.tp1.ironforge.dto.fabricante.FabricanteCreateRequestDTO;
-import br.unitins.tp1.ironforge.dto.fabricante.FabricanteUpdateRequestDTO;
+import br.unitins.tp1.ironforge.dto.pessoajuridica.FabricanteRequestDTO;
+import br.unitins.tp1.ironforge.dto.pessoajuridica.FabricanteUpdateRequestDTO;
 import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
 import br.unitins.tp1.ironforge.model.Fabricante;
 
@@ -16,7 +16,7 @@ public interface FabricanteService {
 
     List<Fabricante> findAll();
 
-    Fabricante create(FabricanteCreateRequestDTO dto);
+    Fabricante create(FabricanteRequestDTO dto);
 
     void update(Long id, FabricanteUpdateRequestDTO dto);
 
