@@ -1,14 +1,11 @@
 @startuml diagram
 
-
-
 class WheyProtein{
     - nome: String
     - descricao: String
     - preco: Double
     - peso: Integer
 }
-
 
 class Lote{
     - codigo: String 
@@ -17,9 +14,6 @@ class Lote{
 }
 
 class Fabricante{
-    -cnpj: String
-    -nome: String
-    -email: String
 }
 
 class Sabor{
@@ -28,7 +22,7 @@ class Sabor{
 }
 
 enum TipoWhey{
-    + CONCETRADO: int
+    + CONCENTRADO: int
     + ISOLADO: int
     + HIDROLISADO: int
 }
@@ -44,33 +38,52 @@ class TabelaNutricional{
     - sodio: Double
     - fibras: Double
     - acucares: Double
-
-}
-
-class Cliente{
-
-}
-
-class Usuario{
-    - nome: String
-    - cpf: String
-    - email: String
-    - senha: String
-    - dataNascimento: LocalDate
 }
 
 class Funcionario{
-    - salario: Double
+    - salario: BigDecimal
+    - dataContratacao: LocalDate
+    - cargo: String
 }
 
+class Cliente {
+}
 
+class Usuario {
+    - username: String
+    - senha: String
+}
 
-class Telefone{
+abstract class Pessoa {
+    - nome: String
+    - email: String
+}
+
+Pessoa "1" *--> "*" Telefone
+Pessoa "1" *--> "*" Endereco
+
+class PessoaFisica {
+    - cpf: String
+}
+
+class PessoaJuridica {
+    - cnpj: String
+}
+
+PessoaFisica --|> Pessoa
+PessoaJuridica --|> Pessoa
+
+Pessoa "1" --> "1" Usuario
+Cliente --> PessoaFisica
+Funcionario --> PessoaFisica
+Fabricante --> PessoaJuridica
+
+class Telefone {
     - codigoArea: String
     - numero: String
 }
 
-class Pedido{
+class Pedido {
     - data: LocalDateTime
     - valorTotal: Double
 }
@@ -78,27 +91,27 @@ class Pedido{
 Pedido "1" *--> "*" StatusPedido
 StatusPedido "*" --> "1" Situacao
 
-class StatusPedido{
+class StatusPedido {
     - dataAtualizacao: LocalDateTime
 }
 
-enum Situacao{
-    +ENVIADO: int
-    +ENTREGUE: int
-    +DEVOLVIDO: int
+enum Situacao {
+    + ENVIADO: int
+    + ENTREGUE: int
+    + DEVOLVIDO: int
 }
 
-class ItemPedido{
-    - quantidade:Integer
+class ItemPedido {
+    - quantidade: Integer
     - preco: Double
 }
 
-class Avaliacao{
+class Avaliacao {
     - comentario: String
     - data: LocalDate
 }
 
-enum Nota{
+enum Nota {
     + ESTRELA_1
     + ESTRELA_2
     + ESTRELA_3
@@ -106,67 +119,67 @@ enum Nota{
     + ESTRELA_5
 }
 
-class Endereco{
-    -logradouro: String
-    -bairro: String
-    -numero:String
-    -complemento: String
-    -cep: String
+class Endereco {
+    - logradouro: String
+    - bairro: String
+    - numero: String
+    - complemento: String
+    - cep: String
 }
 
-class EnderecoEntrega{
-    -logradouro: String
-    -bairro: String
-    -numero:String
-    -complemento: String
-    -cep: String
+class EnderecoEntrega {
+    - logradouro: String
+    - bairro: String
+    - numero: String
+    - complemento: String
+    - cep: String
 }
 
-class Cidade{
-    -nome:String
+class Cidade {
+    - nome: String
 }
 
-class Estado{
-    -nome:String
+class Estado {
+    - nome: String
 }
 
-abstract Pagamento{
+abstract class Pagamento {
     - valor: Double
     - dataPagamento: LocalDateTime
-     -dataVencimento: LocalDateTime
+    - dataVencimento: LocalDateTime
 }
 
-enum Status{
+enum Status {
     + PENDENTE: int
     + PAGO: int
     + VENCIDO: int
 }
 
-class PIX{
-   -chave: String
+class PIX {
+    - chave: String
 }
 
-class Boleto{
-    -codigoBarras:String
+class Boleto {
+    - codigoBarras: String
 }
 
-class Cartao{
+class Cartao {
     - nomeTitular: String
     - numero: String
-    - codigoSecuranca: String
+    - codigoSeguranca: String
     - validade: LocalDate
 }
 
-enum TipoCartao{
+enum TipoCartao {
     + DEBITO: int
     + CREDITO: int
 }
 
-class Cupom{
-    -codigo: String
-    -percentualDesconto: Double
-    -dataValidade: LocalDateTime
-    -ativo: Boolean
+class Cupom {
+    - codigo: String
+    - percentualDesconto: Double
+    - dataValidade: LocalDateTime
+    - ativo: Boolean
 }
 
 Pedido *--> Pagamento
@@ -176,43 +189,28 @@ PIX --|> Pagamento
 Boleto --|> Pagamento
 Cartao --|> Pagamento
 
-Pedido "1" *--> "*"ItemPedido
+Pedido "1" *--> "*" ItemPedido
 ItemPedido "*" --> "1" Lote
 ItemPedido "*" o--> "1" Cupom
-' Não faz sentido Cliente ter Pedido , se não teria que inserir pedido em cliente
-Pedido  "*" --> "1" Cliente  
+Pedido "*" --> "1" Cliente  
 Pedido "1" *--> "1" EnderecoEntrega
 
 Cidade "*" *--> "1" Estado
 Endereco "*" --> "1" Cidade
 EnderecoEntrega "*" --> "1" Cidade
 
-' Se a modelagem fosse de 1 para 1 , eu teria produtos únicos
 WheyProtein "*" --> "1" Sabor 
 WheyProtein "*" --> "1" TipoWhey
 WheyProtein "1" *--> "1" TabelaNutricional
-
-
-WheyProtein "*"--> "1" Fabricante
+WheyProtein "*" --> "1" Fabricante
 Lote "*" --> "1" WheyProtein
 
-
 Cliente "*" --> "*" WheyProtein : listaDesejos
-Usuario "1" *-up-> "*" Endereco
-Usuario "1" *-up-> "*" Telefone
-
-Cliente "1"-right-> "1" Usuario
-Funcionario "1" --> "1" Usuario
-Fabricante "1" *-left-> "*" Telefone
-Fabricante "1" *--> "*" Endereco
-
 Cupom "*" o--> "1" Fabricante
-
-
 Avaliacao "*" --> "1" Cliente
 Avaliacao "*" --> "1" WheyProtein
 Avaliacao "*" --> "1" Nota
 
-' Anotações
 note left of WheyProtein: Peso em gramas
 
+@enduml
