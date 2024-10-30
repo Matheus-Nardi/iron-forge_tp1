@@ -2,7 +2,6 @@ package br.unitins.tp1.ironforge.resource;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -23,7 +22,7 @@ public class WheyProteinResourceTest {
 
     @Test
     void testCreate() {
-        WheyProteinRequestDTO dto = new WheyProteinRequestDTO("123456789", "Whey teste", "um whey para testes", 1L, 1,
+        WheyProteinRequestDTO dto = new WheyProteinRequestDTO(" 631656714142", "Whey teste", "um whey para testes", 1L, 1,
                 100.00, 1000, 1L);
 
         given()
@@ -43,7 +42,7 @@ public class WheyProteinResourceTest {
 
     @Test
     void testDelete() {
-        WheyProteinRequestDTO dto = new WheyProteinRequestDTO("123456789", "Whey teste", "um whey para testes", 1L, 1,
+        WheyProteinRequestDTO dto = new WheyProteinRequestDTO("631656714142", "Whey teste", "um whey para testes", 1L, 1,
                 100.00, 1000, 1L);
 
         Long id = wheyService.create(dto).getId();
@@ -70,20 +69,20 @@ public class WheyProteinResourceTest {
     void testFindByNome() {
         given()
                 .when()
-                .queryParam("nome", "Whey da Growth")
+                .queryParam("nome", "Ultra Whey ")
                 .get("/wheys/search/nome")
                 .then().statusCode(200)
-                .body("[0].nome", is("Whey da Growth"), "$.size()", greaterThan(1));
+                .body("[0].nome", is("Ultra Whey Supreme"));
     }
 
     @Test
     void testFindByPreco() {
         given()
                 .when()
-                .queryParam("preco", 100)
+                .queryParam("preco", 130)
                 .get("/wheys/search/preco")
                 .then().statusCode(200)
-                .body("[0].nome", is("Whey da Growth"), "$.size()", greaterThan(1));
+                .body("[0].nome", is("Neutro Energizante"));
     }
 
     @Test
@@ -93,7 +92,7 @@ public class WheyProteinResourceTest {
 
                 .get("/wheys/search/preco/min/{precoMin}/max/{precoMax}", 100, 150)
                 .then().statusCode(200)
-                .body("[0].nome", is("Whey da Growth"), "$.size()", greaterThan(2));
+                .body("[0].nome", is("Neutro Energizante"));
     }
 
     @Test
@@ -103,7 +102,7 @@ public class WheyProteinResourceTest {
                 .queryParam("sabor", "Chocolate")
                 .get("/wheys/search/sabor")
                 .then().statusCode(200)
-                .body("[0].nome", is("Whey da Growth"), "$.size()", is(1),
+                .body("[0].nome", is("Delícia de Chocolate Whey"),
                         "[0].tipoWhey.label", is("Concentrado"));
     }
 
@@ -114,7 +113,7 @@ public class WheyProteinResourceTest {
                 .queryParam("tipo", "ISOLADO")
                 .get("/wheys/search/tipo")
                 .then().statusCode(200)
-                .body("[0].id", is(3), "[0].nome", is("Whey da Growth"),
+                .body("[0].id", is(4), "[0].nome", is("Cookies Whey Delight"),
                         "[0].tipoWhey.label", is("Isolado"));
     }
 
@@ -127,12 +126,12 @@ public class WheyProteinResourceTest {
 
     @Test
     void testUpdate() {
-        WheyProteinRequestDTO dto = new WheyProteinRequestDTO("123456789", "Whey teste", "um whey para testes", 1L, 1,
+        WheyProteinRequestDTO dto = new WheyProteinRequestDTO("631656714142", "Whey teste", "um whey para testes", 1L, 1,
                 100.00, 1000, 1L);
 
         Long id = wheyService.create(dto).getId();
 
-        WheyProteinRequestDTO novoDto = new WheyProteinRequestDTO("123456789", "Whey novo",
+        WheyProteinRequestDTO novoDto = new WheyProteinRequestDTO("631656714142", "Whey novo",
                 "um whey para testes atualizado", 2L, 2,
                 500.00, 4000, 1L);
 

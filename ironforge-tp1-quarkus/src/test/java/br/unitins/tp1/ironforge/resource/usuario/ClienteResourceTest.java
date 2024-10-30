@@ -3,6 +3,7 @@ package br.unitins.tp1.ironforge.resource.usuario;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.time.LocalDate;
@@ -11,13 +12,12 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
+import br.unitins.tp1.ironforge.dto.pessoafisica.ClienteRequestDTO;
+import br.unitins.tp1.ironforge.dto.pessoafisica.ClienteUpdateRequestDTO;
 import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
-import br.unitins.tp1.ironforge.dto.usuario.UsuarioCreateRequestDTO;
-import br.unitins.tp1.ironforge.dto.usuario.cliente.ClienteCreateRequestDTO;
+import br.unitins.tp1.ironforge.dto.usuario.UsuarioRequestDTO;
 import br.unitins.tp1.ironforge.model.usuario.Cliente;
-import br.unitins.tp1.ironforge.model.usuario.Usuario;
 import br.unitins.tp1.ironforge.service.usuario.ClienteService;
-import br.unitins.tp1.ironforge.service.usuario.UsuarioService;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import jakarta.inject.Inject;
@@ -27,9 +27,6 @@ public class ClienteResourceTest {
 
         @Inject
         public ClienteService clienteService;
-
-        @Inject
-        public UsuarioService usuarioService;
 
         @Test
         void testCreate() {
@@ -41,12 +38,9 @@ public class ClienteResourceTest {
                                 .of(new EnderecoRequestDTO(1L, "Teste", "Teste bairro", "Teste numero",
                                                 "Teste compleento", "121212"));
 
-                UsuarioCreateRequestDTO userDto = new UsuarioCreateRequestDTO("Igor Giovanni Gael Pires", "22480428095",
-                                "usuario@email.com",
-                                "macarrão123", LocalDate.of(1990, 10, 10), telefones, enderecos);
-
-                ClienteCreateRequestDTO dto = new ClienteCreateRequestDTO(userDto);
-
+                ClienteRequestDTO dto = new ClienteRequestDTO("Cliente", "27263640040", "cliente@gmail.com",
+                                LocalDate.of(1990, 10, 10), telefones, enderecos,
+                                new UsuarioRequestDTO("cliente.dto", "pato branco"));
                 given()
                                 .contentType(ContentType.JSON)
                                 .body(dto)
@@ -54,9 +48,9 @@ public class ClienteResourceTest {
                                 .post("/clientes")
                                 .then()
                                 .statusCode(201)
-                                .body("id", notNullValue(), "usuario.nome", is("Igor Giovanni Gael Pires"));
+                                .body("id", notNullValue(), "nome", is("Cliente"));
 
-                clienteService.delete(clienteService.findByNome("Igor Giovanni Gael Pires").getFirst().getId());
+                clienteService.delete(clienteService.findByNome("Cliente").getFirst().getId());
         }
 
         @Test
@@ -69,10 +63,9 @@ public class ClienteResourceTest {
                                 .of(new EnderecoRequestDTO(1L, "Teste", "Teste bairro", "Teste numero",
                                                 "Teste comlemento", "121212"));
 
-                UsuarioCreateRequestDTO userDto = new UsuarioCreateRequestDTO("Igor Giovanni Gael Pires", "22480428095",
-                                "usuario@email.com",
-                                "macarrão123", LocalDate.of(1990, 10, 10), telefones, enderecos);
-                ClienteCreateRequestDTO dto = new ClienteCreateRequestDTO(userDto);
+                ClienteRequestDTO dto = new ClienteRequestDTO("Cliente", "27263640040", "cliente@gmail.com",
+                                LocalDate.of(1990, 10, 10), telefones, enderecos,
+                                new UsuarioRequestDTO("cliente.dto", "pato branco"));
 
                 Long id = clienteService.create(dto).getId();
                 given()
@@ -82,9 +75,7 @@ public class ClienteResourceTest {
                                 .statusCode(204);
 
                 Cliente cliente = clienteService.findById(id);
-                Usuario usuario = usuarioService.findById(id);
                 assertNull(cliente);
-                assertNull(usuario);
         }
 
         @Test
@@ -103,18 +94,51 @@ public class ClienteResourceTest {
                                 .get("/clientes/{id}", 1L)
                                 .then()
                                 .statusCode(200)
-                                .body("usuario.nome", is("Pedro"));
+                                .body("nome", is("João Silva"));
         }
 
         @Test
         void testFindByNome() {
                 given()
                                 .when()
-                                .get("/clientes/search/{nome}", "Pedro")
+                                .get("/clientes/search/{nome}", "João")
                                 .then()
                                 .statusCode(200)
-                                .body("[0].id", is(1), "[0].usuario.nome", is("Pedro"));
+                                .body("[0].id", is(1), "[0].nome", is("João Silva"));
         }
 
-       
+        @Test
+        void testUpdate() {
+                List<TelefoneRequestDTO> telefones = List.of(new TelefoneRequestDTO("63", "912345678"),
+                                new TelefoneRequestDTO("85", "912355678"));
+
+                List<EnderecoRequestDTO> enderecos = List
+                                .of(new EnderecoRequestDTO(1L, "Teste", "Teste bairro", "Teste numero",
+                                                "Teste comlemento", "121212"));
+
+                ClienteRequestDTO dto = new ClienteRequestDTO("Cliente", "27263640040",
+                                "cliente@gmail.com",
+                                LocalDate.of(1990, 10, 10), telefones, enderecos,
+                                new UsuarioRequestDTO("cliente.dto", "pato branco"));
+
+                Long id = clienteService.create(dto).getId();
+
+                ClienteUpdateRequestDTO novoCliente = new ClienteUpdateRequestDTO("Cliente Novo",
+                                "27263640040",
+                                "clienteNovo@gmail.com", LocalDate.of(1990, 07, 20));
+                given()
+                                .contentType(ContentType.JSON)
+                                .body(novoCliente)
+                                .when()
+                                .patch("/clientes/{id}", id)
+                                .then()
+                                .statusCode(204);
+
+                Cliente cliente = clienteService.findById(id);
+                assertEquals(cliente.getPessoaFisica().getNome(), novoCliente.nome());
+                assertEquals(cliente.getPessoaFisica().getDataNascimento(), novoCliente.dataNascimento());
+
+                clienteService.delete(clienteService.findById(id).getId());
+        }
+
 }

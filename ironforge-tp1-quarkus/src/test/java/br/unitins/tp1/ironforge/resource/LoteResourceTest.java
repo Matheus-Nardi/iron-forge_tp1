@@ -59,17 +59,16 @@ public class LoteResourceTest {
 
     @Test
     void testFindByCodigo() {
-        String codigo = "L-2024-10-21-WHEY";
 
         given()
-                .queryParam("codigo", codigo)
+                .queryParam("codigo", "COD-WHEY-001")
                 .when()
                 .get("/lotes/search/codigo")
                 .then()
                 .statusCode(200)
                 .body("[0].id", is(1))
-                .body("[0].quantidade", is(50))
-                .body("[0].wheyProtein.nome", is("Whey da Growth"));
+                .body("[0].quantidade", is(100))
+                .body("[0].wheyProtein.nome", is("Ultra Whey Supreme"));
 
     }
 
@@ -92,8 +91,8 @@ public class LoteResourceTest {
                 .then()
                 .statusCode(200)
                 .body("[0].id", is(1))
-                .body("[0].quantidade", is(50))
-                .body("[0].wheyProtein.nome", is("Whey da Growth"));
+                .body("[0].quantidade", is(100))
+                .body("[0].wheyProtein.nome", is("Ultra Whey Supreme"));
     }
 
     @Test

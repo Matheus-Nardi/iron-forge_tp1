@@ -114,6 +114,7 @@ public class ClienteServiceImpl implements ClienteService {
         Telefone telefone = cliente.getPessoaFisica().getTelefones().stream().filter(t -> t.getId().equals(idTelefone))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Telefone não encontrado"));
+
         telefone.setCodigoArea(dto.codigoArea());
         telefone.setNumero(dto.numero());
     }

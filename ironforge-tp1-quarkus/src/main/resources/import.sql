@@ -74,6 +74,7 @@ INSERT INTO sabor (nome) VALUES
 
 -- Inserção de whey protein
 INSERT INTO wheyprotein (
+    upc,
     nome,
     descricao,
     preco,
@@ -82,12 +83,12 @@ INSERT INTO wheyprotein (
     tipoWhey,
     id_fabricante
 ) VALUES 
-    ('Ultra Whey Supreme', 'Proteína de alta qualidade com sabor de chocolate.', 149.90, 900, 1, 1, 1),
-    ('Delícia de Morango Whey', 'Sabor incrível de morango, ideal para smoothies.', 139.90, 900, 2, 1, 2),
-    ('Baunilha Mágica', 'Whey de baunilha com ingredientes que aumentam o foco.', 154.90, 1000, 3, 2, 1),
-    ('Cookies Whey Delight', 'Combinação perfeita de cookies e proteína.', 159.90, 800, 5, 2, 2),
-    ('Neutro Energizante', 'Sabor neutro para misturar com qualquer receita.', 129.90, 900, 4, 3, 1),
-    ('Trem de Chocolate', 'Experimente a explosão de chocolate na sua proteína.', 169.90, 950, 1, 3, 2);
+    ('815044020354','Ultra Whey Supreme', 'Proteína de alta qualidade com sabor de chocolate.', 149.90, 900, 1, 1, 1),
+    ('631656711325','Delícia de Chocolate Whey', 'Sabor incrível de chocolate, ideal para smoothies.', 139.90, 900, 2, 1, 2),
+    ('883309010105','Baunilha Mágica', 'Whey de baunilha com ingredientes que aumentam o foco.', 154.90, 1000, 3, 2, 1),
+    ('631656714142','Cookies Whey Delight', 'Combinação perfeita de cookies e proteína.', 159.90, 800, 5, 2, 2),
+    ('631656716627','Neutro Energizante', 'Sabor neutro para misturar com qualquer receita.', 129.90, 900, 4, 3, 1),
+    (' 631656714142','Trem de Chocolate', 'Experimente a explosão de chocolate na sua proteína.', 169.90, 950, 1, 3, 2);
 
 -- Inserção de lotes
 INSERT INTO lote (quantidade, dataFabricacao, id_whey, codigo) VALUES

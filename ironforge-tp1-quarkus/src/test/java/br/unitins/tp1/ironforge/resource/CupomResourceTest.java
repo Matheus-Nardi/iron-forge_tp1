@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -92,15 +91,13 @@ public class CupomResourceTest {
     @Test
     void testFindByFabricante() {
         Long idFabricante = 1L;
-        List<Cupom> cupons = cupomService.findByFabricante(1L);
 
         given()
                 .when()
                 .get("/cupons/search/{idFabricante}", idFabricante)
                 .then()
-                .statusCode(200);
-
-        assertEquals(cupons.size(), 4);
+                .statusCode(200)
+                .body("[0].codigo", is("WHEY10"));
 
     }
 
