@@ -5,6 +5,7 @@ import java.util.List;
 import br.unitins.tp1.ironforge.dto.whey.WheyProteinRequestDTO;
 import br.unitins.tp1.ironforge.model.whey.TipoWhey;
 import br.unitins.tp1.ironforge.model.whey.WheyProtein;
+import br.unitins.tp1.ironforge.model.whey.tabelanutricional.Food;
 import br.unitins.tp1.ironforge.repository.WheyProteinRepository;
 import br.unitins.tp1.ironforge.service.fabricante.FabricanteService;
 import br.unitins.tp1.ironforge.service.whey.sabor.SaborService;
@@ -52,8 +53,12 @@ public class WheyProteinServiceImpl implements WheyProteinService {
     @Override
     @Transactional
     public WheyProtein create(WheyProteinRequestDTO dto) {
+        Food tabela = tabelaNutricionalService.getTabelaNutricional(dto.upc());
 
         WheyProtein whey = new WheyProtein();
+        if(tabela == null){
+            throw new IllegalArgumentException("O código UPC fornecido é invalído. Uma lista de códigos pode ser acessada em: https://www.barcodespider.com/whey");
+        }
         whey.setNome(dto.nome());
         whey.setDescricao(dto.descricao());
         whey.setPeso(dto.peso());

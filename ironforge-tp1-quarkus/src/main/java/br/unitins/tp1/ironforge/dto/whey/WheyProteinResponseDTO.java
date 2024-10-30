@@ -1,9 +1,7 @@
 package br.unitins.tp1.ironforge.dto.whey;
 
-import br.unitins.tp1.ironforge.dto.pessoajuridica.FabricanteResponseDTO;
 import br.unitins.tp1.ironforge.model.whey.TipoWhey;
 import br.unitins.tp1.ironforge.model.whey.WheyProtein;
-import br.unitins.tp1.ironforge.model.whey.tabelanutricional.Food;
 
 public record WheyProteinResponseDTO(
         Long id,
@@ -13,8 +11,8 @@ public record WheyProteinResponseDTO(
         TipoWhey tipoWhey,
         Double preco,
         Integer peso,
-        FabricanteResponseDTO fabricante,
-        Food tabelaNutricional) {
+        String fabricante,
+        TabelaNutricionalResponseDTO tabelaNutricional) {
 
     public static WheyProteinResponseDTO valueOf(WheyProtein whey) {
         return new WheyProteinResponseDTO(whey.getId(),
@@ -24,7 +22,7 @@ public record WheyProteinResponseDTO(
                 whey.getTipoWhey(),
                 whey.getPreco(),
                 whey.getPeso(),
-                FabricanteResponseDTO.valueOf(whey.getFabricante()),
-                whey.getFood());
+                whey.getFabricante().getPessoaJuridica().getNome(),
+                TabelaNutricionalResponseDTO.valeuOf(whey.getFood()));
     }
 }
