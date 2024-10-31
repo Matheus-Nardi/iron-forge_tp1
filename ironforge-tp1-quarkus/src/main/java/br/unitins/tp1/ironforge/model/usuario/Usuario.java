@@ -1,15 +1,16 @@
 package br.unitins.tp1.ironforge.model.usuario;
 
 import br.unitins.tp1.ironforge.model.DefaultEntity;
-import jakarta.persistence.Column;
+import br.unitins.tp1.ironforge.model.Perfil;
 import jakarta.persistence.Entity;
 
 @Entity
 public class Usuario extends DefaultEntity {
 
     private String username;
-    @Column(length = 20)
     private String senha;
+
+    private Perfil perfil;
 
     public String getUsername() {
         return username;
@@ -25,6 +26,14 @@ public class Usuario extends DefaultEntity {
 
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    public Perfil getPerfil() {
+        return perfil;
+    }
+
+    public void setPerfil(Perfil perfil) {
+        this.perfil = perfil;
     }
 
 }

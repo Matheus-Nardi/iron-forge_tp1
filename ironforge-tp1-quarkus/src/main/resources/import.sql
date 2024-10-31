@@ -12,11 +12,11 @@ INSERT INTO cidade (nome, id_estado) VALUES
     ('São Paulo', 2);
 
 -- Inserção de usuários
-INSERT INTO usuario (username, senha) VALUES 
-    ('joao.silva', 'acabatecompimenta'),
-    ('wheyHot', '123456'),
-    ('maxuel', 'flamengo'),
-    ('growthsuplementos', 'senhaSegura');
+INSERT INTO usuario (username, senha, perfil) VALUES 
+    ('joao.silva', 'acabatecompimenta', 2),
+    ('wheyHot', '123456', 2),
+    ('maxuel', 'flamengo' , 1),
+    ('growthsuplementos', 'senhaSegura',2);
 
 -- Inserção de pessoas
 INSERT INTO pessoa (id_usuario, email, nome) VALUES 
