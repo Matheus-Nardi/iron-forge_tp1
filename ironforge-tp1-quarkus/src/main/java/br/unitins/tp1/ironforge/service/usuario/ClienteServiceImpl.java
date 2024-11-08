@@ -173,4 +173,9 @@ public class ClienteServiceImpl implements ClienteService {
         return enderecos;
     }
 
+    @Override
+    public Cliente findByUsuario(String username) {
+        return clienteRepository.findClienteByUsuario(username);
+    }
+
 }

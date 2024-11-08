@@ -9,8 +9,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class PedidoRepository implements PanacheRepository<Pedido> {
 
-    public List<Pedido> findByUsuario(Long idCliente) {
-        return find("cliente.id = ?1", idCliente).firstResult();
+    public List<Pedido> findByCliente(Long idCliente) {
+        return find("cliente.id = ?1", idCliente).list();
     }
 
 

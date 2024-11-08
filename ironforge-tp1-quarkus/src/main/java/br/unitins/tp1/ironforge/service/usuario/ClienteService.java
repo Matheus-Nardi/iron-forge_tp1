@@ -14,6 +14,8 @@ public interface ClienteService {
 
     List<Cliente> findByNome(String nome);
 
+    Cliente findByUsuario(String username);
+
     List<Cliente> findAll();
 
     Cliente create(ClienteRequestDTO dto);

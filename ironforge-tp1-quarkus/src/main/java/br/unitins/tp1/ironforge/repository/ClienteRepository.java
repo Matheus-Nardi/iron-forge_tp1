@@ -13,4 +13,8 @@ public class ClienteRepository implements PanacheRepository<Cliente> {
         return find("pessoaFisica.nome LIKE ?1", "%" + nome + "%").list();
     }
 
+    public Cliente findClienteByUsuario(String username) {
+        return find("pessoaFisica.usuario.username = ?1 ", username).firstResult();
+    }
+
 }

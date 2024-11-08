@@ -3,9 +3,10 @@ package br.unitins.tp1.ironforge.model.pedido;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import br.unitins.tp1.ironforge.model.Cupom;
 import br.unitins.tp1.ironforge.model.DefaultEntity;
 import br.unitins.tp1.ironforge.model.ItemPedido;
-import br.unitins.tp1.ironforge.model.usuario.Usuario;
+import br.unitins.tp1.ironforge.model.usuario.Cliente;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -16,13 +17,18 @@ import jakarta.persistence.OneToMany;
 public class Pedido extends DefaultEntity {
 
     private LocalDateTime data;
+
     @ManyToOne
-    @JoinColumn(name = "id_usuario")
-    private Usuario usuario;
+    @JoinColumn(name = "id_cliente")
+    private Cliente cliente;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_pedido")
     private List<ItemPedido> itensPedidos;
+
+    @ManyToOne
+    @JoinColumn(name = "id_cupom")
+    private Cupom cupom;
 
     private Double valorTotal;
 
@@ -50,12 +56,20 @@ public class Pedido extends DefaultEntity {
         this.valorTotal = valorTotal;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
+    public Cupom getCupom() {
+        return cupom;
     }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setCupom(Cupom cupom) {
+        this.cupom = cupom;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 
 }

@@ -6,11 +6,15 @@ import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.itempedido.ItemPedidoRequestDTO;
 import br.unitins.tp1.ironforge.dto.pedido.PedidoRequestDTO;
+import br.unitins.tp1.ironforge.model.Cupom;
 import br.unitins.tp1.ironforge.model.ItemPedido;
 import br.unitins.tp1.ironforge.model.Lote;
 import br.unitins.tp1.ironforge.model.pedido.Pedido;
+import br.unitins.tp1.ironforge.model.usuario.Cliente;
 import br.unitins.tp1.ironforge.repository.PedidoRepository;
+import br.unitins.tp1.ironforge.service.cupom.CupomService;
 import br.unitins.tp1.ironforge.service.lote.LoteService;
+import br.unitins.tp1.ironforge.service.usuario.ClienteService;
 import br.unitins.tp1.ironforge.service.usuario.UsuarioService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -26,7 +30,13 @@ public class PedidoServiceImpl implements PedidoService {
     public UsuarioService usuarioService;
 
     @Inject
+    public ClienteService clienteService;
+
+    @Inject
     public LoteService loteService;
+
+    @Inject
+    public CupomService cupomService;
 
     @Override
     public Pedido findById(Long id) {
@@ -38,10 +48,23 @@ public class PedidoServiceImpl implements PedidoService {
     public Pedido create(PedidoRequestDTO dto, String username) {
         Pedido pedido = new Pedido();
         pedido.setData(LocalDateTime.now());
-        pedido.setUsuario(usuarioService.findByUsername(username));
-        pedido.setValorTotal(dto.valorTotal());
+        pedido.setCliente(clienteService.findByUsuario(username));
+        obterCupom(dto, pedido);
 
         pedido.setItensPedidos(new ArrayList<>());
+        definirItens(dto, pedido);
+
+        Double valorFinal = arredondarParaDuasCasasDecimais(aplicarDesconto(pedido));
+        if (!(dto.valorTotal().equals(valorFinal)))
+            throw new IllegalArgumentException("O valor fornecido não corresponde ao valor final do pedido");
+
+        pedido.setValorTotal(valorFinal);
+        pedidoRepository.persist(pedido);
+
+        return pedido;
+    }
+
+    private void definirItens(PedidoRequestDTO dto, Pedido pedido) {
         for (ItemPedidoRequestDTO itemDTO : dto.itensPedidos()) {
             ItemPedido item = new ItemPedido();
             Lote lote = loteService.findByWhey(itemDTO.idProduto());
@@ -53,24 +76,58 @@ public class PedidoServiceImpl implements PedidoService {
 
             pedido.getItensPedidos().add(item);
         }
+    }
 
-        pedidoRepository.persist(pedido);
+    private void obterCupom(PedidoRequestDTO dto, Pedido pedido) {
+        if (dto.cupom() == null || dto.cupom().isBlank()) {
+            pedido.setCupom(null);
+            return;
+        } else {
+            List<Cupom> cupons = cupomService.findByCodigo(dto.cupom());
+            if (cupons.isEmpty()) {
+                throw new IllegalArgumentException("Cupom não encontrado ou inválido");
+            }
 
-        return pedido;
+            if (!cupons.get(0).isValido() || (cupons.get(0).getAtivo().equals(false))) {
+                throw new IllegalArgumentException("Cupom não encontrado ou inválido");
+            }
+
+            pedido.setCupom(cupons.get(0));
+        }
     }
 
     private Double calcularTotal(List<ItemPedido> itensPedidos) {
+        if (itensPedidos == null || itensPedidos.isEmpty()) {
+            return 0.0;
+        }
         Double total = 0.0;
         for (ItemPedido itemPedido : itensPedidos) {
-            total += itemPedido.getPreco();
+            total = total + itemPedido.getPreco() * itemPedido.getQuantidade();
         }
 
         return total;
     }
 
+    private Double aplicarDesconto(Pedido pedido) {
+        Double total = calcularTotal(pedido.getItensPedidos());
+        if (pedido.getCupom() == null)
+            return total;
+
+        return total - (pedido.getCupom().getPercentualDesconto() * total);
+    }
+
+    private Double arredondarParaDuasCasasDecimais(Double valor) {
+        if (valor == null) {
+            return 0.0;
+        }
+
+        return Math.round(valor * 100.0) / 100.0;
+    }
+
     @Override
     public List<Pedido> findByUsername(String username) {
-        return null;
+        Cliente cliente = clienteService.findByUsuario(username);
+        return pedidoRepository.findByCliente(cliente.getId());
     }
 
 }

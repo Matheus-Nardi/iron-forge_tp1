@@ -96,9 +96,14 @@ class StatusPedido {
 }
 
 enum Situacao {
+    + SEPARANDO_PEDIDO: int
+    + PRONTO_PARA_ENVIO: int       
     + ENVIADO: int
-    + ENTREGUE: int
-    + DEVOLVIDO: int
+    + EM_TRANSITO:int
+    + ENTREGUE:int
+    + DESISTIDO:int
+    + DEVOLVIDO:int
+
 }
 
 class ItemPedido {
@@ -191,7 +196,7 @@ Cartao --|> Pagamento
 
 Pedido "1" *--> "*" ItemPedido
 ItemPedido "*" --> "1" Lote
-ItemPedido "*" o--> "1" Cupom
+Pedido "*" o--> "1" Cupom
 Pedido "*" --> "1" Cliente  
 Pedido "1" *--> "1" EnderecoEntrega
 

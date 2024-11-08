@@ -16,6 +16,7 @@ import br.unitins.tp1.ironforge.repository.FuncionarioRepository;
 import br.unitins.tp1.ironforge.repository.PessoaFisicaRepository;
 import br.unitins.tp1.ironforge.repository.UsuarioRepository;
 import br.unitins.tp1.ironforge.service.cidade.CidadeService;
+import br.unitins.tp1.ironforge.service.hash.HashService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityNotFoundException;
@@ -35,6 +36,9 @@ public class FuncionarioServiceImpl implements FuncionarioService {
 
     @Inject
     public CidadeService cidadeService;
+
+    @Inject
+    public HashService hashService;
 
     @Override
     public Funcionario findById(Long id) {
@@ -88,7 +92,7 @@ public class FuncionarioServiceImpl implements FuncionarioService {
 
         // Definindo usuario
         usuario.setUsername(dto.usuario().username());
-        usuario.setSenha(dto.usuario().senha());
+        usuario.setSenha(hashService.getHashSenha(dto.usuario().senha()));
         usuarioRepository.persist(usuario);
         return usuario;
     }

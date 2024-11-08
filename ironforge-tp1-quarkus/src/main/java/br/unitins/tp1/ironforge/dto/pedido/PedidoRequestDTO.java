@@ -6,11 +6,9 @@ import br.unitins.tp1.ironforge.dto.itempedido.ItemPedidoRequestDTO;
 import jakarta.validation.constraints.NotNull;
 
 public record PedidoRequestDTO(
-        @NotNull(message = "O campo valor total deve ser informado")
-        Double valorTotal,
-        List<ItemPedidoRequestDTO> itensPedidos
-)
-        
+                @NotNull(message = "O campo valor total deve ser informado") Double valorTotal,
+                List<ItemPedidoRequestDTO> itensPedidos,
+                String cupom)
 
 {
 

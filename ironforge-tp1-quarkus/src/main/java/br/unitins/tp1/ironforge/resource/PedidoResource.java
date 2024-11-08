@@ -33,7 +33,6 @@ public class PedidoResource {
     @GET
     @RolesAllowed("User")
     public Response findByUsername() {
-
         String username = jsonWebToken.getSubject();
         List<Pedido> pedidos = pedidoService.findByUsername(username);
         return Response.ok(pedidos.stream().map(PedidoResponseDTO::valueOf)).build();

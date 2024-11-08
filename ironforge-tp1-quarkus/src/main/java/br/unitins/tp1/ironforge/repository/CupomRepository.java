@@ -10,7 +10,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 public class CupomRepository implements PanacheRepository<Cupom> {
 
     public List<Cupom> findByCodigo(String codigo) {
-        return find("codigo LIKE ?1", "%" + codigo + "%").list();
+        return find("codigo = ?1", codigo).list();
     }
 
     public List<Cupom> findByFabricante(Long idFabricante) {

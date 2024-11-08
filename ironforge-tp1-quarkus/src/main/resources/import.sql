@@ -13,9 +13,9 @@ INSERT INTO cidade (nome, id_estado) VALUES
 
 -- Inserção de usuários
 INSERT INTO usuario (username, senha, perfil) VALUES 
-    ('joao.silva', 'dE5TpSNMnb+T6Ki8eB8MjwkWjQ2n1zYAAz34lp4cZ3Imszx0z3e1PHC72JKkH0NFcKCceQfbPVQJyll4v9hcJA==', 2),
+    ('joao.silva', 'OaF4paP+SqLenJW8Rjrk5goXvajn1knmWXfupry55Kbkpll5xliVH9X3U8hMf6l4x/d2WnYf30xNVYTtLu7jmQ==', 2),  -- Senha é abacatecompimenta
     ('wheyHot', '123456', 2),
-    ('maxuel', 'qOf0Qw7LIP5PqpJJMwKqcX6BZ+t+elaNZW+fBPY70EsAhd2deno3eb2KnjlTMC06GwBMhShPtQJM8k308HXQog==' , 2),
+    ('maxuel', 'qOf0Qw7LIP5PqpJJMwKqcX6BZ+t+elaNZW+fBPY70EsAhd2deno3eb2KnjlTMC06GwBMhShPtQJM8k308HXQog==' , 2), -- Senha é flamengo
     ('growthsuplementos', 'senhaSegura',2);
 
 -- Inserção de pessoas
@@ -88,7 +88,7 @@ INSERT INTO wheyprotein (
     ('883309010105','Baunilha Mágica', 'Whey de baunilha com ingredientes que aumentam o foco.', 154.90, 1000, 3, 2, 1),
     ('631656714142','Cookies Whey Delight', 'Combinação perfeita de cookies e proteína.', 159.90, 800, 5, 2, 2),
     ('631656716627','Neutro Energizante', 'Sabor neutro para misturar com qualquer receita.', 129.90, 900, 4, 3, 1),
-    (' 631656714142','Trem de Chocolate', 'Experimente a explosão de chocolate na sua proteína.', 169.90, 950, 1, 3, 2);
+    ('631656714142','Trem de Chocolate', 'Experimente a explosão de chocolate na sua proteína.', 169.90, 950, 1, 3, 2);
 
 -- Inserção de lotes
 INSERT INTO lote (quantidade, dataFabricacao, id_whey, codigo) VALUES
@@ -103,10 +103,10 @@ INSERT INTO lote (quantidade, dataFabricacao, id_whey, codigo) VALUES
 
 -- Inserção de cupons
 INSERT INTO cupom (id_fabricante, codigo, percentualdesconto, datavalidade, ativo) VALUES
-    (1, 'WHEY10', 10.0, '2024-12-31T23:59:59', true), 
-    (1, 'WHEY20', 20.0, '2024-11-30T23:59:59', false), 
+    (1, 'WHEY10', 0.1, '2024-12-31T23:59:59', true), 
+    (1, 'WHEY20', 0.2, '2024-11-30T23:59:59', false), 
     (1, 'FRETEWHEY', 0.0, '2024-10-31T23:59:59', true), 
-    (2, 'WHEY30', 30.0, '2024-12-15T23:59:59', false), 
-    (2, 'WHEYBLACK', 25.0, '2024-09-01T23:59:59', true),
-    (2, 'SUPER20', 5.0, '2024-12-01T23:59:59', true), 
-    (2, 'GROWTH20', 50.0, '2024-02-20T23:59:59', true);
+    (2, 'WHEY30', 0.3, '2024-12-15T23:59:59', false), 
+    (2, 'WHEYBLACK', 0.25, '2024-09-01T23:59:59', true),
+    (2, 'SUPER20', 0.20, '2024-12-01T23:59:59', true), 
+    (2, 'GROWTH20', 0.20, '2024-02-20T23:59:59', true);
