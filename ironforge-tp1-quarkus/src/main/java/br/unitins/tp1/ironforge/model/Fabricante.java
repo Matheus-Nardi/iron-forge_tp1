@@ -1,5 +1,6 @@
 package br.unitins.tp1.ironforge.model;
 
+import br.unitins.tp1.ironforge.model.usuario.PessoaJuridica;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;

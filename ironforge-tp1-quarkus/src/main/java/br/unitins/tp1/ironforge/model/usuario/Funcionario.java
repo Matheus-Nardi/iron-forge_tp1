@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import br.unitins.tp1.ironforge.model.DefaultEntity;
-import br.unitins.tp1.ironforge.model.PessoaFisica;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;

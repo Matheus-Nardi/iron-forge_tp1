@@ -13,9 +13,9 @@ INSERT INTO cidade (nome, id_estado) VALUES
 
 -- Inserção de usuários
 INSERT INTO usuario (username, senha, perfil) VALUES 
-    ('joao.silva', 'acabatecompimenta', 2),
+    ('joao.silva', 'dE5TpSNMnb+T6Ki8eB8MjwkWjQ2n1zYAAz34lp4cZ3Imszx0z3e1PHC72JKkH0NFcKCceQfbPVQJyll4v9hcJA==', 2),
     ('wheyHot', '123456', 2),
-    ('maxuel', 'flamengo' , 1),
+    ('maxuel', 'qOf0Qw7LIP5PqpJJMwKqcX6BZ+t+elaNZW+fBPY70EsAhd2deno3eb2KnjlTMC06GwBMhShPtQJM8k308HXQog==' , 2),
     ('growthsuplementos', 'senhaSegura',2);
 
 -- Inserção de pessoas

@@ -1,15 +1,10 @@
 package br.unitins.tp1.ironforge.service.lote;
 
-import java.time.LocalDate;
-
 import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.lote.LoteRequestDTO;
-
 import br.unitins.tp1.ironforge.model.Lote;
-
 import br.unitins.tp1.ironforge.repository.LoteRepository;
-
 import br.unitins.tp1.ironforge.service.whey.WheyProteinService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -39,7 +34,7 @@ public class LoteServiceImpl implements LoteService {
     @Transactional
     public Lote create(LoteRequestDTO dto) {
         Lote lote = new Lote();
-        lote.setCodigo(generateCode(dto.dataFabricacao()));
+        lote.setCodigo(dto.codigo());
         lote.setDataFabricacao(dto.dataFabricacao());
         lote.setQuantidade(dto.quantidade());
         lote.setWheyProtein(wheyService.findById(dto.idWhey()));
@@ -54,7 +49,7 @@ public class LoteServiceImpl implements LoteService {
         if (lote == null)
             throw new IllegalArgumentException("Lote não encontrado!");
 
-        lote.setCodigo(generateCode(dto.dataFabricacao()));
+        lote.setCodigo(dto.codigo());
         lote.setDataFabricacao(dto.dataFabricacao());
         lote.setQuantidade(dto.quantidade());
         lote.setWheyProtein(wheyService.findById(dto.idWhey()));
@@ -70,17 +65,12 @@ public class LoteServiceImpl implements LoteService {
     }
 
     @Override
-    public List<Lote> findByCodigo(String codigo) {
+    public Lote findByCodigo(String codigo) {
         return loteRepository.findByCodigo(codigo);
     }
 
-    private String generateCode(LocalDate dataFabricacao) {
-        String data = dataFabricacao.toString();
-        return "L" + data + "WHEY";
-    }
-
     @Override
-    public List<Lote> findByWhey(Long idWhey) {
+    public Lote findByWhey(Long idWhey) {
         return loteRepository.findByWhey(idWhey);
     }
 

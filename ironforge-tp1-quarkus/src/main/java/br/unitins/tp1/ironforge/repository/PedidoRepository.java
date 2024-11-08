@@ -2,7 +2,7 @@ package br.unitins.tp1.ironforge.repository;
 
 import java.util.List;
 
-import br.unitins.tp1.ironforge.model.Pedido;
+import br.unitins.tp1.ironforge.model.pedido.Pedido;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 

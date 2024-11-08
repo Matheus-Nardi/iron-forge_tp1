@@ -43,15 +43,13 @@ public class LoteResource {
     @GET
     @Path("/search/codigo")
     public Response findByCodigo(@QueryParam("codigo") String codigo) {
-        List<Lote> lotes = loteService.findByCodigo(codigo);
-        return Response.ok(lotes.stream().map(LoteResponseDTO::valueOf).toList()).build();
+        return Response.ok(LoteResponseDTO.valueOf(loteService.findByCodigo(codigo))).build();
     }
 
     @GET
     @Path("/search/whey")
     public Response findByWhey(@QueryParam("idWhey") Long idWhey) {
-        List<Lote> lotes = loteService.findByWhey(idWhey);
-        return Response.ok(lotes.stream().map(LoteResponseDTO::valueOf).toList()).build();
+        return Response.ok(LoteResponseDTO.valueOf(loteService.findByWhey(idWhey))).build();
     }
 
     @POST

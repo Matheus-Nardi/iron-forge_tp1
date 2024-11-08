@@ -6,6 +6,7 @@ import br.unitins.tp1.ironforge.dto.estado.EstadoRequestDTO;
 import br.unitins.tp1.ironforge.dto.estado.EstadoResponseDTO;
 import br.unitins.tp1.ironforge.model.Estado;
 import br.unitins.tp1.ironforge.service.estado.EstadoService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
@@ -30,12 +31,14 @@ public class EstadoResource {
 
     @GET
     @Path("/{id}")
+    @RolesAllowed({"Adm", "User"})
     public Response findById(@PathParam("id") Long id) {
         return Response.ok(EstadoResponseDTO.valueOf(estadoService.findById(id))).build();
     }
 
     @GET
     @Path("/search/{nome}")
+    @RolesAllowed("Adm")
     public Response findByNome(@PathParam("nome") String nome) {
         List<Estado> estados = estadoService.findByNome(nome);
         return Response.ok(estados.stream().map(EstadoResponseDTO::valueOf).toList()).build();

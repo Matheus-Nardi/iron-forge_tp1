@@ -1,8 +1,10 @@
-package br.unitins.tp1.ironforge.model;
+package br.unitins.tp1.ironforge.model.usuario;
 
 import java.util.List;
 
-import br.unitins.tp1.ironforge.model.usuario.Usuario;
+import br.unitins.tp1.ironforge.model.DefaultEntity;
+import br.unitins.tp1.ironforge.model.Endereco;
+import br.unitins.tp1.ironforge.model.Telefone;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

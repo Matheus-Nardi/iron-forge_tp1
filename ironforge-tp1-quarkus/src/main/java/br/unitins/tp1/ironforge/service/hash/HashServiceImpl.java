@@ -32,4 +32,9 @@ public class HashServiceImpl implements HashService {
         }
     }
 
+    public static void main(String[] args) {
+        HashService hashService = new HashServiceImpl();
+        System.out.println(hashService.getHashSenha("flamengo"));
+    }
 }
+

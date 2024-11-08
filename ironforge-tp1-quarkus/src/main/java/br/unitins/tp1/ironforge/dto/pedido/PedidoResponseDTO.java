@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.itempedido.ItemPedidoResponseDTO;
-import br.unitins.tp1.ironforge.model.Pedido;
+import br.unitins.tp1.ironforge.model.pedido.Pedido;
 
 public record PedidoResponseDTO(
                 Long id,

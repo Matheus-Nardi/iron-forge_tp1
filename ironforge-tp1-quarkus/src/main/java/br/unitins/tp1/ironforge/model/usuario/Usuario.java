@@ -2,11 +2,13 @@ package br.unitins.tp1.ironforge.model.usuario;
 
 import br.unitins.tp1.ironforge.model.DefaultEntity;
 import br.unitins.tp1.ironforge.model.Perfil;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 
 @Entity
 public class Usuario extends DefaultEntity {
 
+    @Column(unique = true)
     private String username;
     private String senha;
 

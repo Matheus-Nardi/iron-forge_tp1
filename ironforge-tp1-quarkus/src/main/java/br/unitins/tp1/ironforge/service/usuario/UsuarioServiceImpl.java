@@ -20,14 +20,17 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public Usuario findById(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findById'");
+        return usuarioRepository.findById(id);
     }
 
     @Override
     public List<Usuario> findAll() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findAll'");
+       return usuarioRepository.findAll().list();
+    }
+
+    @Override
+    public Usuario findByUsername(String username) {
+        return usuarioRepository.findByUsername(username);
     }
 
 }

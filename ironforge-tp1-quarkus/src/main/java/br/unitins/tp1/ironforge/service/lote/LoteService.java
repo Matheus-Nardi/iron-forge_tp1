@@ -9,9 +9,9 @@ public interface LoteService {
 
     Lote findById(Long id);
 
-    List<Lote> findByCodigo(String codigo);
+    Lote findByCodigo(String codigo);
 
-    List<Lote> findByWhey(Long idWhey);
+    Lote findByWhey(Long idWhey);
 
     List<Lote> findAll();
 

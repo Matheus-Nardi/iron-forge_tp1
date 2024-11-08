@@ -3,6 +3,7 @@ package br.unitins.tp1.ironforge.model;
 import java.time.LocalDate;
 
 import br.unitins.tp1.ironforge.model.whey.WheyProtein;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -10,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 @Entity
 public class Lote extends DefaultEntity {
 
+    @Column(unique = true)
     private String codigo;
     private Integer quantidade;
     private LocalDate dataFabricacao;
@@ -49,7 +51,5 @@ public class Lote extends DefaultEntity {
     public void setWheyProtein(WheyProtein wheyProtein) {
         this.wheyProtein = wheyProtein;
     }
-
-    
 
 }

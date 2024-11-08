@@ -3,7 +3,7 @@ package br.unitins.tp1.ironforge.service.pedido;
 import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.pedido.PedidoRequestDTO;
-import br.unitins.tp1.ironforge.model.Pedido;
+import br.unitins.tp1.ironforge.model.pedido.Pedido;
 
 public interface PedidoService {
 
@@ -11,7 +11,7 @@ public interface PedidoService {
 
     List<Pedido> findByUsername(String username);
 
-    Pedido create(PedidoRequestDTO dto);
+    Pedido create(PedidoRequestDTO dto, String username);
 
     // Implementar os patch's
 

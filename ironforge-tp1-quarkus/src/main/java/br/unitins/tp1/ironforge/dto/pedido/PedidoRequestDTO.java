@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 public record PedidoRequestDTO(
         @NotNull(message = "O campo valor total deve ser informado")
         Double valorTotal,
-        List<ItemPedidoRequestDTO> itensPedidos 
+        List<ItemPedidoRequestDTO> itensPedidos
 )
         
 

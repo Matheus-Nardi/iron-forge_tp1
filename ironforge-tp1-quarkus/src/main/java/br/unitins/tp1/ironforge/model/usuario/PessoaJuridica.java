@@ -1,4 +1,4 @@
-package br.unitins.tp1.ironforge.model;
+package br.unitins.tp1.ironforge.model.usuario;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
