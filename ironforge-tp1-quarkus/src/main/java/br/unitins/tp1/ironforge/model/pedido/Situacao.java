@@ -7,12 +7,13 @@ import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 public enum Situacao {
 
     SEPARANDO_PEDIDO(1, "O pedido está sendo separado"),
-    PRONTO_PARA_ENVIO(2, "Pedido pronto para envio"),             
-    ENVIADO(3, "Pedido enviado, aguardando atualização de trânsito"), 
+    PRONTO_PARA_ENVIO(2, "Pedido pronto para envio"),
+    ENVIADO(3, "Pedido enviado, aguardando atualização de trânsito"),
     EM_TRANSITO(4, "Pedido em trânsito"),
     ENTREGUE(5, "Pedido entregue"),
     DESISTIDO(6, "Desistência do pedido antes do envio"),
-    DEVOLVIDO(7, "Devolução do pedido após a entrega");
+    DEVOLVIDO(7, "Devolução do pedido após a entrega"),
+    AGURARDANDO_PAGAMENTO(8, "Aguardando o pagamento do pedido");
 
     private final Integer id;
     private final String label;

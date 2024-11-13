@@ -12,6 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Pedido extends DefaultEntity {
@@ -31,6 +32,14 @@ public class Pedido extends DefaultEntity {
     private Cupom cupom;
 
     private Double valorTotal;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "id_pedido")
+    private List<StatusPedido> statusPedidos;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "id_enderecoEntrega")
+    private EnderecoEntrega enderecoEntrega;
 
     public LocalDateTime getData() {
         return data;
@@ -70,6 +79,22 @@ public class Pedido extends DefaultEntity {
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
+    }
+
+    public List<StatusPedido> getStatusPedidos() {
+        return statusPedidos;
+    }
+
+    public void setStatusPedidos(List<StatusPedido> statusPedidos) {
+        this.statusPedidos = statusPedidos;
+    }
+
+    public EnderecoEntrega getEnderecoEntrega() {
+        return enderecoEntrega;
+    }
+
+    public void setEnderecoEntrega(EnderecoEntrega enderecoEntrega) {
+        this.enderecoEntrega = enderecoEntrega;
     }
 
 }

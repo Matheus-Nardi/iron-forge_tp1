@@ -4,6 +4,7 @@ import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.pedido.PedidoRequestDTO;
 import br.unitins.tp1.ironforge.model.pedido.Pedido;
+import br.unitins.tp1.ironforge.model.pedido.Situacao;
 
 public interface PedidoService {
 
@@ -14,6 +15,8 @@ public interface PedidoService {
     Pedido create(PedidoRequestDTO dto, String username);
 
     // Implementar os patch's
+
+    void updateStatusPedido(Long id, Situacao situacao);
 
     // pensar no cancelar
 

@@ -15,7 +15,7 @@ INSERT INTO cidade (nome, id_estado) VALUES
 INSERT INTO usuario (username, senha, perfil) VALUES 
     ('joao.silva', 'OaF4paP+SqLenJW8Rjrk5goXvajn1knmWXfupry55Kbkpll5xliVH9X3U8hMf6l4x/d2WnYf30xNVYTtLu7jmQ==', 2),  -- Senha é abacatecompimenta
     ('wheyHot', '123456', 2),
-    ('maxuel', 'qOf0Qw7LIP5PqpJJMwKqcX6BZ+t+elaNZW+fBPY70EsAhd2deno3eb2KnjlTMC06GwBMhShPtQJM8k308HXQog==' , 2), -- Senha é flamengo
+    ('maxuel', 'qOf0Qw7LIP5PqpJJMwKqcX6BZ+t+elaNZW+fBPY70EsAhd2deno3eb2KnjlTMC06GwBMhShPtQJM8k308HXQog==' , 1), -- Senha é flamengo
     ('growthsuplementos', 'senhaSegura',2);
 
 -- Inserção de pessoas

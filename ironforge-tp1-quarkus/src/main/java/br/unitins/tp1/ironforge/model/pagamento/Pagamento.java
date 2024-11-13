@@ -1,6 +1,5 @@
 package br.unitins.tp1.ironforge.model.pagamento;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import br.unitins.tp1.ironforge.model.DefaultEntity;
@@ -14,9 +13,11 @@ public abstract class Pagamento extends DefaultEntity {
 
     private Double valor;
 
-    private LocalDate dataPagamento;
+    private LocalDateTime dataPagamento;
 
     private LocalDateTime dataVencimento;
+
+    private StatusPagamento statusPagamento;
 
     public Double getValor() {
         return valor;
@@ -26,20 +27,28 @@ public abstract class Pagamento extends DefaultEntity {
         this.valor = valor;
     }
 
-    public LocalDate getDataPagamento() {
-        return dataPagamento;
-    }
-
-    public void setDataPagamento(LocalDate dataPagamento) {
-        this.dataPagamento = dataPagamento;
-    }
-
     public LocalDateTime getDataVencimento() {
         return dataVencimento;
     }
 
     public void setDataVencimento(LocalDateTime dataVencimento) {
         this.dataVencimento = dataVencimento;
+    }
+
+    public LocalDateTime getDataPagamento() {
+        return dataPagamento;
+    }
+
+    public void setDataPagamento(LocalDateTime dataPagamento) {
+        this.dataPagamento = dataPagamento;
+    }
+
+    public StatusPagamento getStatusPagamento() {
+        return statusPagamento;
+    }
+
+    public void setStatusPagamento(StatusPagamento statusPagamento) {
+        this.statusPagamento = statusPagamento;
     }
 
 }

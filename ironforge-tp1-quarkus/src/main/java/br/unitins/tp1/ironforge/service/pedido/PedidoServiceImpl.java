@@ -9,9 +9,13 @@ import br.unitins.tp1.ironforge.dto.pedido.PedidoRequestDTO;
 import br.unitins.tp1.ironforge.model.Cupom;
 import br.unitins.tp1.ironforge.model.ItemPedido;
 import br.unitins.tp1.ironforge.model.Lote;
+import br.unitins.tp1.ironforge.model.pedido.EnderecoEntrega;
 import br.unitins.tp1.ironforge.model.pedido.Pedido;
+import br.unitins.tp1.ironforge.model.pedido.Situacao;
+import br.unitins.tp1.ironforge.model.pedido.StatusPedido;
 import br.unitins.tp1.ironforge.model.usuario.Cliente;
 import br.unitins.tp1.ironforge.repository.PedidoRepository;
+import br.unitins.tp1.ironforge.service.cidade.CidadeService;
 import br.unitins.tp1.ironforge.service.cupom.CupomService;
 import br.unitins.tp1.ironforge.service.lote.LoteService;
 import br.unitins.tp1.ironforge.service.usuario.ClienteService;
@@ -38,6 +42,9 @@ public class PedidoServiceImpl implements PedidoService {
     @Inject
     public CupomService cupomService;
 
+    @Inject
+    public CidadeService cidadeService;
+
     @Override
     public Pedido findById(Long id) {
         return pedidoRepository.findById(id);
@@ -49,6 +56,7 @@ public class PedidoServiceImpl implements PedidoService {
         Pedido pedido = new Pedido();
         pedido.setData(LocalDateTime.now());
         pedido.setCliente(clienteService.findByUsuario(username));
+        pedido.setEnderecoEntrega(getEnderecoEntrega(dto));
         obterCupom(dto, pedido);
 
         pedido.setItensPedidos(new ArrayList<>());
@@ -59,9 +67,30 @@ public class PedidoServiceImpl implements PedidoService {
             throw new IllegalArgumentException("O valor fornecido não corresponde ao valor final do pedido");
 
         pedido.setValorTotal(valorFinal);
+        getStatusPedido(pedido);
+
         pedidoRepository.persist(pedido);
 
         return pedido;
+    }
+
+    private EnderecoEntrega getEnderecoEntrega(PedidoRequestDTO dto) {
+        EnderecoEntrega enderecoEntrega = new EnderecoEntrega();
+        enderecoEntrega.setBairro(dto.enderecoEntrega().bairro());
+        enderecoEntrega.setLogradouro(dto.enderecoEntrega().logradouro());
+        enderecoEntrega.setCep(dto.enderecoEntrega().cep());
+        enderecoEntrega.setNumero(dto.enderecoEntrega().numero());
+        enderecoEntrega.setComplemento(dto.enderecoEntrega().complemento());
+        enderecoEntrega.setCidade(cidadeService.findById(dto.enderecoEntrega().idCidade()));
+        return enderecoEntrega;
+    }
+
+    private void getStatusPedido(Pedido pedido) {
+        pedido.setStatusPedidos(new ArrayList<>());
+        StatusPedido statusPedido = new StatusPedido();
+        statusPedido.setSituacao(Situacao.AGURARDANDO_PAGAMENTO);
+        statusPedido.setDataAtualizacao(LocalDateTime.now());
+        pedido.getStatusPedidos().add(statusPedido);
     }
 
     private void definirItens(PedidoRequestDTO dto, Pedido pedido) {
@@ -128,6 +157,17 @@ public class PedidoServiceImpl implements PedidoService {
     public List<Pedido> findByUsername(String username) {
         Cliente cliente = clienteService.findByUsuario(username);
         return pedidoRepository.findByCliente(cliente.getId());
+    }
+
+    @Override
+    @Transactional
+    public void updateStatusPedido(Long id, Situacao situacao) {
+        Pedido pedido = pedidoRepository.findById(id);
+
+        StatusPedido status = new StatusPedido();
+        status.setSituacao(situacao);
+        status.setDataAtualizacao(LocalDateTime.now());
+        pedido.getStatusPedidos().add(status);
     }
 
 }
