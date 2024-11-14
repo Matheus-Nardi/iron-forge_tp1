@@ -28,4 +28,8 @@ public interface ClienteService {
 
     void updateEndereco(Long id, Long idEndereco, EnderecoRequestDTO dto);
 
+    void updateNomeImagem(Long id, String nomeImagem);
+
+
+
 }

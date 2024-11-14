@@ -16,7 +16,8 @@ public record ClienteResponseDTO(
         LocalDate dataNascimento,
         List<TelefoneResponseDTO> telefones,
         List<EnderecoResponseDTO> enderecos,
-        UsuarioResponseDTO usuario) {
+        UsuarioResponseDTO usuario,
+        String fotoPerfil) {
     public static ClienteResponseDTO valueOf(Cliente cliente) {
         return new ClienteResponseDTO(cliente.getId(), cliente.getPessoaFisica().getNome(),
                 cliente.getPessoaFisica().getCpf(),
@@ -24,6 +25,7 @@ public record ClienteResponseDTO(
                 cliente.getPessoaFisica().getDataNascimento(),
                 cliente.getPessoaFisica().getTelefones().stream().map(TelefoneResponseDTO::valueOf).toList(),
                 cliente.getPessoaFisica().getEnderecos().stream().map(EnderecoResponseDTO::valueOf).toList(),
-                UsuarioResponseDTO.valueOf(cliente.getPessoaFisica().getUsuario()));
+                UsuarioResponseDTO.valueOf(cliente.getPessoaFisica().getUsuario()),
+                cliente.getPessoaFisica().getFotoPerfil());
     }
 }

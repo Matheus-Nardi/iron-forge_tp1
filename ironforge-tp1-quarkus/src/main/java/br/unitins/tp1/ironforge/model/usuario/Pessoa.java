@@ -35,6 +35,8 @@ public abstract class Pessoa extends DefaultEntity {
     @JoinColumn(name = "id_pessoa")
     private List<Endereco> enderecos;
 
+    private String fotoPerfil;
+
     public String getNome() {
         return nome;
     }
@@ -73,6 +75,14 @@ public abstract class Pessoa extends DefaultEntity {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+
+    public String getFotoPerfil() {
+        return fotoPerfil;
+    }
+
+    public void setFotoPerfil(String fotoPerfil) {
+        this.fotoPerfil = fotoPerfil;
     }
 
 }

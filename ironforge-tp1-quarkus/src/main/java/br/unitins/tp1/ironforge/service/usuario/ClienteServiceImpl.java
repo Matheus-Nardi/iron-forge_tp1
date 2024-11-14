@@ -178,4 +178,11 @@ public class ClienteServiceImpl implements ClienteService {
         return clienteRepository.findClienteByUsuario(username);
     }
 
+    @Override
+    @Transactional
+    public void updateNomeImagem(Long id, String nomeImagem) {
+        Cliente cliente = clienteRepository.findById(id);
+        cliente.getPessoaFisica().setFotoPerfil(nomeImagem);
+    }
+
 }

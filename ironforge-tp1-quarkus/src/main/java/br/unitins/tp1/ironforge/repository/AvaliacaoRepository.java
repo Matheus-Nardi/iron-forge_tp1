@@ -10,10 +10,10 @@ import jakarta.enterprise.context.ApplicationScoped;
 public class AvaliacaoRepository implements PanacheRepository<Avaliacao> {
 
     public List<Avaliacao> findByCliente(Long idCliente) {
-        return find("cliente = ?1", idCliente).list();
+        return find("cliente.id = ?1", idCliente).list();
     }
 
     public List<Avaliacao> findByWhey(Long idWhey) {
-        return find("wheyProtein = ?1", idWhey).list();
+        return find("wheyProtein.id = ?1", idWhey).list();
     }
 }
