@@ -64,7 +64,7 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
     public void update(Long id, AvaliacaoRequestDTO dto, String username) {
         Cliente cliente = clienteService.findByUsuario(username);
         WheyProtein wheyProtein = wheyService.findById(dto.idWhey());
-        Avaliacao avaliacao = new Avaliacao();
+        Avaliacao avaliacao = avaliacaoRepository.findById(id);
         avaliacao.setComentario(dto.comentario());
         avaliacao.setNota(Nota.valueOf(dto.nota()));
         avaliacao.setData(LocalDate.now());

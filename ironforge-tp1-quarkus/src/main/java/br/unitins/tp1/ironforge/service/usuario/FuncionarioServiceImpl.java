@@ -188,4 +188,16 @@ public class FuncionarioServiceImpl implements FuncionarioService {
         return enderecos;
     }
 
+    @Override
+    @Transactional
+    public void updateNomeImagem(String username, String nomeImagem) {
+        Funcionario funcionario = funcionarioRepository.findFuncionarioByUsername(username);
+        funcionario.getPessoaFisica().setFotoPerfil(nomeImagem);
+    }
+
+    @Override
+    public Funcionario findByUsermame(String username) {
+        return funcionarioRepository.findFuncionarioByUsername(username);
+    }
+
 }

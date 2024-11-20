@@ -14,6 +14,8 @@ public interface FuncionarioService {
 
     List<Funcionario> findByNome(String nome);
 
+    Funcionario findByUsermame(String username);
+
     List<Funcionario> findAll();
 
     Funcionario create(FuncionarioRequestDTO dto);
@@ -25,5 +27,7 @@ public interface FuncionarioService {
     void updateTelefone(Long id, Long idTelefone, TelefoneRequestDTO dto);
 
     void updateEndereco(Long id, Long idEndereco, EnderecoRequestDTO dto);
+
+    void updateNomeImagem(String username, String nomeImagem);
 
 }

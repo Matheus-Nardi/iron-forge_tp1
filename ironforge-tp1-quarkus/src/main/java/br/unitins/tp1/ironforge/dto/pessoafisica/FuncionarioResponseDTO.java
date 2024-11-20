@@ -20,7 +20,8 @@ public record FuncionarioResponseDTO(
         UsuarioResponseDTO usuario,
         BigDecimal salario,
         String cargo,
-        LocalDate dataContracao) {
+        LocalDate dataContracao,
+        String fotoPerfil) {
     public static FuncionarioResponseDTO valueOf(Funcionario funcionario) {
         return new FuncionarioResponseDTO(funcionario.getId(), funcionario.getPessoaFisica().getNome(),
                 funcionario.getPessoaFisica().getCpf(),
@@ -31,6 +32,7 @@ public record FuncionarioResponseDTO(
                 UsuarioResponseDTO.valueOf(funcionario.getPessoaFisica().getUsuario()),
                 funcionario.getSalario(),
                 funcionario.getCargo(),
-                funcionario.getDataContratacao());
+                funcionario.getDataContratacao(),
+                funcionario.getPessoaFisica().getFotoPerfil());
     }
 }

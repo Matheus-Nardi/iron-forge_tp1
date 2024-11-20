@@ -12,11 +12,13 @@ import br.unitins.tp1.ironforge.model.Telefone;
 import br.unitins.tp1.ironforge.model.usuario.Cliente;
 import br.unitins.tp1.ironforge.model.usuario.PessoaFisica;
 import br.unitins.tp1.ironforge.model.usuario.Usuario;
+import br.unitins.tp1.ironforge.model.whey.WheyProtein;
 import br.unitins.tp1.ironforge.repository.ClienteRepository;
 import br.unitins.tp1.ironforge.repository.PessoaFisicaRepository;
 import br.unitins.tp1.ironforge.repository.UsuarioRepository;
 import br.unitins.tp1.ironforge.service.cidade.CidadeService;
 import br.unitins.tp1.ironforge.service.hash.HashService;
+import br.unitins.tp1.ironforge.service.whey.WheyProteinService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityNotFoundException;
@@ -36,6 +38,9 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Inject
     public CidadeService cidadeService;
+
+    @Inject
+    public WheyProteinService wheyService;
 
     @Inject
     public HashService hashService;
@@ -180,9 +185,35 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     @Transactional
-    public void updateNomeImagem(Long id, String nomeImagem) {
-        Cliente cliente = clienteRepository.findById(id);
+    public void updateNomeImagem(String username, String nomeImagem) {
+        Cliente cliente = clienteRepository.findClienteByUsuario(username);
         cliente.getPessoaFisica().setFotoPerfil(nomeImagem);
+    }
+
+    @Override
+    @Transactional
+    public void adicionarListaDesejo(String username, Long idWhey) {
+        Cliente cliente = clienteRepository.findClienteByUsuario(username);
+
+        if (cliente.getListaDesejos() == null) {
+            cliente.setListaDesejos(new ArrayList<>());
+            return;
+        }
+
+        cliente.getListaDesejos().add(wheyService.findById(idWhey));
+    }
+
+    @Override
+    @Transactional
+    public void removerListaDesejo(String username, Long idWhey) {
+        Cliente cliente = clienteRepository.findClienteByUsuario(username);
+        List<WheyProtein> listaDesejos = cliente.getListaDesejos();
+
+        if (listaDesejos == null) {
+            throw new IllegalArgumentException("Não há itens a serem removidos da lista de desejos !");
+        }
+
+        listaDesejos.remove(wheyService.findById(idWhey));
     }
 
 }

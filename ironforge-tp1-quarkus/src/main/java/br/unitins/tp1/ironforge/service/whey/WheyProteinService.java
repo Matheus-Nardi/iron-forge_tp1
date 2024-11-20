@@ -26,5 +26,7 @@ public interface WheyProteinService {
 
     void update(Long id, WheyProteinRequestDTO dto);
 
+    void updateNomeImagem(Long id, String nomeImagem);
+
     void delete(Long id);
 }

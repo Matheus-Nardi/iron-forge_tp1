@@ -12,4 +12,8 @@ public class FuncionarioRepository implements PanacheRepository<Funcionario> {
     public List<Funcionario> findFuncionarioByNome(String nome) {
         return find("pessoaFisica.nome LIKE ?1", "%" + nome + "%").list();
     }
+
+    public Funcionario findFuncionarioByUsername(String username){
+        return find("pessoaFisica.usuario.username = ?1 ", username).firstResult();
+    }
 }

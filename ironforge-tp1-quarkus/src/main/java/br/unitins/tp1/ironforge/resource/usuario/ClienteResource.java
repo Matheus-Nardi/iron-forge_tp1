@@ -3,6 +3,7 @@ package br.unitins.tp1.ironforge.resource.usuario;
 import java.io.IOException;
 import java.util.List;
 
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
@@ -10,9 +11,9 @@ import br.unitins.tp1.ironforge.dto.pessoafisica.ClienteRequestDTO;
 import br.unitins.tp1.ironforge.dto.pessoafisica.ClienteResponseDTO;
 import br.unitins.tp1.ironforge.dto.pessoafisica.ClienteUpdateRequestDTO;
 import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
-import br.unitins.tp1.ironforge.form.ClienteImageForm;
+import br.unitins.tp1.ironforge.form.ImageForm;
 import br.unitins.tp1.ironforge.model.usuario.Cliente;
-import br.unitins.tp1.ironforge.service.FileService;
+import br.unitins.tp1.ironforge.service.ClienteFileServiceImpl;
 import br.unitins.tp1.ironforge.service.usuario.ClienteService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
@@ -39,7 +40,10 @@ public class ClienteResource {
     public ClienteService clienteService;
 
     @Inject
-    public FileService clienteFileService;
+    public ClienteFileServiceImpl clienteFileService;
+
+    @Inject
+    public JsonWebToken jsonWebToken;
 
     @GET
     @Path("/{id}")
@@ -52,6 +56,25 @@ public class ClienteResource {
     public Response findByNome(@PathParam("nome") String nome) {
         List<Cliente> clientes = clienteService.findByNome(nome);
         return Response.ok(clientes.stream().map(ClienteResponseDTO::valueOf).toList()).build();
+    }
+
+    @PATCH
+    @Path("/adicao/{idProduto}")
+    @RolesAllowed({ "User" })
+    public Response adicionarListaDesejo(@PathParam("idProduto") Long idProduto) {
+        String username = jsonWebToken.getSubject();
+        System.out.println(username);
+        clienteService.adicionarListaDesejo(username, idProduto);
+        return Response.noContent().build();
+    }
+
+    @PATCH
+    @Path("/remocao/{idProduto}")
+    @RolesAllowed({ "User" })
+    public Response removerListaDesejo(@PathParam("idProduto") Long idProduto) {
+        String username = jsonWebToken.getSubject();
+        clienteService.removerListaDesejo(username, idProduto);
+        return Response.noContent().build();
     }
 
     @GET
@@ -96,14 +119,14 @@ public class ClienteResource {
     }
 
     @PATCH
-    @Path("/{id}/upload/imagens")
+    @Path("upload/imagens")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @RolesAllowed({ "User" })
-    public Response uploadImage(@PathParam("id") Long id , @MultipartForm ClienteImageForm form) {
-
+    public Response uploadImage(@MultipartForm ImageForm form) {
+        String username = jsonWebToken.getSubject();
         try {
             String nomeImagem = clienteFileService.save(form.getNomeImagem(), form.getImagem());
-            clienteService.updateNomeImagem(id, nomeImagem);
+            clienteService.updateNomeImagem(username, nomeImagem);
         } catch (IOException e) {
             Response.status(Status.INTERNAL_SERVER_ERROR).encoding("Não foi possível salvar a imagem").build();
         }
@@ -116,7 +139,12 @@ public class ClienteResource {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     @RolesAllowed({ "User" })
     public Response downloadImage(@PathParam("nomeImagem") String nomeImagem) {
-        ResponseBuilder response = Response.ok(clienteFileService.find(nomeImagem));
+        ResponseBuilder response = null;
+        try {
+            response = Response.ok(clienteFileService.find(nomeImagem));
+        } catch (IOException e) {
+            Response.status(Status.INTERNAL_SERVER_ERROR).encoding("Não foi possível baixar a imagem").build();
+        }
         response.header("Content-Disposition", "attachment; filename=" + nomeImagem);
         return response.build();
     }

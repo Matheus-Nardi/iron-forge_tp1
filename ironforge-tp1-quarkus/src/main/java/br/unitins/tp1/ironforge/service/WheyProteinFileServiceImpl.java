@@ -14,31 +14,30 @@ import java.util.UUID;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class ClienteFileServiceImpl implements FileService {
+public class WheyProteinFileServiceImpl implements FileService {
 
-    private final String PATH_CLIENTE = System.getProperty("user.home")
+    private final String PATH_WHEYPROTEIN = System.getProperty("user.home")
             + File.separator + "quarkus"
             + File.separator + "ironforge"
             + File.separator + "images"
-            + File.separator + "cliente"
+            + File.separator + "wheyprotein"
             + File.separator;
 
     private static final List<String> SUPPORTED_MIME_TYPES = Arrays.asList("image/jpeg", "image/jpg", "image/png",
             "image/gif");
 
-    private static final int MAX_FILE_SIZE = 1024 * 1024 * 10; // Até 10MB
+    private static final int MAX_FILE_SIZE = 1024 * 1024 * 10;
 
     @Override
     public String save(String nomeArquivo, byte[] arquivo) throws IOException {
-
         nomeArquivo = nomeArquivo.trim();
         verificarTamanhoArquivo(arquivo);
 
         String mimeType = Files.probeContentType(Paths.get(nomeArquivo));
         verificarTipoArquivo(mimeType);
 
-        Path diretorio = Paths.get(PATH_CLIENTE);
-        if (!new File(PATH_CLIENTE).exists())
+        Path diretorio = Paths.get(PATH_WHEYPROTEIN);
+        if (!new File(PATH_WHEYPROTEIN).exists())
             Files.createDirectory(diretorio);
 
         String novoNomeArquivo = existeArquivo(nomeArquivo, diretorio);
@@ -85,11 +84,12 @@ public class ClienteFileServiceImpl implements FileService {
 
     @Override
     public File find(String nomeArquivo) throws FileNotFoundException {
-        File file = new File(PATH_CLIENTE + nomeArquivo);
+        File file = new File(PATH_WHEYPROTEIN + nomeArquivo);
 
         if (!file.exists()) {
             throw new FileNotFoundException("Arquivo não encontrado: " + nomeArquivo);
         }
         return file;
     }
+
 }

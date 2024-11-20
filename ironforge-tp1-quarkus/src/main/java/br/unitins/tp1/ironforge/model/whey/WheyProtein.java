@@ -1,9 +1,14 @@
 package br.unitins.tp1.ironforge.model.whey;
 
+import java.util.List;
+
 import br.unitins.tp1.ironforge.model.DefaultEntity;
 import br.unitins.tp1.ironforge.model.Fabricante;
 import br.unitins.tp1.ironforge.model.whey.tabelanutricional.Food;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -31,6 +36,11 @@ public class WheyProtein extends DefaultEntity {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_food")
     private Food food;
+
+    @ElementCollection
+    @CollectionTable(name = "imagens_whey", joinColumns = @JoinColumn(name = "id_whey"))
+    @Column(name = "imagem")
+    private List<String> imagens;
 
     public String getNome() {
         return nome;
@@ -102,6 +112,14 @@ public class WheyProtein extends DefaultEntity {
 
     public void setFood(Food food) {
         this.food = food;
+    }
+
+    public List<String> getImagens() {
+        return imagens;
+    }
+
+    public void setImagens(List<String> imagens) {
+        this.imagens = imagens;
     }
 
 }

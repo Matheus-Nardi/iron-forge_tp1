@@ -28,7 +28,11 @@ public interface ClienteService {
 
     void updateEndereco(Long id, Long idEndereco, EnderecoRequestDTO dto);
 
-    void updateNomeImagem(Long id, String nomeImagem);
+    void updateNomeImagem(String username, String nomeImagem);
+
+    void adicionarListaDesejo(String username, Long idProduto);
+
+    void removerListaDesejo(String username, Long idProduto);
 
 
 

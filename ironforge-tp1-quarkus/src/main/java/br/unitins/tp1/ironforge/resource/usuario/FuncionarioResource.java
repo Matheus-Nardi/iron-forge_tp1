@@ -1,14 +1,21 @@
 package br.unitins.tp1.ironforge.resource.usuario;
 
+import java.io.IOException;
 import java.util.List;
+
+import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
 import br.unitins.tp1.ironforge.dto.pessoafisica.FuncionarioRequestDTO;
 import br.unitins.tp1.ironforge.dto.pessoafisica.FuncionarioResponseDTO;
 import br.unitins.tp1.ironforge.dto.pessoafisica.FuncionarioUpdateRequestDTO;
 import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
+import br.unitins.tp1.ironforge.form.ImageForm;
 import br.unitins.tp1.ironforge.model.usuario.Funcionario;
+import br.unitins.tp1.ironforge.service.FuncionarioFileServiceImpl;
 import br.unitins.tp1.ironforge.service.usuario.FuncionarioService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
@@ -21,6 +28,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
 import jakarta.ws.rs.core.Response.Status;
 
 @Path("/funcionarios")
@@ -30,6 +38,12 @@ public class FuncionarioResource {
 
     @Inject
     public FuncionarioService funcionarioService;
+
+    @Inject
+    public JsonWebToken jsonWebToken;
+
+    @Inject
+    public FuncionarioFileServiceImpl fileService;
 
     @GET
     @Path("/{id}")
@@ -84,6 +98,37 @@ public class FuncionarioResource {
     public Response delete(@PathParam("id") Long id) {
         funcionarioService.delete(id);
         return Response.noContent().build();
+    }
+
+    @PATCH
+    @Path("upload/imagens")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @RolesAllowed({ "Adm" })
+    public Response uploadImage(@MultipartForm ImageForm form) {
+        String username = jsonWebToken.getSubject();
+        try {
+            String nomeImagem = fileService.save(form.getNomeImagem(), form.getImagem());
+            funcionarioService.updateNomeImagem(username, nomeImagem);
+        } catch (IOException e) {
+            Response.status(Status.INTERNAL_SERVER_ERROR).encoding("Não foi possível salvar a imagem").build();
+        }
+
+        return Response.noContent().build();
+    }
+
+    @GET
+    @Path("/download/image/{nomeImagem}")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @RolesAllowed({ "Adm" })
+    public Response downloadImage(@PathParam("nomeImagem") String nomeImagem) {
+        ResponseBuilder response = null;
+        try {
+            response = Response.ok(fileService.find(nomeImagem));
+        } catch (IOException e) {
+            Response.status(Status.INTERNAL_SERVER_ERROR).encoding("Não foi possível baixar a imagem").build();
+        }
+        response.header("Content-Disposition", "attachment; filename=" + nomeImagem);
+        return response.build();
     }
 
 }

@@ -72,23 +72,54 @@ INSERT INTO sabor (nome) VALUES
     ('Neutro'),
     ('Cookies and Cream');
 
+-- Inserir dados em fullnutrient
+INSERT INTO fullnutrient (attr_id, value) VALUES
+(0, 500), -- Exemplo: Vitamina A, 500 IU
+(1, 200), -- Exemplo: Cálcio, 200 mg
+(2, 100); -- Exemplo: Potássio, 100 mg
+
+-- Inserir dados em photo
+INSERT INTO photo (thumb, highres, is_user_uploaded) VALUES
+('http://example.com/thumb1.jpg', 'http://example.com/highres1.jpg', true),
+('http://example.com/thumb2.jpg', 'http://example.com/highres2.jpg', false),
+('http://example.com/thumb3.jpg', 'http://example.com/highres3.jpg', true),
+('http://example.com/thumb4.jpg', 'http://example.com/highres4.jpg', false),
+('http://example.com/thumb5.jpg', 'http://example.com/highres5.jpg', true);
+
+
+
+-- Inserir dados em food
+INSERT INTO food (
+    food_name, brand_name, serving_qty, serving_unit, serving_weight_grams,
+    nf_metric_qty, nf_metric_uom, nf_calories, nf_total_fat, nf_saturated_fat,
+    nf_cholesterol, nf_sodium, nf_total_carbohydrate, nf_dietary_fiber, nf_sugars,
+    nf_protein, nf_potassium, nf_p, nix_brand_name, nix_brand_id, nix_item_name,
+    nix_item_id, source, ndb_no, tags, alt_measures, lat, lng, note, class_code,
+    brick_code, tag_id, updated_at, nf_ingredient_statement, id_photo
+)
+VALUES 
+('Whey Protein 1', 'BrandX', 1, 'scoop', 30, 24, 'g', 120, 1, '0g', '0mg', 50, 3, '1g', '2g', 24, '500mg', 'Protein supplement', 'BrandX', '12345', 'Whey Protein Item 1', '67890', 1, '123456789', 'protein, supplement', 'scoop', '40.7128', '-74.0060', 'Good for muscle growth', 'Whey', 'Protein', 'TAG123', CURRENT_TIMESTAMP, 'Whey protein isolate', 1),
+  
+('Whey Protein 2', 'BrandY', 1, 'scoop', 30, 24, 'g', 130, 2, '1g', '1mg', 60, 4, '1g', '3g', 25, '600mg', 'Protein supplement', 'BrandY', '22345', 'Whey Protein Item 2', '78890', 1, '223456789', 'protein, supplement', 'scoop', '41.7128', '-75.0060', 'Supports muscle recovery', 'Whey', 'Protein', 'TAG124', CURRENT_TIMESTAMP, 'Whey protein concentrate',2),
+
+('Whey Protein 3', 'BrandZ', 1, 'scoop', 35, 30, 'g', 140, 3, '0g', '2mg', 70, 5, '2g', '4g', 26, '700mg', 'Protein supplement', 'BrandZ', '32345', 'Whey Protein Item 3', '89890', 1, '323456789', 'protein, supplement', 'scoop', '42.7128', '-76.0060', 'Ideal for post-workout', 'Whey', 'Protein', 'TAG125', CURRENT_TIMESTAMP, 'Whey protein isolate',3),
+
+('Whey Protein 4', 'BrandA', 1, 'scoop', 28, 22, 'g', 110, 2, '1g', '0mg', 40, 2, '1g', '3g', 22, '400mg', 'Protein supplement', 'BrandA', '42345', 'Whey Protein Item 4', '98890', 1, '423456789', 'protein, supplement', 'scoop', '43.7128', '-77.0060', 'Helps build muscle mass', 'Whey', 'Protein', 'TAG126', CURRENT_TIMESTAMP, 'Whey protein concentrate',
+ 4),
+
+('Whey Protein 5', 'BrandB', 1, 'scoop', 32, 25, 'g', 150, 4, '0g', '1mg', 80, 6, '3g', '5g', 28, '800mg', 'Protein supplement', 'BrandB', '52345', 'Whey Protein Item 5', '108890', 1, '523456789', 'protein, supplement', 'scoop', '44.7128', '-78.0060', 'For muscle endurance', 'Whey', 'Protein', 'TAG127', CURRENT_TIMESTAMP, 'Whey protein isolate',5);
+
+
 -- Inserção de whey protein
+-- Inserir dados na tabela wheyprotein com todos os campos
 INSERT INTO wheyprotein (
-    upc,
-    nome,
-    descricao,
-    preco,
-    peso,
-    id_sabor,
-    tipoWhey,
-    id_fabricante
-) VALUES 
-    ('815044020354','Ultra Whey Supreme', 'Proteína de alta qualidade com sabor de chocolate.', 149.90, 900, 1, 1, 1),
-    ('631656711325','Delícia de Chocolate Whey', 'Sabor incrível de chocolate, ideal para smoothies.', 139.90, 900, 2, 1, 2),
-    ('883309010105','Baunilha Mágica', 'Whey de baunilha com ingredientes que aumentam o foco.', 154.90, 1000, 3, 2, 1),
-    ('631656714142','Cookies Whey Delight', 'Combinação perfeita de cookies e proteína.', 159.90, 800, 5, 2, 2),
-    ('631656716627','Neutro Energizante', 'Sabor neutro para misturar com qualquer receita.', 129.90, 900, 4, 3, 1),
-    ('631656714142','Trem de Chocolate', 'Experimente a explosão de chocolate na sua proteína.', 169.90, 950, 1, 3, 2);
+    upc, nome, descricao, preco, peso, id_sabor, tipoWhey, id_fabricante, id_food
+) 
+VALUES
+    ('815044020354','Ultra Whey Supreme', 'Proteína de alta qualidade com sabor de chocolate.', 149.90, 900, 1, 1, 1, 1),
+    ('631656711325','Delícia de Chocolate Whey', 'Sabor incrível de chocolate, ideal para smoothies.', 139.90, 900, 2, 1, 2, 2),
+    ('883309010105','Baunilha Mágica', 'Whey de baunilha com ingredientes que aumentam o foco.', 154.90, 1000, 3, 2, 1, 3),
+    ('631656714142','Cookies Whey Delight', 'Combinação perfeita de cookies e proteína.', 159.90, 800, 5, 2, 2, 4);
 
 -- Inserção de lotes
 INSERT INTO lote (quantidade, dataFabricacao, id_whey, codigo) VALUES
@@ -97,10 +128,7 @@ INSERT INTO lote (quantidade, dataFabricacao, id_whey, codigo) VALUES
     (200, '2024-01-15', 2, 'COD-WHEY-003'),
     (180, '2024-01-20', 2, 'COD-WHEY-004'),
     (120, '2024-01-18', 3, 'COD-WHEY-005'),
-    (90, '2024-01-22', 4, 'COD-WHEY-006'),
-    (160, '2024-01-25', 5, 'COD-WHEY-007'),
-    (140, '2024-01-28', 6, 'COD-WHEY-008');
-
+    (90, '2024-01-22', 4, 'COD-WHEY-006');
 -- Inserção de cupons
 INSERT INTO cupom (id_fabricante, codigo, percentualdesconto, datavalidade, ativo) VALUES
     (1, 'WHEY10', 0.1, '2024-12-31T23:59:59', true), 

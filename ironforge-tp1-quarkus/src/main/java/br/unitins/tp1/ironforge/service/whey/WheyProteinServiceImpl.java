@@ -1,5 +1,6 @@
 package br.unitins.tp1.ironforge.service.whey;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.whey.WheyProteinRequestDTO;
@@ -56,8 +57,9 @@ public class WheyProteinServiceImpl implements WheyProteinService {
         Food tabela = tabelaNutricionalService.getTabelaNutricional(dto.upc());
 
         WheyProtein whey = new WheyProtein();
-        if(tabela == null){
-            throw new IllegalArgumentException("O código UPC fornecido é invalído. Uma lista de códigos pode ser acessada em: https://www.barcodespider.com/whey");
+        if (tabela == null) {
+            throw new IllegalArgumentException(
+                    "O código UPC fornecido é invalído. Uma lista de códigos pode ser acessada em: https://www.barcodespider.com/whey");
         }
         whey.setNome(dto.nome());
         whey.setDescricao(dto.descricao());
@@ -108,6 +110,19 @@ public class WheyProteinServiceImpl implements WheyProteinService {
     @Override
     public List<WheyProtein> findByTipoWhey(TipoWhey tipo) {
         return wheyRepository.findByTipo(tipo);
+    }
+
+    @Override
+    @Transactional
+    public void updateNomeImagem(Long id, String nomeImagem) {
+        WheyProtein whey = wheyRepository.findById(id);
+
+        if (whey.getImagens() == null) {
+            whey.setImagens(new ArrayList<>());
+            return;
+        }
+
+        whey.getImagens().add(nomeImagem);
     }
 
 }

@@ -7,5 +7,5 @@ public interface FileService {
 
     String save(String nomeArquivo, byte[] arquivo) throws IOException; // Nome do arquivo para indicar a extensão, pois bytes podem representar qqlr coisa (pdf, gif)
 
-    File find(String nomeArquivo); //Representa o dowload do arquivo
+    File find(String nomeArquivo) throws IOException;
 }
