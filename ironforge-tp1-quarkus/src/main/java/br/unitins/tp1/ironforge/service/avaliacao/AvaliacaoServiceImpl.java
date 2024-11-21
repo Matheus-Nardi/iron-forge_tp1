@@ -11,6 +11,7 @@ import br.unitins.tp1.ironforge.model.whey.WheyProtein;
 import br.unitins.tp1.ironforge.repository.AvaliacaoRepository;
 import br.unitins.tp1.ironforge.service.usuario.ClienteService;
 import br.unitins.tp1.ironforge.service.whey.WheyProteinService;
+import br.unitins.tp1.ironforge.validation.EntidadeNotFoundException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -29,7 +30,16 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
 
     @Override
     public Avaliacao findById(Long id) {
-        return avaliacaoRepository.findById(id);
+        Avaliacao avaliacao = findAvaliacao(id);
+        return avaliacao;
+    }
+
+    private Avaliacao findAvaliacao(Long id) {
+        Avaliacao avaliacao = avaliacaoRepository.findById(id);
+        if (avaliacao == null) {
+            throw new EntidadeNotFoundException("id", "Avaliação não encontrada");
+        }
+        return avaliacao;
     }
 
     @Override
@@ -45,8 +55,8 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
     @Override
     @Transactional
     public Avaliacao create(AvaliacaoRequestDTO dto, String username) {
-        Cliente cliente = clienteService.findByUsuario(username);
-        WheyProtein wheyProtein = wheyService.findById(dto.idWhey());
+        Cliente cliente = findCliente(username);
+        WheyProtein wheyProtein = findWheyProtein(dto);
         Avaliacao avaliacao = new Avaliacao();
         avaliacao.setComentario(dto.comentario());
         avaliacao.setNota(Nota.valueOf(dto.nota()));
@@ -59,12 +69,28 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
         return avaliacao;
     }
 
+    private WheyProtein findWheyProtein(AvaliacaoRequestDTO dto) {
+        WheyProtein wheyProtein = wheyService.findById(dto.idWhey());
+        if (wheyProtein == null) {
+            throw new EntidadeNotFoundException("idWhey", "Whey Protein não encontrado");
+        }
+        return wheyProtein;
+    }
+
+    private Cliente findCliente(String username) {
+        Cliente cliente = clienteService.findByUsuario(username);
+        if (cliente == null) {
+            throw new EntidadeNotFoundException("username", "Cliente não encontrado");
+        }
+        return cliente;
+    }
+
     @Override
     @Transactional
     public void update(Long id, AvaliacaoRequestDTO dto, String username) {
-        Cliente cliente = clienteService.findByUsuario(username);
-        WheyProtein wheyProtein = wheyService.findById(dto.idWhey());
-        Avaliacao avaliacao = avaliacaoRepository.findById(id);
+        Cliente cliente = findCliente(username);
+        WheyProtein wheyProtein = findWheyProtein(dto);
+        Avaliacao avaliacao = findAvaliacao(id);
         avaliacao.setComentario(dto.comentario());
         avaliacao.setNota(Nota.valueOf(dto.nota()));
         avaliacao.setData(LocalDate.now());
@@ -75,7 +101,8 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
 
     @Override
     public void delete(Long id) {
-        avaliacaoRepository.deleteById(id);
+        Avaliacao avaliacao = findAvaliacao(id);
+        avaliacaoRepository.delete(avaliacao);
     }
 
 }

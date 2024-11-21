@@ -6,6 +6,7 @@ import br.unitins.tp1.ironforge.dto.cupom.CupomRequestDTO;
 import br.unitins.tp1.ironforge.dto.cupom.CupomResponseDTO;
 import br.unitins.tp1.ironforge.model.Cupom;
 import br.unitins.tp1.ironforge.service.cupom.CupomService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
@@ -31,12 +32,14 @@ public class CupomResource {
 
     @GET
     @Path("/{id}")
+    @RolesAllowed("Adm")
     public Response findById(@PathParam("id") Long id) {
         return Response.ok(CupomResponseDTO.valueOf(cupomService.findById(id))).build();
     }
 
     @GET
     @Path("/search/{codigo}")
+    @RolesAllowed("Adm")
     public Response findByCodigo(@PathParam("codigo") String codigo) {
         List<Cupom> cupons = cupomService.findByCodigo(codigo);
         return Response.ok(cupons.stream().map(CupomResponseDTO::valueOf).toList()).build();
@@ -44,23 +47,27 @@ public class CupomResource {
 
     @GET
     @Path("/search/{idFabricante}")
+    @RolesAllowed("Adm")
     public Response findByFabricante(@PathParam("idFabricante") Long idFabricante) {
         List<Cupom> cupons = cupomService.findByFabricante(idFabricante);
         return Response.ok(cupons.stream().map(CupomResponseDTO::valueOf).toList()).build();
     }
 
     @GET
+    @RolesAllowed("Adm")
     public Response findAll() {
         List<Cupom> cupons = cupomService.findAll();
         return Response.ok(cupons.stream().map(CupomResponseDTO::valueOf).toList()).build();
     }
 
     @POST
+    @RolesAllowed("Adm")
     public Response create(@Valid CupomRequestDTO dto) {
         return Response.status(Status.CREATED).entity(CupomResponseDTO.valueOf(cupomService.create(dto))).build();
     }
 
     @PUT
+    @RolesAllowed("Adm")
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, @Valid CupomRequestDTO dto) {
         cupomService.update(id, dto);
@@ -68,6 +75,7 @@ public class CupomResource {
     }
 
     @DELETE
+    @RolesAllowed("Adm")
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {
         cupomService.delete(id);
@@ -75,6 +83,7 @@ public class CupomResource {
     }
 
     @PATCH
+    @RolesAllowed("Adm")
     @Path("/{id}")
     public Response deactive(@PathParam("id") Long id) {
         cupomService.deactivate(id);

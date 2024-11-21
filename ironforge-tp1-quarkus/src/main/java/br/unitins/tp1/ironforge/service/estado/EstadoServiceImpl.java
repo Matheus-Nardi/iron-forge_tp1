@@ -5,6 +5,7 @@ import java.util.List;
 import br.unitins.tp1.ironforge.dto.estado.EstadoRequestDTO;
 import br.unitins.tp1.ironforge.model.Estado;
 import br.unitins.tp1.ironforge.repository.EstadoRepository;
+import br.unitins.tp1.ironforge.validation.ValidationException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -28,11 +29,19 @@ public class EstadoServiceImpl implements EstadoService {
     @Override
     @Transactional
     public Estado create(EstadoRequestDTO dto) {
+
+        verificarSigla(dto.sigla());
         Estado estado = new Estado();
         estado.setNome(dto.nome());
         estado.setSigla(dto.sigla());
         estadoRepository.persist(estado);
         return estado;
+    }
+
+    private void verificarSigla(String sigla) {
+        if (!(estadoRepository.findBySigla(sigla) == null)) {
+            throw new ValidationException("sigla", "A sigla já foi utilizada por outro estado.");
+        }
     }
 
     @Override
@@ -56,7 +65,7 @@ public class EstadoServiceImpl implements EstadoService {
     }
 
     @Override
-    public List<Estado> findBySigla(String sigla) {
+    public Estado findBySigla(String sigla) {
         return estadoRepository.findBySigla(sigla);
     }
 

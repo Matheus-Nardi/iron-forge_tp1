@@ -6,6 +6,7 @@ import br.unitins.tp1.ironforge.dto.cidade.CidadeRequestDTO;
 import br.unitins.tp1.ironforge.model.Cidade;
 import br.unitins.tp1.ironforge.repository.CidadeRepository;
 import br.unitins.tp1.ironforge.service.estado.EstadoService;
+import br.unitins.tp1.ironforge.validation.EntidadeNotFoundException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -21,7 +22,16 @@ public class CidadeServiceImpl implements CidadeService {
 
     @Override
     public Cidade findById(Long id) {
-        return cidadeRepository.findById(id);
+        Cidade cidade = findCidade(id);
+        return cidade;
+    }
+
+    private Cidade findCidade(Long id) {
+        Cidade cidade = cidadeRepository.findById(id);
+        if (cidade == null)
+            throw new EntidadeNotFoundException("id", "Cidade não encontrada");
+
+        return cidade;
     }
 
     @Override
@@ -35,6 +45,9 @@ public class CidadeServiceImpl implements CidadeService {
     public Cidade create(CidadeRequestDTO dto) {
         Cidade cidade = new Cidade();
         cidade.setNome(dto.nome());
+        if (estadoService.findById(dto.idEstado()) == null) {
+            throw new EntidadeNotFoundException("idEstado", "Estado não encontrado");
+        }
         cidade.setEstado(estadoService.findById(dto.idEstado()));
         cidadeRepository.persist(cidade);
         return cidade;
@@ -43,8 +56,11 @@ public class CidadeServiceImpl implements CidadeService {
     @Override
     @Transactional
     public Cidade update(Long id, CidadeRequestDTO dto) {
-        Cidade cidade = cidadeRepository.findById(id);
+        Cidade cidade = findCidade(id);
         cidade.setNome(dto.nome());
+        if (estadoService.findById(dto.idEstado()) == null) {
+            throw new EntidadeNotFoundException("idEstado", "Estado não encontrado");
+        }
         cidade.setEstado(estadoService.findById(dto.idEstado()));
         return cidade;
     }
@@ -52,7 +68,8 @@ public class CidadeServiceImpl implements CidadeService {
     @Override
     @Transactional
     public void delete(Long id) {
-        cidadeRepository.deleteById(id);
+        Cidade cidade = findCidade(id);
+        cidadeRepository.delete(cidade);
     }
 
     @Override
