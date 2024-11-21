@@ -3,25 +3,33 @@ package br.unitins.tp1.ironforge.service.pedido;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import br.unitins.tp1.ironforge.dto.itempedido.ItemPedidoRequestDTO;
 import br.unitins.tp1.ironforge.dto.pedido.PedidoRequestDTO;
 import br.unitins.tp1.ironforge.model.Cupom;
 import br.unitins.tp1.ironforge.model.ItemPedido;
 import br.unitins.tp1.ironforge.model.Lote;
+import br.unitins.tp1.ironforge.model.pagamento.Boleto;
+import br.unitins.tp1.ironforge.model.pagamento.Pagamento;
+import br.unitins.tp1.ironforge.model.pagamento.Pix;
+import br.unitins.tp1.ironforge.model.pagamento.StatusPagamento;
 import br.unitins.tp1.ironforge.model.pedido.EnderecoEntrega;
 import br.unitins.tp1.ironforge.model.pedido.Pedido;
 import br.unitins.tp1.ironforge.model.pedido.Situacao;
 import br.unitins.tp1.ironforge.model.pedido.StatusPedido;
 import br.unitins.tp1.ironforge.model.usuario.Cliente;
+import br.unitins.tp1.ironforge.repository.PagamentoRepository;
 import br.unitins.tp1.ironforge.repository.PedidoRepository;
 import br.unitins.tp1.ironforge.service.cidade.CidadeService;
 import br.unitins.tp1.ironforge.service.cupom.CupomService;
 import br.unitins.tp1.ironforge.service.lote.LoteService;
 import br.unitins.tp1.ironforge.service.usuario.ClienteService;
 import br.unitins.tp1.ironforge.service.usuario.UsuarioService;
+import br.unitins.tp1.ironforge.validation.ValidationException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @ApplicationScoped
@@ -45,6 +53,9 @@ public class PedidoServiceImpl implements PedidoService {
     @Inject
     public CidadeService cidadeService;
 
+    @Inject
+    public PagamentoRepository pagamentoRepository;
+
     @Override
     public Pedido findById(Long id) {
         return pedidoRepository.findById(id);
@@ -64,8 +75,7 @@ public class PedidoServiceImpl implements PedidoService {
 
         Double valorFinal = arredondarParaDuasCasasDecimais(aplicarDesconto(pedido));
         if (!(dto.valorTotal().equals(valorFinal)))
-            throw new IllegalArgumentException("O valor fornecido não corresponde ao valor final do pedido");
-
+            throw new ValidationException("valorTotal", "O valor fornecido não corresponde ao valor final do pedido!");
         pedido.setValorTotal(valorFinal);
         getStatusPedido(pedido);
 
@@ -114,11 +124,11 @@ public class PedidoServiceImpl implements PedidoService {
         } else {
             List<Cupom> cupons = cupomService.findByCodigo(dto.cupom());
             if (cupons.isEmpty()) {
-                throw new IllegalArgumentException("Cupom não encontrado ou inválido");
+                throw new ValidationException("cupom", "Cupom não encontrado ou inválido");
             }
 
             if (!cupons.get(0).isValido() || (cupons.get(0).getAtivo().equals(false))) {
-                throw new IllegalArgumentException("Cupom não encontrado ou inválido");
+                throw new ValidationException("cupom", "Cupom não encontrado ou inválido");
             }
 
             pedido.setCupom(cupons.get(0));
@@ -164,10 +174,43 @@ public class PedidoServiceImpl implements PedidoService {
     public void updateStatusPedido(Long id, Situacao situacao) {
         Pedido pedido = pedidoRepository.findById(id);
 
+        if (pedido == null) {
+            throw new EntityNotFoundException("Pedido não encontrado");
+        }
+
         StatusPedido status = new StatusPedido();
         status.setSituacao(situacao);
         status.setDataAtualizacao(LocalDateTime.now());
         pedido.getStatusPedidos().add(status);
+    }
+
+    @Override
+    public Pix gerarPix(Long id) {
+        Pedido pedido = pedidoRepository.findById(id);
+        if (pedido == null) {
+            throw new EntityNotFoundException("Pedido não encontrado");
+        }
+        Pix pix = new Pix();
+        pix.setDataVencimento(pedido.getData().plusMinutes(30));
+        pix.setChave(UUID.randomUUID().toString());
+        pix.setDestinatario("Iron Forge");
+        pix.setStatusPagamento(StatusPagamento.PENDENTE);
+        pix.setValor(pedido.getValorTotal());
+        pagamentoRepository.persist(pix);
+        return pix;
+
+    }
+
+    @Override
+    public Boleto gerarBoleto(Long id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'gerarBoleto'");
+    }
+
+    @Override
+    public void pagar(Pagamento pagamento) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'pagar'");
     }
 
 }

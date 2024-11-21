@@ -41,6 +41,10 @@ public class Pedido extends DefaultEntity {
     @JoinColumn(name = "id_enderecoEntrega")
     private EnderecoEntrega enderecoEntrega;
 
+    @OneToOne
+    @JoinColumn(name = "id_pagamento")
+    private Pedido pedido;
+
     public LocalDateTime getData() {
         return data;
     }
