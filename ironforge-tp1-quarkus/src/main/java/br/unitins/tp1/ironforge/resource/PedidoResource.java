@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
+import br.unitins.tp1.ironforge.dto.pagamento.PixResponseDTO;
 import br.unitins.tp1.ironforge.dto.pedido.PedidoRequestDTO;
 import br.unitins.tp1.ironforge.dto.pedido.PedidoResponseDTO;
 import br.unitins.tp1.ironforge.model.pedido.Pedido;
@@ -57,5 +58,15 @@ public class PedidoResource {
         pedidoService.updateStatusPedido(id, situacao);
         return Response.noContent().build();
     }
+
+    @POST
+    @Path("informacoes/pix/{id}")
+    @RolesAllowed({ "User", "Adm" })
+    public Response gerarPix(@PathParam("id") Long idPedido) {
+        return Response.status(Status.CREATED).entity(PixResponseDTO.valueOf(pedidoService.gerarPix(idPedido))).build();
+    }
+
+
+
 
 }

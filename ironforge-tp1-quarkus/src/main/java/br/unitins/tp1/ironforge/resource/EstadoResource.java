@@ -31,7 +31,7 @@ public class EstadoResource {
 
     @GET
     @Path("/{id}")
-    @RolesAllowed({"Adm", "User"})
+    @RolesAllowed({ "Adm", "User" })
     public Response findById(@PathParam("id") Long id) {
         return Response.ok(EstadoResponseDTO.valueOf(estadoService.findById(id))).build();
     }
@@ -43,12 +43,11 @@ public class EstadoResource {
         List<Estado> estados = estadoService.findByNome(nome);
         return Response.ok(estados.stream().map(EstadoResponseDTO::valueOf).toList()).build();
     }
-    
+
     @GET
     @Path("/search/{sigla}")
     public Response findBySigla(@PathParam("sigla") String sigla) {
-        List<Estado> estados = estadoService.findBySigla(sigla);
-        return Response.ok(estados.stream().map(EstadoResponseDTO::valueOf).toList()).build();
+        return Response.ok(estadoService.findBySigla(sigla)).build();
     }
 
     @GET

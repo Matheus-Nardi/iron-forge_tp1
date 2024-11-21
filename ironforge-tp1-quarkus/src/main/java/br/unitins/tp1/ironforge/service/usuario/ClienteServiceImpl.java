@@ -19,9 +19,9 @@ import br.unitins.tp1.ironforge.repository.UsuarioRepository;
 import br.unitins.tp1.ironforge.service.cidade.CidadeService;
 import br.unitins.tp1.ironforge.service.hash.HashService;
 import br.unitins.tp1.ironforge.service.whey.WheyProteinService;
+import br.unitins.tp1.ironforge.validation.EntidadeNotFoundException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @ApplicationScoped
@@ -47,7 +47,13 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public Cliente findById(Long id) {
-        return clienteRepository.findById(id);
+        Cliente cliente = clienteRepository.findById(id);
+
+        if (cliente == null) {
+            throw new EntidadeNotFoundException("id", "Cliente não encontrado");
+        }
+        return cliente;
+
     }
 
     @Override
@@ -96,7 +102,7 @@ public class ClienteServiceImpl implements ClienteService {
         Cliente cliente = clienteRepository.findById(id);
 
         if (cliente == null)
-            throw new IllegalArgumentException("Cliente não encontrado!");
+            throw new EntidadeNotFoundException("id", "Cliente não encontrado");
         PessoaFisica pf = cliente.getPessoaFisica();
         pf.setNome(dto.nome());
         pf.setCpf(dto.cpf());
@@ -110,7 +116,7 @@ public class ClienteServiceImpl implements ClienteService {
 
         Cliente cliente = clienteRepository.findById(clienteId);
         if (cliente == null) {
-            throw new EntityNotFoundException("Cliente não encontrado para o ID: " + clienteId);
+            throw new EntidadeNotFoundException("clienteId", "Cliente não encontrado");
         }
         usuarioRepository.delete(cliente.getPessoaFisica().getUsuario());
         pessoaFisicaRepository.delete(cliente.getPessoaFisica());
@@ -121,9 +127,13 @@ public class ClienteServiceImpl implements ClienteService {
     @Transactional
     public void updateTelefone(Long id, Long idTelefone, TelefoneRequestDTO dto) {
         Cliente cliente = clienteRepository.findById(id);
+
+        if (cliente == null) {
+            throw new EntidadeNotFoundException("id", "Cliente não encontrado");
+        }
         Telefone telefone = cliente.getPessoaFisica().getTelefones().stream().filter(t -> t.getId().equals(idTelefone))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Telefone não encontrado"));
+                .orElseThrow(() -> new EntidadeNotFoundException("idTelefone", "Telefone não encontrado"));
 
         telefone.setCodigoArea(dto.codigoArea());
         telefone.setNumero(dto.numero());
@@ -133,9 +143,13 @@ public class ClienteServiceImpl implements ClienteService {
     @Transactional
     public void updateEndereco(Long id, Long idEndereco, EnderecoRequestDTO dto) {
         Cliente cliente = clienteRepository.findById(id);
+
+        if (cliente == null) {
+            throw new EntidadeNotFoundException("id", "Cliente não encontrado");
+        }
         Endereco endereco = cliente.getPessoaFisica().getEnderecos().stream().filter(e -> e.getId().equals(idEndereco))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Endereco não encontrado"));
+                .orElseThrow(() -> new EntidadeNotFoundException("idEndereco", "Endereco não encontrado"));
 
         endereco.setBairro(dto.bairro());
         endereco.setCep(dto.cep());
@@ -200,7 +214,11 @@ public class ClienteServiceImpl implements ClienteService {
             return;
         }
 
-        cliente.getListaDesejos().add(wheyService.findById(idWhey));
+        WheyProtein wheyProtein = wheyService.findById(idWhey);
+        if (wheyProtein == null) {
+            throw new EntidadeNotFoundException("idWhey", "Whey Protein não encontrado");
+        }
+        cliente.getListaDesejos().add(wheyProtein);
     }
 
     @Override
@@ -210,10 +228,21 @@ public class ClienteServiceImpl implements ClienteService {
         List<WheyProtein> listaDesejos = cliente.getListaDesejos();
 
         if (listaDesejos == null) {
-            throw new IllegalArgumentException("Não há itens a serem removidos da lista de desejos !");
+            throw new EntidadeNotFoundException("message", "Caro cliente, voce ainda não possui uma lista de desejos");
         }
 
-        listaDesejos.remove(wheyService.findById(idWhey));
+        WheyProtein wheyProtein = wheyService.findById(idWhey);
+        if (wheyProtein == null) {
+            throw new EntidadeNotFoundException("idWhey", "Whey Protein não encontrado");
+        }
+
+        listaDesejos.remove(wheyProtein);
+    }
+
+    @Override
+    public List<WheyProtein> getListaDesejos(String username) {
+        Cliente cliente = clienteRepository.findClienteByUsuario(username);
+        return cliente.getListaDesejos();
     }
 
 }

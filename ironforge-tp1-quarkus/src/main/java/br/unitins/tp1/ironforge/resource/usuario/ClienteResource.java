@@ -11,6 +11,7 @@ import br.unitins.tp1.ironforge.dto.pessoafisica.ClienteRequestDTO;
 import br.unitins.tp1.ironforge.dto.pessoafisica.ClienteResponseDTO;
 import br.unitins.tp1.ironforge.dto.pessoafisica.ClienteUpdateRequestDTO;
 import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
+import br.unitins.tp1.ironforge.dto.whey.WheyProteinResponseDTO;
 import br.unitins.tp1.ironforge.form.ImageForm;
 import br.unitins.tp1.ironforge.model.usuario.Cliente;
 import br.unitins.tp1.ironforge.service.ClienteFileServiceImpl;
@@ -75,6 +76,15 @@ public class ClienteResource {
         String username = jsonWebToken.getSubject();
         clienteService.removerListaDesejo(username, idProduto);
         return Response.noContent().build();
+    }
+
+    @GET
+    @Path("/desejos")
+    @RolesAllowed({ "User" })
+    public Response getListaDesejos() {
+        String username = jsonWebToken.getSubject();
+        return Response.ok()
+                .entity(clienteService.getListaDesejos(username).stream().map(WheyProteinResponseDTO::valueOf)).build();
     }
 
     @GET

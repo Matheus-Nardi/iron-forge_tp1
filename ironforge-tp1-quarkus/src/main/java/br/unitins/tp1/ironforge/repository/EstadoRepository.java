@@ -14,7 +14,8 @@ public class EstadoRepository implements PanacheRepository<Estado> {
         return find("nome LIKE ?1" , "%" + nome + "%").list();
     }
 
-    public List<Estado> findBySigla(String sigla){
-        return find("sigla LIKE ?1" , "%" + sigla.toUpperCase() + "%").list();
+    public Estado findBySigla(String sigla){
+        return find("sigla LIKE ?1" , "%" + sigla.toUpperCase() + "%").firstResult();
     }
+
 }
