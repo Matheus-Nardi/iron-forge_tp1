@@ -17,9 +17,10 @@ import br.unitins.tp1.ironforge.repository.PessoaFisicaRepository;
 import br.unitins.tp1.ironforge.repository.UsuarioRepository;
 import br.unitins.tp1.ironforge.service.cidade.CidadeService;
 import br.unitins.tp1.ironforge.service.hash.HashService;
+import br.unitins.tp1.ironforge.validation.EntidadeNotFoundException;
+import br.unitins.tp1.ironforge.validation.ValidationException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @ApplicationScoped
@@ -42,7 +43,12 @@ public class FuncionarioServiceImpl implements FuncionarioService {
 
     @Override
     public Funcionario findById(Long id) {
-        return funcionarioRepository.findById(id);
+        Funcionario funcionario = funcionarioRepository.findById(id);
+
+        if (funcionario == null) {
+            throw new EntidadeNotFoundException("id", "Funcionario não encontrado");
+        }
+        return funcionario;
     }
 
     @Override
@@ -58,6 +64,7 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     @Override
     @Transactional
     public Funcionario create(FuncionarioRequestDTO dto) {
+        validarEntidade(dto);
         Funcionario funcionario = new Funcionario();
         Usuario usuario = getUsuario(dto);
 
@@ -93,6 +100,7 @@ public class FuncionarioServiceImpl implements FuncionarioService {
         // Definindo usuario
         usuario.setUsername(dto.usuario().username());
         usuario.setSenha(hashService.getHashSenha(dto.usuario().senha()));
+        usuario.setPerfil(dto.usuario().perfil());
         usuarioRepository.persist(usuario);
         return usuario;
     }
@@ -104,7 +112,15 @@ public class FuncionarioServiceImpl implements FuncionarioService {
         Funcionario funcionario = funcionarioRepository.findById(id);
 
         if (funcionario == null)
-            throw new IllegalArgumentException("Funcionario não encontrado!");
+            throw new EntidadeNotFoundException("id", "Funcionario não encontrado");
+
+        if (existeCPF(dto.cpf())) {
+            throw new ValidationException("cpf", "CPF informado é inválido");
+        }
+
+        if (existeEmail(dto.email())) {
+            throw new ValidationException("email", "Email informado é inválido");
+        }
         funcionario.setCargo(dto.cargo());
         funcionario.setSalario(dto.salario());
         funcionario.setDataContratacao(dto.dataContratacao());
@@ -121,7 +137,7 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     public void delete(Long id) {
         Funcionario funcionario = funcionarioRepository.findById(id);
         if (funcionario == null) {
-            throw new EntityNotFoundException("Funcionario não encontrado para o ID: " + id);
+            throw new EntidadeNotFoundException("id", "Funcionario não encontrado");
         }
 
         usuarioRepository.delete(funcionario.getPessoaFisica().getUsuario());
@@ -133,10 +149,14 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     @Transactional
     public void updateTelefone(Long id, Long idTelefone, TelefoneRequestDTO dto) {
         Funcionario funcionario = funcionarioRepository.findById(id);
+
+        if (funcionario == null) {
+            throw new EntidadeNotFoundException("id", "Funcionario não encontrado");
+        }
         Telefone telefone = funcionario.getPessoaFisica().getTelefones().stream()
                 .filter(t -> t.getId().equals(idTelefone))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Telefone não encontrado"));
+                .orElseThrow(() -> new EntidadeNotFoundException("idTelefone", "Telefone não encontrado"));
         telefone.setCodigoArea(dto.codigoArea());
         telefone.setNumero(dto.numero());
     }
@@ -148,7 +168,7 @@ public class FuncionarioServiceImpl implements FuncionarioService {
         Endereco endereco = funcionario.getPessoaFisica().getEnderecos().stream()
                 .filter(e -> e.getId().equals(idEndereco))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Endereco não encontrado"));
+                .orElseThrow(() -> new EntidadeNotFoundException("idEndereco", "Endereco não encontrado"));
 
         endereco.setBairro(dto.bairro());
         endereco.setCep(dto.cep());
@@ -198,6 +218,31 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     @Override
     public Funcionario findByUsermame(String username) {
         return funcionarioRepository.findFuncionarioByUsername(username);
+    }
+
+    private void validarEntidade(FuncionarioRequestDTO dto) {
+        if (existeUsuario(dto.usuario().username())) {
+            throw new ValidationException("usuario.username", "Username inválido");
+        }
+
+        if (existeCPF(dto.cpf())) {
+            throw new ValidationException("cnpj", "Cnpj informado é inválido");
+        }
+        if (existeEmail(dto.email())) {
+            throw new ValidationException("email", "Email informado é inválido");
+        }
+    }
+
+    private boolean existeUsuario(String username) {
+        return funcionarioRepository.findFuncionarioByUsername(username) == null ? false : true;
+    }
+
+    private boolean existeCPF(String cnpj) {
+        return funcionarioRepository.findFuncionarioByCpf(cnpj) == null ? false : true;
+    }
+
+    private boolean existeEmail(String email) {
+        return funcionarioRepository.findFuncionarioByEmail(email) == null ? false : true;
     }
 
 }

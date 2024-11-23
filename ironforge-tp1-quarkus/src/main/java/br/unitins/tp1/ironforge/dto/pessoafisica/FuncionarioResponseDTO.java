@@ -12,7 +12,7 @@ import br.unitins.tp1.ironforge.model.usuario.Funcionario;
 public record FuncionarioResponseDTO(
         Long id,
         String nome,
-        String cnpj,
+        String cpf,
         String email,
         LocalDate dataNascimento,
         List<TelefoneResponseDTO> telefones,

@@ -6,6 +6,7 @@ import br.unitins.tp1.ironforge.dto.lote.LoteRequestDTO;
 import br.unitins.tp1.ironforge.model.Lote;
 import br.unitins.tp1.ironforge.repository.LoteRepository;
 import br.unitins.tp1.ironforge.service.whey.WheyProteinService;
+import br.unitins.tp1.ironforge.validation.EntidadeNotFoundException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -21,7 +22,12 @@ public class LoteServiceImpl implements LoteService {
 
     @Override
     public Lote findById(Long id) {
-        return loteRepository.findById(id);
+        Lote lote = loteRepository.findById(id);
+
+        if (lote == null) {
+            throw new EntidadeNotFoundException("id", "Lote não encontrado");
+        }
+        return lote;
 
     }
 
@@ -47,7 +53,7 @@ public class LoteServiceImpl implements LoteService {
     public void update(Long id, LoteRequestDTO dto) {
         Lote lote = loteRepository.findById(id);
         if (lote == null)
-            throw new IllegalArgumentException("Lote não encontrado!");
+            throw new EntidadeNotFoundException("id", "Lote não encontrado!");
 
         lote.setCodigo(dto.codigo());
         lote.setDataFabricacao(dto.dataFabricacao());
@@ -60,7 +66,7 @@ public class LoteServiceImpl implements LoteService {
     public void delete(Long id) {
         Lote lote = loteRepository.findById(id);
         if (lote == null)
-            throw new IllegalArgumentException("Lote não encontrado!");
+            throw new EntidadeNotFoundException("id", "Lote não encontrado!");
         loteRepository.delete(lote);
     }
 

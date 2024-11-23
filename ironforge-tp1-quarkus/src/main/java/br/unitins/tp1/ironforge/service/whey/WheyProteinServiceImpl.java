@@ -11,6 +11,7 @@ import br.unitins.tp1.ironforge.repository.WheyProteinRepository;
 import br.unitins.tp1.ironforge.service.fabricante.FabricanteService;
 import br.unitins.tp1.ironforge.service.whey.sabor.SaborService;
 import br.unitins.tp1.ironforge.service.whey.tabelanutricional.TabelaNutricionalService;
+import br.unitins.tp1.ironforge.validation.EntidadeNotFoundException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -32,8 +33,11 @@ public class WheyProteinServiceImpl implements WheyProteinService {
 
     @Override
     public WheyProtein findById(Long id) {
-        return wheyRepository.findById(id);
+        WheyProtein whey = wheyRepository.findById(id);
+        if (whey == null)
+            throw new EntidadeNotFoundException("id", "Whey não encontrado!");
 
+        return whey;
     }
 
     @Override
@@ -58,7 +62,8 @@ public class WheyProteinServiceImpl implements WheyProteinService {
 
         WheyProtein whey = new WheyProtein();
         if (tabela == null) {
-            throw new IllegalArgumentException(
+            throw new EntidadeNotFoundException(
+                    "upc",
                     "O código UPC fornecido é invalído. Uma lista de códigos pode ser acessada em: https://www.barcodespider.com/whey");
         }
         whey.setNome(dto.nome());
@@ -79,7 +84,7 @@ public class WheyProteinServiceImpl implements WheyProteinService {
     public void update(Long id, WheyProteinRequestDTO dto) {
         WheyProtein wheyToUpdate = wheyRepository.findById(id);
         if (wheyToUpdate == null)
-            throw new IllegalArgumentException("Whey não encontrado!");
+            throw new EntidadeNotFoundException("id", "Whey não encontrado!");
         wheyToUpdate.setNome(dto.nome());
         wheyToUpdate.setDescricao(dto.descricao());
         wheyToUpdate.setPreco(dto.preco());
@@ -93,7 +98,7 @@ public class WheyProteinServiceImpl implements WheyProteinService {
     public void delete(Long id) {
         WheyProtein wheyToDelete = wheyRepository.findById(id);
         if (wheyToDelete == null)
-            throw new IllegalArgumentException("Whey não encontrado!");
+            throw new EntidadeNotFoundException("id", "Whey não encontrado!");
         wheyRepository.delete(wheyToDelete);
     }
 

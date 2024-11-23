@@ -7,6 +7,7 @@ import br.unitins.tp1.ironforge.dto.lote.LoteResponseDTO;
 import br.unitins.tp1.ironforge.model.Lote;
 import br.unitins.tp1.ironforge.service.lote.LoteService;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -53,14 +54,14 @@ public class LoteResource {
     }
 
     @POST
-    public Response create(LoteRequestDTO loteDTO) {
+    public Response create(@Valid LoteRequestDTO loteDTO) {
         Lote lote = loteService.create(loteDTO);
         return Response.status(Status.CREATED).entity(LoteResponseDTO.valueOf(lote)).build();
     }
 
     @PUT
     @Path("/{id}")
-    public Response update(@PathParam("id") Long id, LoteRequestDTO loteToUpdate) {
+    public Response update(@PathParam("id") Long id, @Valid LoteRequestDTO loteToUpdate) {
         loteService.update(id, loteToUpdate);
         return Response.noContent().build();
     }

@@ -16,6 +16,8 @@ import br.unitins.tp1.ironforge.repository.FabricanteRepository;
 import br.unitins.tp1.ironforge.repository.PessoaJuridicaRepository;
 import br.unitins.tp1.ironforge.repository.UsuarioRepository;
 import br.unitins.tp1.ironforge.service.cidade.CidadeService;
+import br.unitins.tp1.ironforge.validation.EntidadeNotFoundException;
+import br.unitins.tp1.ironforge.validation.ValidationException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -37,7 +39,12 @@ public class FabricanteServiceImpl implements FabricanteService {
 
     @Override
     public Fabricante findById(Long id) {
-        return fabricanteRepository.findById(id);
+        Fabricante fabricante = fabricanteRepository.findById(id);
+
+        if (fabricante == null) {
+            throw new EntidadeNotFoundException("id", "Fabricante não encontrado");
+        }
+        return fabricante;
 
     }
 
@@ -55,6 +62,8 @@ public class FabricanteServiceImpl implements FabricanteService {
     @Transactional
     public Fabricante create(FabricanteRequestDTO dto) {
 
+        validarEntidade(dto);
+
         Fabricante fabricante = new Fabricante();
         Usuario usuario = getUsuario(dto);
 
@@ -64,6 +73,19 @@ public class FabricanteServiceImpl implements FabricanteService {
         fabricanteRepository.persist(fabricante);
 
         return fabricante;
+    }
+
+    private void validarEntidade(FabricanteRequestDTO dto) {
+        if (existeUsuario(dto.usuario().username())) {
+            throw new ValidationException("usuario.username", "Username inválido");
+        }
+
+        if (existeCNPJ(dto.cnpj())) {
+            throw new ValidationException("cnpj", "Cnpj informado é inválido");
+        }
+        if (existeEmail(dto.email())) {
+            throw new ValidationException("email", "Email informado é inválido");
+        }
     }
 
     private PessoaJuridica getPessoaJuridica(FabricanteRequestDTO dto, Usuario usuario) {
@@ -82,6 +104,7 @@ public class FabricanteServiceImpl implements FabricanteService {
         Usuario usuario = new Usuario();
         usuario.setUsername(dto.usuario().username());
         usuario.setSenha(dto.usuario().senha());
+        usuario.setPerfil(dto.usuario().perfil());
         usuarioRepository.persist(usuario);
         return usuario;
     }
@@ -92,7 +115,16 @@ public class FabricanteServiceImpl implements FabricanteService {
         Fabricante fabricante = fabricanteRepository.findById(id);
 
         if (fabricante == null)
-            throw new IllegalArgumentException("Fabricante não encontrado!");
+            throw new EntidadeNotFoundException("id", "Fabricante não encontrado");
+
+        if (existeCNPJ(dto.cnpj())) {
+            throw new ValidationException("cnpj", "Cnpj informado é inválido");
+        }
+
+        if (existeEmail(dto.email())) {
+            throw new ValidationException("email", "Email informado é inválido");
+        }
+
         PessoaJuridica pJ = fabricante.getPessoaJuridica();
         pJ.setNome(dto.nome());
         pJ.setCnpj(dto.cnpj());
@@ -103,8 +135,9 @@ public class FabricanteServiceImpl implements FabricanteService {
     @Transactional
     public void delete(Long id) {
         Fabricante fabricante = fabricanteRepository.findById(id);
-        if (fabricante == null)
-            throw new IllegalArgumentException("Fabricante não encontrado!");
+        if (fabricante == null) {
+            throw new EntidadeNotFoundException("fabricanteId", "Fabricante não encontrado");
+        }
         usuarioRepository.delete(fabricante.getPessoaJuridica().getUsuario());
         pessoaJuridicaRepository.delete(fabricante.getPessoaJuridica());
         fabricanteRepository.delete(fabricante);
@@ -144,9 +177,13 @@ public class FabricanteServiceImpl implements FabricanteService {
     @Transactional
     public void updateTelefone(Long id, Long idTelefone, TelefoneRequestDTO dto) {
         Fabricante fabricante = fabricanteRepository.findById(id);
+
+        if (fabricante == null) {
+            throw new EntidadeNotFoundException("id", "Fabricante não encontrado");
+        }
         Telefone telefone = fabricante.getPessoaJuridica().getTelefones().stream()
                 .filter(t -> t.getId().equals(idTelefone)).findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Telefone não encontrado"));
+                .orElseThrow(() -> new EntidadeNotFoundException("idTelefone", "Telefone não encontrado"));
         telefone.setCodigoArea(dto.codigoArea());
         telefone.setNumero(dto.numero());
     }
@@ -155,9 +192,13 @@ public class FabricanteServiceImpl implements FabricanteService {
     @Transactional
     public void updateEndereco(Long id, Long idEndereco, EnderecoRequestDTO dto) {
         Fabricante fabricante = fabricanteRepository.findById(id);
+
+        if (fabricante == null) {
+            throw new EntidadeNotFoundException("id", "Fabricante não encontrado");
+        }
         Endereco endereco = fabricante.getPessoaJuridica().getEnderecos().stream()
                 .filter(e -> e.getId().equals(idEndereco)).findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Endereco não encontrado"));
+                .orElseThrow(() -> new EntidadeNotFoundException("idEndereco", "Endereco não encontrado"));
 
         endereco.setBairro(dto.bairro());
         endereco.setCep(dto.cep());
@@ -168,5 +209,16 @@ public class FabricanteServiceImpl implements FabricanteService {
 
     }
 
+    private boolean existeUsuario(String username) {
+        return fabricanteRepository.findFabricanteByUsername(username) == null ? false : true;
+    }
+
+    private boolean existeCNPJ(String cnpj) {
+        return fabricanteRepository.findFabricanteByCnpj(cnpj) == null ? false : true;
+    }
+
+    private boolean existeEmail(String email) {
+        return fabricanteRepository.findFabricanteByEmail(email) == null ? false : true;
+    }
 
 }

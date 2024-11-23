@@ -26,10 +26,10 @@ import br.unitins.tp1.ironforge.service.cupom.CupomService;
 import br.unitins.tp1.ironforge.service.lote.LoteService;
 import br.unitins.tp1.ironforge.service.usuario.ClienteService;
 import br.unitins.tp1.ironforge.service.usuario.UsuarioService;
+import br.unitins.tp1.ironforge.validation.EntidadeNotFoundException;
 import br.unitins.tp1.ironforge.validation.ValidationException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @ApplicationScoped
@@ -58,6 +58,10 @@ public class PedidoServiceImpl implements PedidoService {
 
     @Override
     public Pedido findById(Long id) {
+        Pedido pedido = pedidoRepository.findById(id);
+        if (pedido == null) {
+            throw new EntidadeNotFoundException("id", "Pedido não encontrado");
+        }
         return pedidoRepository.findById(id);
     }
 
@@ -175,7 +179,7 @@ public class PedidoServiceImpl implements PedidoService {
         Pedido pedido = pedidoRepository.findById(id);
 
         if (pedido == null) {
-            throw new EntityNotFoundException("Pedido não encontrado");
+            throw new EntidadeNotFoundException("id", "Pedido não encontrado");
         }
 
         StatusPedido status = new StatusPedido();
@@ -188,7 +192,7 @@ public class PedidoServiceImpl implements PedidoService {
     public Pix gerarPix(Long id) {
         Pedido pedido = pedidoRepository.findById(id);
         if (pedido == null) {
-            throw new EntityNotFoundException("Pedido não encontrado");
+            throw new EntidadeNotFoundException("id", "Pedido não encontrado");
         }
         Pix pix = new Pix();
         pix.setDataVencimento(pedido.getData().plusMinutes(30));

@@ -5,6 +5,7 @@ import java.util.List;
 import br.unitins.tp1.ironforge.dto.estado.EstadoRequestDTO;
 import br.unitins.tp1.ironforge.model.Estado;
 import br.unitins.tp1.ironforge.repository.EstadoRepository;
+import br.unitins.tp1.ironforge.validation.EntidadeNotFoundException;
 import br.unitins.tp1.ironforge.validation.ValidationException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -18,7 +19,11 @@ public class EstadoServiceImpl implements EstadoService {
 
     @Override
     public Estado findById(Long id) {
-        return estadoRepository.findById(id);
+        Estado estado = estadoRepository.findById(id);
+        if (estado == null) {
+            throw new EntidadeNotFoundException("id", "Estado não encontrado");
+        }
+        return estado;
     }
 
     @Override
@@ -48,6 +53,10 @@ public class EstadoServiceImpl implements EstadoService {
     @Transactional
     public Estado update(Long id, EstadoRequestDTO dto) {
         Estado estado = estadoRepository.findById(id);
+        if (estado == null) {
+            throw new EntidadeNotFoundException("id", "Estado não encontrado");
+        }
+        verificarSigla(dto.sigla());
         estado.setNome(dto.nome());
         estado.setSigla(dto.sigla());
         return estado;
@@ -56,7 +65,11 @@ public class EstadoServiceImpl implements EstadoService {
     @Override
     @Transactional
     public void delete(Long id) {
-        estadoRepository.deleteById(id);
+        Estado estado = estadoRepository.findById(id);
+        if (estado == null) {
+            throw new EntidadeNotFoundException("id", "Estado não encontrado");
+        }
+        estadoRepository.delete(estado);
     }
 
     @Override

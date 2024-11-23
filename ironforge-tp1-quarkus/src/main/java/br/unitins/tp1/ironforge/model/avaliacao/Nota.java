@@ -3,6 +3,8 @@ package br.unitins.tp1.ironforge.model.avaliacao;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 
+import br.unitins.tp1.ironforge.validation.EntidadeNotFoundException;
+
 @JsonFormat(shape = Shape.OBJECT)
 public enum Nota {
 
@@ -36,7 +38,7 @@ public enum Nota {
                 return tipo;
         }
 
-        throw new IllegalArgumentException("Tipo de estrela não encontrado!");
+        throw new EntidadeNotFoundException("nota", "Tipo de estrela não encontrado!");
     }
 
 }

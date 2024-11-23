@@ -13,7 +13,15 @@ public class FuncionarioRepository implements PanacheRepository<Funcionario> {
         return find("pessoaFisica.nome LIKE ?1", "%" + nome + "%").list();
     }
 
-    public Funcionario findFuncionarioByUsername(String username){
+    public Funcionario findFuncionarioByUsername(String username) {
         return find("pessoaFisica.usuario.username = ?1 ", username).firstResult();
+    }
+
+    public Funcionario findFuncionarioByCpf(String cpf) {
+        return find("pessoaFisica.cpf = ?1 ", cpf).firstResult();
+    }
+
+    public Funcionario findFuncionarioByEmail(String email) {
+        return find("pessoaFisica.email = ?1 ", email).firstResult();
     }
 }

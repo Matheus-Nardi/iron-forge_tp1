@@ -3,6 +3,8 @@ package br.unitins.tp1.ironforge.model.pedido;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 
+import br.unitins.tp1.ironforge.validation.EntidadeNotFoundException;
+
 @JsonFormat(shape = Shape.OBJECT)
 public enum Situacao {
 
@@ -39,7 +41,7 @@ public enum Situacao {
                 return tipo;
         }
 
-        throw new IllegalArgumentException("Tipo de situação não encontrado!");
+        throw new EntidadeNotFoundException("idSituacao", "Tipo de situação não encontrado!");
     }
 
 }

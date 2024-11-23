@@ -8,6 +8,7 @@ import br.unitins.tp1.ironforge.model.Fabricante;
 import br.unitins.tp1.ironforge.repository.CupomRepository;
 import br.unitins.tp1.ironforge.service.fabricante.FabricanteService;
 import br.unitins.tp1.ironforge.validation.EntidadeNotFoundException;
+import br.unitins.tp1.ironforge.validation.ValidationException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -101,7 +102,7 @@ public class CupomServiceImpl implements CupomService {
         Cupom cupom = cupomRepository.findById(id);
 
         if (!cupom.getAtivo())
-            throw new EntidadeNotFoundException("id", "Cupom já esta desativado");
+            throw new ValidationException("id", "Cupom já esta desativado");
 
         cupom.setAtivo(false);
     }

@@ -3,6 +3,8 @@ package br.unitins.tp1.ironforge.model.whey;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 
+import br.unitins.tp1.ironforge.validation.EntidadeNotFoundException;
+
 @JsonFormat(shape = Shape.OBJECT)
 public enum TipoWhey {
 
@@ -32,7 +34,7 @@ public enum TipoWhey {
                 return tipo;
         }
 
-        throw new IllegalArgumentException("Tipo de whey não encontrado!");
+        throw new EntidadeNotFoundException("idTipoWhey", "Tipo de whey não encontrado!");
     }
 
 }

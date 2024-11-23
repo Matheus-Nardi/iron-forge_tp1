@@ -20,6 +20,7 @@ import br.unitins.tp1.ironforge.service.cidade.CidadeService;
 import br.unitins.tp1.ironforge.service.hash.HashService;
 import br.unitins.tp1.ironforge.service.whey.WheyProteinService;
 import br.unitins.tp1.ironforge.validation.EntidadeNotFoundException;
+import br.unitins.tp1.ironforge.validation.ValidationException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -69,6 +70,8 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     @Transactional
     public Cliente create(ClienteRequestDTO dto) {
+        validarEntidade(dto);
+
         Cliente cliente = new Cliente();
         PessoaFisica pf = new PessoaFisica();
         Usuario usuario = new Usuario();
@@ -103,6 +106,14 @@ public class ClienteServiceImpl implements ClienteService {
 
         if (cliente == null)
             throw new EntidadeNotFoundException("id", "Cliente não encontrado");
+
+        if (existeCPF(dto.cpf())) {
+            throw new ValidationException("cpf", "CPF informado é inválido");
+        }
+
+        if (existeEmail(dto.email())) {
+            throw new ValidationException("email", "Email informado é inválido");
+        }
         PessoaFisica pf = cliente.getPessoaFisica();
         pf.setNome(dto.nome());
         pf.setCpf(dto.cpf());
@@ -194,20 +205,20 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public Cliente findByUsuario(String username) {
-        return clienteRepository.findClienteByUsuario(username);
+        return clienteRepository.findClienteByUsername(username);
     }
 
     @Override
     @Transactional
     public void updateNomeImagem(String username, String nomeImagem) {
-        Cliente cliente = clienteRepository.findClienteByUsuario(username);
+        Cliente cliente = clienteRepository.findClienteByUsername(username);
         cliente.getPessoaFisica().setFotoPerfil(nomeImagem);
     }
 
     @Override
     @Transactional
     public void adicionarListaDesejo(String username, Long idWhey) {
-        Cliente cliente = clienteRepository.findClienteByUsuario(username);
+        Cliente cliente = clienteRepository.findClienteByUsername(username);
 
         if (cliente.getListaDesejos() == null) {
             cliente.setListaDesejos(new ArrayList<>());
@@ -224,7 +235,7 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     @Transactional
     public void removerListaDesejo(String username, Long idWhey) {
-        Cliente cliente = clienteRepository.findClienteByUsuario(username);
+        Cliente cliente = clienteRepository.findClienteByUsername(username);
         List<WheyProtein> listaDesejos = cliente.getListaDesejos();
 
         if (listaDesejos == null) {
@@ -241,8 +252,33 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public List<WheyProtein> getListaDesejos(String username) {
-        Cliente cliente = clienteRepository.findClienteByUsuario(username);
+        Cliente cliente = clienteRepository.findClienteByUsername(username);
         return cliente.getListaDesejos();
+    }
+
+    private void validarEntidade(ClienteRequestDTO dto) {
+        if (existeUsuario(dto.usuario().username())) {
+            throw new ValidationException("usuario.username", "Username inválido");
+        }
+
+        if (existeCPF(dto.cpf())) {
+            throw new ValidationException("cnpj", "Cnpj informado é inválido");
+        }
+        if (existeEmail(dto.email())) {
+            throw new ValidationException("email", "Email informado é inválido");
+        }
+    }
+
+    private boolean existeUsuario(String username) {
+        return clienteRepository.findClienteByUsername(username) == null ? false : true;
+    }
+
+    private boolean existeCPF(String cnpj) {
+        return clienteRepository.findClienteByCpf(cnpj) == null ? false : true;
+    }
+
+    private boolean existeEmail(String email) {
+        return clienteRepository.findClienteByEmail(email) == null ? false : true;
     }
 
 }

@@ -3,6 +3,8 @@ package br.unitins.tp1.ironforge.model.pagamento;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 
+import br.unitins.tp1.ironforge.validation.EntidadeNotFoundException;
+
 @JsonFormat(shape = Shape.OBJECT)
 public enum TipoCartao {
 
@@ -32,7 +34,7 @@ public enum TipoCartao {
                 return tipo;
         }
 
-        throw new IllegalArgumentException("Tipo de cartão não encontrado!");
+        throw new EntidadeNotFoundException("tipoCartao", "Tipo de cartão não encontrado!");
     }
 
 }

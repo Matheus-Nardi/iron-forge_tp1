@@ -5,6 +5,7 @@ import java.util.List;
 import br.unitins.tp1.ironforge.dto.whey.SaborRequestDTO;
 import br.unitins.tp1.ironforge.model.whey.Sabor;
 import br.unitins.tp1.ironforge.repository.SaborRepository;
+import br.unitins.tp1.ironforge.validation.EntidadeNotFoundException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -17,7 +18,11 @@ public class SaborServiceImpl implements SaborService {
 
     @Override
     public Sabor findById(Long id) {
-        return saborRepository.findById(id);
+        Sabor sabor = saborRepository.findById(id);
+        if (sabor == null)
+            throw new EntidadeNotFoundException("id", "Sabor não encontrado!");
+
+        return sabor;
 
     }
 
@@ -45,7 +50,7 @@ public class SaborServiceImpl implements SaborService {
     public void update(Long id, SaborRequestDTO dto) {
         Sabor sabor = saborRepository.findById(id);
         if (sabor == null)
-            throw new IllegalArgumentException("Sabor não encontrado!");
+            throw new EntidadeNotFoundException("id", "Sabor não encontrado!");
 
         sabor.setNome(dto.nome());
     }
@@ -55,7 +60,7 @@ public class SaborServiceImpl implements SaborService {
     public void delete(Long id) {
         Sabor sabor = saborRepository.findById(id);
         if (sabor == null)
-            throw new IllegalArgumentException("Sabor não encontrado!");
+            throw new EntidadeNotFoundException("id", "Sabor não encontrado!");
         saborRepository.delete(sabor);
     }
 
