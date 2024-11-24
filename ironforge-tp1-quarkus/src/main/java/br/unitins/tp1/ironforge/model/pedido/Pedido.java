@@ -6,6 +6,7 @@ import java.util.List;
 import br.unitins.tp1.ironforge.model.Cupom;
 import br.unitins.tp1.ironforge.model.DefaultEntity;
 import br.unitins.tp1.ironforge.model.ItemPedido;
+import br.unitins.tp1.ironforge.model.pagamento.Pagamento;
 import br.unitins.tp1.ironforge.model.usuario.Cliente;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -44,6 +45,10 @@ public class Pedido extends DefaultEntity {
     @OneToOne
     @JoinColumn(name = "id_pagamento")
     private Pedido pedido;
+
+    @OneToOne
+    @JoinColumn(name = "id_pedido")
+    private Pagamento pagamento;
 
     public LocalDateTime getData() {
         return data;
@@ -99,6 +104,22 @@ public class Pedido extends DefaultEntity {
 
     public void setEnderecoEntrega(EnderecoEntrega enderecoEntrega) {
         this.enderecoEntrega = enderecoEntrega;
+    }
+
+    public Pedido getPedido() {
+        return pedido;
+    }
+
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
+    }
+
+    public Pagamento getPagamento() {
+        return pagamento;
+    }
+
+    public void setPagamento(Pagamento pagamento) {
+        this.pagamento = pagamento;
     }
 
 }

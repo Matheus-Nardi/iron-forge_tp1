@@ -13,7 +13,7 @@ public enum Situacao {
     ENVIADO(3, "Pedido enviado, aguardando atualização de trânsito"),
     EM_TRANSITO(4, "Pedido em trânsito"),
     ENTREGUE(5, "Pedido entregue"),
-    DESISTIDO(6, "Desistência do pedido antes do envio"),
+    CANCELADO(6, "Desistência do pedido antes do envio"),
     DEVOLVIDO(7, "Devolução do pedido após a entrega"),
     AGURARDANDO_PAGAMENTO(8, "Aguardando o pagamento do pedido");
 

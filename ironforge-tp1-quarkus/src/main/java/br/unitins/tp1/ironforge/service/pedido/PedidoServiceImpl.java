@@ -3,17 +3,12 @@ package br.unitins.tp1.ironforge.service.pedido;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import br.unitins.tp1.ironforge.dto.itempedido.ItemPedidoRequestDTO;
 import br.unitins.tp1.ironforge.dto.pedido.PedidoRequestDTO;
 import br.unitins.tp1.ironforge.model.Cupom;
 import br.unitins.tp1.ironforge.model.ItemPedido;
 import br.unitins.tp1.ironforge.model.Lote;
-import br.unitins.tp1.ironforge.model.pagamento.Boleto;
-import br.unitins.tp1.ironforge.model.pagamento.Pagamento;
-import br.unitins.tp1.ironforge.model.pagamento.Pix;
-import br.unitins.tp1.ironforge.model.pagamento.StatusPagamento;
 import br.unitins.tp1.ironforge.model.pedido.EnderecoEntrega;
 import br.unitins.tp1.ironforge.model.pedido.Pedido;
 import br.unitins.tp1.ironforge.model.pedido.Situacao;
@@ -188,33 +183,6 @@ public class PedidoServiceImpl implements PedidoService {
         pedido.getStatusPedidos().add(status);
     }
 
-    @Override
-    public Pix gerarPix(Long id) {
-        Pedido pedido = pedidoRepository.findById(id);
-        if (pedido == null) {
-            throw new EntidadeNotFoundException("id", "Pedido não encontrado");
-        }
-        Pix pix = new Pix();
-        pix.setDataVencimento(pedido.getData().plusMinutes(30));
-        pix.setChave(UUID.randomUUID().toString());
-        pix.setDestinatario("Iron Forge");
-        pix.setStatusPagamento(StatusPagamento.PENDENTE);
-        pix.setValor(pedido.getValorTotal());
-        pagamentoRepository.persist(pix);
-        return pix;
 
-    }
-
-    @Override
-    public Boleto gerarBoleto(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'gerarBoleto'");
-    }
-
-    @Override
-    public void pagar(Pagamento pagamento) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'pagar'");
-    }
 
 }

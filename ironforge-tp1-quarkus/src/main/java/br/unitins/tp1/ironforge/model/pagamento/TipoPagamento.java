@@ -3,14 +3,17 @@ package br.unitins.tp1.ironforge.model.pagamento;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 
-@JsonFormat(shape = Shape.OBJECT)
-public enum StatusPagamento {
+import br.unitins.tp1.ironforge.validation.EntidadeNotFoundException;
 
-    PENDENTE(1, "Pendente"), PAGO(1, "Pago"), VENCIDO(1, "Vencido");
+@JsonFormat(shape = Shape.OBJECT)
+public enum TipoPagamento {
+
+    PIX(1, "Pix"), BOLETO(2, "Boleto"), CARTAO(3, "Cartão");
+
     private final Integer id;
     private final String label;
 
-    private StatusPagamento(Integer id, String label) {
+    private TipoPagamento(Integer id, String label) {
         this.id = id;
         this.label = label;
     }
@@ -23,15 +26,15 @@ public enum StatusPagamento {
         return label;
     }
 
-    public static StatusPagamento valueOf(Integer id) {
+    public static TipoPagamento valueOf(Integer id) {
         if (id.equals(null))
             return null;
-        for (StatusPagamento tipo : values()) {
+        for (TipoPagamento tipo : values()) {
             if (tipo.getId().equals(id))
                 return tipo;
         }
 
-        throw new IllegalArgumentException("Tipo de situação não encontrado!");
+        throw new EntidadeNotFoundException("tipoPagamento", "Tipo de pagameto não encontrado!");
     }
 
 }

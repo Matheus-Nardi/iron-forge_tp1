@@ -17,7 +17,9 @@ public abstract class Pagamento extends DefaultEntity {
 
     private LocalDateTime dataVencimento;
 
-    private StatusPagamento statusPagamento;
+    private Boolean pago;
+
+    private TipoPagamento tipoPagamento;
 
     public Double getValor() {
         return valor;
@@ -43,12 +45,20 @@ public abstract class Pagamento extends DefaultEntity {
         this.dataPagamento = dataPagamento;
     }
 
-    public StatusPagamento getStatusPagamento() {
-        return statusPagamento;
+    public Boolean getPago() {
+        return pago;
     }
 
-    public void setStatusPagamento(StatusPagamento statusPagamento) {
-        this.statusPagamento = statusPagamento;
+    public void setPago(Boolean pago) {
+        this.pago = pago;
+    }
+
+    public TipoPagamento getTipoPagamento() {
+        return tipoPagamento;
+    }
+
+    public void setTipoPagamento(TipoPagamento tipoPagamento) {
+        this.tipoPagamento = tipoPagamento;
     }
 
 }
