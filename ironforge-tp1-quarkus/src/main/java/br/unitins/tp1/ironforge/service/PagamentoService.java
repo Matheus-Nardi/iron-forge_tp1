@@ -15,4 +15,6 @@ public interface PagamentoService {
 
     void pagar(Long idPedido, String username, String identificador, TipoPagamento tipoPagamento);
 
+    void pagarCartao(Long idPedido, String username, Long idCartao);
+
 }

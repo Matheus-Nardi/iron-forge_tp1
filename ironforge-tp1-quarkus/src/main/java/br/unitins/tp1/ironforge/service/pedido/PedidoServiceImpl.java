@@ -7,6 +7,7 @@ import java.util.List;
 import br.unitins.tp1.ironforge.dto.itempedido.ItemPedidoRequestDTO;
 import br.unitins.tp1.ironforge.dto.pedido.PedidoRequestDTO;
 import br.unitins.tp1.ironforge.model.Cupom;
+import br.unitins.tp1.ironforge.model.Endereco;
 import br.unitins.tp1.ironforge.model.ItemPedido;
 import br.unitins.tp1.ironforge.model.Lote;
 import br.unitins.tp1.ironforge.model.pedido.EnderecoEntrega;
@@ -18,6 +19,7 @@ import br.unitins.tp1.ironforge.repository.PagamentoRepository;
 import br.unitins.tp1.ironforge.repository.PedidoRepository;
 import br.unitins.tp1.ironforge.service.cidade.CidadeService;
 import br.unitins.tp1.ironforge.service.cupom.CupomService;
+import br.unitins.tp1.ironforge.service.estado.EstadoService;
 import br.unitins.tp1.ironforge.service.lote.LoteService;
 import br.unitins.tp1.ironforge.service.usuario.ClienteService;
 import br.unitins.tp1.ironforge.service.usuario.UsuarioService;
@@ -49,6 +51,9 @@ public class PedidoServiceImpl implements PedidoService {
     public CidadeService cidadeService;
 
     @Inject
+    public EstadoService estadoService;
+
+    @Inject
     public PagamentoRepository pagamentoRepository;
 
     @Override
@@ -64,9 +69,10 @@ public class PedidoServiceImpl implements PedidoService {
     @Transactional
     public Pedido create(PedidoRequestDTO dto, String username) {
         Pedido pedido = new Pedido();
+        Cliente cliente = clienteService.findByUsuario(username);
         pedido.setData(LocalDateTime.now());
-        pedido.setCliente(clienteService.findByUsuario(username));
-        pedido.setEnderecoEntrega(getEnderecoEntrega(dto));
+        pedido.setCliente(cliente);
+        pedido.setEnderecoEntrega(getEnderecoEntrega(cliente, dto.idEndereco()));
         obterCupom(dto, pedido);
 
         pedido.setItensPedidos(new ArrayList<>());
@@ -75,6 +81,7 @@ public class PedidoServiceImpl implements PedidoService {
         Double valorFinal = arredondarParaDuasCasasDecimais(aplicarDesconto(pedido));
         if (!(dto.valorTotal().equals(valorFinal)))
             throw new ValidationException("valorTotal", "O valor fornecido não corresponde ao valor final do pedido!");
+
         pedido.setValorTotal(valorFinal);
         getStatusPedido(pedido);
 
@@ -83,14 +90,17 @@ public class PedidoServiceImpl implements PedidoService {
         return pedido;
     }
 
-    private EnderecoEntrega getEnderecoEntrega(PedidoRequestDTO dto) {
+    private EnderecoEntrega getEnderecoEntrega(Cliente cliente, Long idEndereco) {
+        Endereco endereco = cliente.getPessoaFisica().getEnderecos().stream().filter(e -> e.getId().equals(idEndereco))
+                .findFirst()
+                .orElseThrow(() -> new EntidadeNotFoundException("idEndereco", "Endereco não encontrado"));
         EnderecoEntrega enderecoEntrega = new EnderecoEntrega();
-        enderecoEntrega.setBairro(dto.enderecoEntrega().bairro());
-        enderecoEntrega.setLogradouro(dto.enderecoEntrega().logradouro());
-        enderecoEntrega.setCep(dto.enderecoEntrega().cep());
-        enderecoEntrega.setNumero(dto.enderecoEntrega().numero());
-        enderecoEntrega.setComplemento(dto.enderecoEntrega().complemento());
-        enderecoEntrega.setCidade(cidadeService.findById(dto.enderecoEntrega().idCidade()));
+        enderecoEntrega.setBairro(endereco.getBairro());
+        enderecoEntrega.setLogradouro(endereco.getLogradouro());
+        enderecoEntrega.setCep(endereco.getCep());
+        enderecoEntrega.setNumero(endereco.getNumero());
+        enderecoEntrega.setComplemento(endereco.getComplemento());
+        enderecoEntrega.setCidade(endereco.getCidade());
         return enderecoEntrega;
     }
 
@@ -113,6 +123,7 @@ public class PedidoServiceImpl implements PedidoService {
             lote.setQuantidade(lote.getQuantidade() - itemDTO.quantidade());
 
             pedido.getItensPedidos().add(item);
+
         }
     }
 
@@ -182,7 +193,5 @@ public class PedidoServiceImpl implements PedidoService {
         status.setDataAtualizacao(LocalDateTime.now());
         pedido.getStatusPedidos().add(status);
     }
-
-
 
 }

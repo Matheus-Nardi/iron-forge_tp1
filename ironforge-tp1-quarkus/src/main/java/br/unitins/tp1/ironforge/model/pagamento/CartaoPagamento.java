@@ -2,11 +2,10 @@ package br.unitins.tp1.ironforge.model.pagamento;
 
 import java.time.LocalDate;
 
-import br.unitins.tp1.ironforge.model.DefaultEntity;
 import jakarta.persistence.Entity;
 
 @Entity
-public class Cartao extends DefaultEntity {
+public class CartaoPagamento extends Pagamento {
 
     private String cpf;
 
@@ -67,5 +66,7 @@ public class Cartao extends DefaultEntity {
     public void setCpf(String cpf) {
         this.cpf = cpf;
     }
+
+    
 
 }

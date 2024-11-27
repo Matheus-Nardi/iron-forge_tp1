@@ -42,12 +42,8 @@ public class Pedido extends DefaultEntity {
     @JoinColumn(name = "id_enderecoEntrega")
     private EnderecoEntrega enderecoEntrega;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_pagamento")
-    private Pedido pedido;
-
-    @OneToOne
-    @JoinColumn(name = "id_pedido")
     private Pagamento pagamento;
 
     public LocalDateTime getData() {
@@ -105,15 +101,7 @@ public class Pedido extends DefaultEntity {
     public void setEnderecoEntrega(EnderecoEntrega enderecoEntrega) {
         this.enderecoEntrega = enderecoEntrega;
     }
-
-    public Pedido getPedido() {
-        return pedido;
-    }
-
-    public void setPedido(Pedido pedido) {
-        this.pedido = pedido;
-    }
-
+    
     public Pagamento getPagamento() {
         return pagamento;
     }

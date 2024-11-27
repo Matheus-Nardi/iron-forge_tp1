@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import br.unitins.tp1.ironforge.model.pagamento.Boleto;
+import br.unitins.tp1.ironforge.model.pagamento.Cartao;
+import br.unitins.tp1.ironforge.model.pagamento.CartaoPagamento;
 import br.unitins.tp1.ironforge.model.pagamento.Pagamento;
 import br.unitins.tp1.ironforge.model.pagamento.Pix;
 import br.unitins.tp1.ironforge.model.pagamento.TipoPagamento;
@@ -31,6 +33,9 @@ public class PagamentoServiceImpl implements PagamentoService {
     @Inject
     public PedidoService pedidoService;
 
+    @Inject
+    public CartaoService cartaoService;
+
     @Override
     public Pagamento findById(Long id) {
         Pagamento pagamento = pagamentoRepository.findById(id);
@@ -40,15 +45,12 @@ public class PagamentoServiceImpl implements PagamentoService {
         return pagamento;
     }
 
-
     @Override
     @Transactional
     public Pix gerarPix(Long idPedido, String username) {
         Pedido pedido = pedidoService.findById(idPedido);
         Cliente cliente = pedido.getCliente();
-        if (!(cliente.equals(clienteService.findByUsuario(username)))) {
-            throw new ValidationException("idPedido", "Cliente não possui um pedido com esse codigo");
-        }
+        validarCliente(username, cliente);
 
         Pix pix = new Pix();
         pix.setChave(gerarUUIDPedidoCliente(idPedido, cliente.getId()));
@@ -70,9 +72,7 @@ public class PagamentoServiceImpl implements PagamentoService {
     public Boleto gerarBoleto(Long idPedido, String username) {
         Pedido pedido = pedidoService.findById(idPedido);
         Cliente cliente = pedido.getCliente();
-        if (!(cliente.equals(clienteService.findByUsuario(username)))) {
-            throw new ValidationException("idPedido", "Cliente não possui um pedido com esse codigo");
-        }
+        validarCliente(username, cliente);
 
         Boleto boleto = new Boleto();
         boleto.setCodigoBarras(gerarUUIDPedidoCliente(idPedido, cliente.getId()));
@@ -93,11 +93,10 @@ public class PagamentoServiceImpl implements PagamentoService {
         Pedido pedido = pedidoService.findById(idPedido);
         Cliente cliente = pedido.getCliente();
 
-        if (!(cliente.equals(clienteService.findByUsuario(username)))) {
-            throw new ValidationException("idPedido", "Cliente não possui um pedido com esse código");
-        }
+        validarCliente(username, cliente);
 
-        Pagamento pagamento;
+        Pagamento pagamento = null;
+
         switch (tipoPagamento) {
             case PIX:
                 pagamento = pagamentoRepository.findByChavePix(identificador);
@@ -109,6 +108,46 @@ public class PagamentoServiceImpl implements PagamentoService {
                 throw new IllegalArgumentException("Tipo de pagamento inválido");
         }
 
+        validarPagamentoPedido(idPedido, pedido, pagamento);
+        pagamento.setDataPagamento(LocalDateTime.now());
+        pagamento.setPago(true);
+        pedidoService.updateStatusPedido(idPedido, Situacao.SEPARANDO_PEDIDO);
+    }
+
+    @Override
+    @Transactional
+    public void pagarCartao(Long idPedido, String username, Long idCartao) {
+        Pedido pedido = pedidoService.findById(idPedido);
+
+        if (pedido.getPagamento() != null && pedido.getPagamento().getPago()) {
+            throw new ValidationException("idPedido", "O pedido já foi pago. Não é possível realizar outro pagamento.");
+        }
+        Cliente cliente = pedido.getCliente();
+
+        validarCliente(username, cliente);
+
+        Cartao cartao = cartaoService.findById(idCartao);
+        if (!cliente.getCartoes().contains(cartao)) {
+            throw new EntidadeNotFoundException("idCartao", "Cartão não encontrado");
+        }
+
+        CartaoPagamento cartaoPagamento = new CartaoPagamento();
+
+        cartaoPagamento.setCpf(cartao.getCpf());
+        cartaoPagamento.setCvc(cartao.getCvc());
+        cartaoPagamento.setValidade(cartao.getValidade());
+        cartaoPagamento.setNumero(cartao.getNumero());
+        cartaoPagamento.setTitular(cartao.getTitular());
+        cartaoPagamento.setValor(pedido.getValorTotal());
+        cartaoPagamento.setTipoCartao(cartao.getTipoCartao());
+        cartaoPagamento.setDataPagamento(LocalDateTime.now());
+        cartaoPagamento.setPago(true);
+        cartaoPagamento.setTipoPagamento(TipoPagamento.CARTAO);
+        pedido.setPagamento(cartaoPagamento);
+        pedidoService.updateStatusPedido(idPedido, Situacao.SEPARANDO_PEDIDO);
+    }
+
+    private void validarPagamentoPedido(Long idPedido, Pedido pedido, Pagamento pagamento) {
         if (!isPagamentoValido(pagamento)) {
             pedidoService.updateStatusPedido(idPedido, Situacao.CANCELADO);
             throw new ValidationException("idPedido",
@@ -123,9 +162,12 @@ public class PagamentoServiceImpl implements PagamentoService {
             throw new ValidationException("identificador", "Pagamento já realizado");
         }
 
-        pagamento.setDataPagamento(LocalDateTime.now());
-        pagamento.setPago(true);
-        pedidoService.updateStatusPedido(idPedido, Situacao.SEPARANDO_PEDIDO);
+    }
+
+    private void validarCliente(String username, Cliente cliente) {
+        if (!(cliente.equals(clienteService.findByUsuario(username)))) {
+            throw new ValidationException("idPedido", "Cliente não possui um pedido com esse código");
+        }
     }
 
     private String gerarUUIDPedidoCliente(Long idPedido, Long idCliente) {
