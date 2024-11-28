@@ -94,37 +94,44 @@ public class ClienteResource {
     }
 
     @POST
+    @RolesAllowed({ "User" })
     public Response create(@Valid ClienteRequestDTO dto) {
-        return Response.status(Status.CREATED).entity(ClienteResponseDTO.valueOf(clienteService.create(dto))).build();
+        String username = jsonWebToken.getSubject();
+        return Response.status(Status.CREATED).entity(ClienteResponseDTO.valueOf(clienteService.create(username, dto)))
+                .build();
     }
 
     @PATCH
-    @Path("/{id}")
-    public Response update(@PathParam("id") Long id, @Valid ClienteUpdateRequestDTO dto) {
-        clienteService.update(id, dto);
+    @RolesAllowed({ "User" })
+    public Response update(@Valid ClienteUpdateRequestDTO dto) {
+        String username = jsonWebToken.getSubject();
+        clienteService.update(username, dto);
         return Response.noContent().build();
     }
 
     @PATCH
-    @Path("/{id}/telefones/{idTelefone}")
+    @Path("/telefones/{idTelefone}")
+    @RolesAllowed({ "User" })
     public Response updateTelefones(@PathParam("id") Long id, @PathParam("idTelefone") Long idTelefone,
             @Valid TelefoneRequestDTO telefone) {
-        clienteService.updateTelefone(id, idTelefone, telefone);
+        String username = jsonWebToken.getSubject();
+        clienteService.updateTelefone(username, idTelefone, telefone);
         return Response.noContent().build();
     }
 
     @PATCH
-    @Path("/{id}/enderecos/{idEndereco}")
+    @Path("/enderecos/{idEndereco}")
+    @RolesAllowed({ "User" })
     public Response updateEnderecos(@PathParam("id") Long id, @PathParam("idEndereco") Long idEndereco,
             @Valid EnderecoRequestDTO endereco) {
-        clienteService.updateEndereco(id, idEndereco, endereco);
+        String username = jsonWebToken.getSubject();
+        clienteService.updateEndereco(username, idEndereco, endereco);
         return Response.noContent().build();
     }
 
     @DELETE
-    @Path("/{id}")
-    public Response delete(@PathParam("id") Long id) {
-        clienteService.delete(id);
+    public Response delete() {
+        //clienteService.delete(id);
         return Response.noContent().build();
     }
 

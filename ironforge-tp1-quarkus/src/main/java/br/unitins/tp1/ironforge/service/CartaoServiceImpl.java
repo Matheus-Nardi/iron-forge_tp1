@@ -7,6 +7,7 @@ import br.unitins.tp1.ironforge.dto.pagamento.CartaoRequestDTO;
 import br.unitins.tp1.ironforge.model.pagamento.Cartao;
 import br.unitins.tp1.ironforge.model.usuario.Cliente;
 import br.unitins.tp1.ironforge.repository.CartaoRepository;
+import br.unitins.tp1.ironforge.service.hash.HashService;
 import br.unitins.tp1.ironforge.service.usuario.ClienteService;
 import br.unitins.tp1.ironforge.validation.EntidadeNotFoundException;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -21,6 +22,9 @@ public class CartaoServiceImpl implements CartaoService {
 
     @Inject
     public ClienteService clienteService;
+
+    @Inject
+    public HashService hashService;
 
     @Override
     public Cartao findById(Long id) {
@@ -55,7 +59,7 @@ public class CartaoServiceImpl implements CartaoService {
         cartao.setTipoCartao(dto.tipoCartao());
         cartaoRepository.persist(cartao);
         addCartaoCliente(cliente, cartao);
-        
+
         return cartao;
     }
 
@@ -65,7 +69,7 @@ public class CartaoServiceImpl implements CartaoService {
         }
 
         cliente.getCartoes().add(cartao);
-        
+
     }
 
     @Override

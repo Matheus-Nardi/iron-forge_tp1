@@ -15,7 +15,6 @@ import br.unitins.tp1.ironforge.model.usuario.Usuario;
 import br.unitins.tp1.ironforge.model.whey.WheyProtein;
 import br.unitins.tp1.ironforge.repository.ClienteRepository;
 import br.unitins.tp1.ironforge.repository.PessoaFisicaRepository;
-import br.unitins.tp1.ironforge.repository.UsuarioRepository;
 import br.unitins.tp1.ironforge.service.cidade.CidadeService;
 import br.unitins.tp1.ironforge.service.hash.HashService;
 import br.unitins.tp1.ironforge.service.whey.WheyProteinService;
@@ -35,7 +34,7 @@ public class ClienteServiceImpl implements ClienteService {
     public PessoaFisicaRepository pessoaFisicaRepository;
 
     @Inject
-    public UsuarioRepository usuarioRepository;
+    public UsuarioService usuarioService;
 
     @Inject
     public CidadeService cidadeService;
@@ -69,18 +68,12 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     @Transactional
-    public Cliente create(ClienteRequestDTO dto) {
+    public Cliente create(String username, ClienteRequestDTO dto) {
         validarEntidade(dto);
 
         Cliente cliente = new Cliente();
         PessoaFisica pf = new PessoaFisica();
-        Usuario usuario = new Usuario();
-
-        // Definindo usuario
-        usuario.setUsername(dto.usuario().username());
-        usuario.setSenha(hashService.getHashSenha(dto.usuario().senha()));
-        usuario.setPerfil(dto.usuario().perfil());
-        usuarioRepository.persist(usuario);
+        Usuario usuario = usuarioService.findByUsername(username);
 
         pf.setUsuario(usuario); // Associando pessoa com usuario
 
@@ -101,8 +94,8 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     @Transactional
-    public void update(Long id, ClienteUpdateRequestDTO dto) {
-        Cliente cliente = clienteRepository.findById(id);
+    public void update(String username, ClienteUpdateRequestDTO dto) {
+        Cliente cliente = clienteRepository.findClienteByUsername(username);
 
         if (cliente == null)
             throw new EntidadeNotFoundException("id", "Cliente não encontrado");
@@ -125,19 +118,19 @@ public class ClienteServiceImpl implements ClienteService {
     @Transactional
     public void delete(Long clienteId) {
 
-        Cliente cliente = clienteRepository.findById(clienteId);
-        if (cliente == null) {
-            throw new EntidadeNotFoundException("clienteId", "Cliente não encontrado");
-        }
-        usuarioRepository.delete(cliente.getPessoaFisica().getUsuario());
-        pessoaFisicaRepository.delete(cliente.getPessoaFisica());
-        clienteRepository.delete(cliente);
+        // Cliente cliente = clienteRepository.findById(clienteId);
+        // if (cliente == null) {
+        // throw new EntidadeNotFoundException("clienteId", "Cliente não encontrado");
+        // }
+        // usuarioRepository.delete(cliente.getPessoaFisica().getUsuario());
+        // pessoaFisicaRepository.delete(cliente.getPessoaFisica());
+        // clienteRepository.delete(cliente);
     }
 
     @Override
     @Transactional
-    public void updateTelefone(Long id, Long idTelefone, TelefoneRequestDTO dto) {
-        Cliente cliente = clienteRepository.findById(id);
+    public void updateTelefone(String username, Long idTelefone, TelefoneRequestDTO dto) {
+        Cliente cliente = clienteRepository.findClienteByUsername(username);
 
         if (cliente == null) {
             throw new EntidadeNotFoundException("id", "Cliente não encontrado");
@@ -152,8 +145,8 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     @Transactional
-    public void updateEndereco(Long id, Long idEndereco, EnderecoRequestDTO dto) {
-        Cliente cliente = clienteRepository.findById(id);
+    public void updateEndereco(String username, Long idEndereco, EnderecoRequestDTO dto) {
+        Cliente cliente = clienteRepository.findClienteByUsername(username);
 
         if (cliente == null) {
             throw new EntidadeNotFoundException("id", "Cliente não encontrado");
@@ -257,9 +250,6 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     private void validarEntidade(ClienteRequestDTO dto) {
-        if (existeUsuario(dto.usuario().username())) {
-            throw new ValidationException("usuario.username", "Username inválido");
-        }
 
         if (existeCPF(dto.cpf())) {
             throw new ValidationException("cnpj", "Cnpj informado é inválido");
@@ -267,10 +257,6 @@ public class ClienteServiceImpl implements ClienteService {
         if (existeEmail(dto.email())) {
             throw new ValidationException("email", "Email informado é inválido");
         }
-    }
-
-    private boolean existeUsuario(String username) {
-        return clienteRepository.findClienteByUsername(username) == null ? false : true;
     }
 
     private boolean existeCPF(String cnpj) {

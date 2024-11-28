@@ -19,15 +19,15 @@ public interface ClienteService {
 
     List<Cliente> findAll();
 
-    Cliente create(ClienteRequestDTO dto);
+    Cliente create(String username, ClienteRequestDTO dto);
 
-    void update(Long id, ClienteUpdateRequestDTO dto);
+    void update(String username, ClienteUpdateRequestDTO dto);
 
     void delete(Long id);
 
-    void updateTelefone(Long id, Long idTelefone, TelefoneRequestDTO dto);
+    void updateTelefone(String username, Long idTelefone, TelefoneRequestDTO dto);
 
-    void updateEndereco(Long id, Long idEndereco, EnderecoRequestDTO dto);
+    void updateEndereco(String username, Long idEndereco, EnderecoRequestDTO dto);
 
     void updateNomeImagem(String username, String nomeImagem);
 

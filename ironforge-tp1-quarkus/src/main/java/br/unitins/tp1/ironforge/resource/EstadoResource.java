@@ -2,6 +2,8 @@ package br.unitins.tp1.ironforge.resource;
 
 import java.util.List;
 
+import org.jboss.logging.Logger;
+
 import br.unitins.tp1.ironforge.dto.estado.EstadoRequestDTO;
 import br.unitins.tp1.ironforge.dto.estado.EstadoResponseDTO;
 import br.unitins.tp1.ironforge.model.Estado;
@@ -26,6 +28,8 @@ import jakarta.ws.rs.core.Response.Status;
 @Produces(MediaType.APPLICATION_JSON)
 public class EstadoResource {
 
+    private static final Logger LOG = Logger.getLogger(EstadoResource.class);
+
     @Inject
     public EstadoService estadoService;
 
@@ -33,6 +37,8 @@ public class EstadoResource {
     @Path("/{id}")
     @RolesAllowed({ "Adm", "User" })
     public Response findById(@PathParam("id") Long id) {
+        LOG.infof("Execucao do metodo findById. Id: %d", id);
+        LOG.debug("DEBUG EXEMPLO");
         return Response.ok(EstadoResponseDTO.valueOf(estadoService.findById(id))).build();
     }
 
