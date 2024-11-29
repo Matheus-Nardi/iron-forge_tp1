@@ -7,7 +7,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class LoteRepository implements PanacheRepository<Lote> {
 
-    // Vai dar buxa, pois cada empresa possui seu codigo de lote. Logo, precisamos transformar esse código em unico, Adicionar id, nome , algo do tipo
+    // Vai dar buxa, pois cada empresa possui seu codigo de lote. Logo, precisamos
+    // transformar esse código em unico, Adicionar id, nome , algo do tipo
     public Lote findByCodigo(String codigo) {
         return find("codigo LIKE ?1", "%" + codigo + "%").firstResult();
     }
@@ -18,6 +19,7 @@ public class LoteRepository implements PanacheRepository<Lote> {
      * @return retorna o whey com o lote mais antigo e com quantidade em estoque
      *         (maior que 0)
      */
+
     public Lote findByWhey(Long idWhey) {
         StringBuffer jpql = new StringBuffer();
         jpql.append("SELECT ");
@@ -30,4 +32,17 @@ public class LoteRepository implements PanacheRepository<Lote> {
         jpql.append(" ORDER BY l.dataFabricacao ");
         return find(jpql.toString(), idWhey).firstResult();
     }
+
+    // Esse método retorna o total em estoque de determinado whey
+    public Integer findByIdWheyQtdeTotal(Long idWhey) {
+        Object result = find("SELECT SUM(l.quantidade) " +
+                             "FROM Lote l " +
+                             "WHERE l.wheyProtein.id = ?1 " +
+                             "AND l.quantidade > 0", idWhey)
+                        .firstResult();
+        return result != null ? ((Number) result).intValue() : 0;
+    }
+    
+
 }
+    

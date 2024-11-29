@@ -18,6 +18,9 @@ public interface PedidoService {
 
     void updateStatusPedido(Long id, Situacao situacao);
 
+    void verifyIfPaymentIsNull();
+
+    void cancelPedido(String username, Long id);
     // pensar no cancelar
 
 }

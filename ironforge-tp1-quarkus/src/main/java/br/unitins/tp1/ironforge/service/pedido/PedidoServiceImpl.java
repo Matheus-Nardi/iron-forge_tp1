@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jboss.logging.Logger;
+
 import br.unitins.tp1.ironforge.dto.itempedido.ItemPedidoRequestDTO;
 import br.unitins.tp1.ironforge.dto.pedido.PedidoRequestDTO;
 import br.unitins.tp1.ironforge.model.Cupom;
@@ -25,6 +27,7 @@ import br.unitins.tp1.ironforge.service.usuario.ClienteService;
 import br.unitins.tp1.ironforge.service.usuario.UsuarioService;
 import br.unitins.tp1.ironforge.validation.EntidadeNotFoundException;
 import br.unitins.tp1.ironforge.validation.ValidationException;
+import io.quarkus.scheduler.Scheduled;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -32,6 +35,7 @@ import jakarta.transaction.Transactional;
 @ApplicationScoped
 public class PedidoServiceImpl implements PedidoService {
 
+    private static final Logger LOG = Logger.getLogger(PedidoServiceImpl.class);
     @Inject
     public PedidoRepository pedidoRepository;
 
@@ -79,6 +83,7 @@ public class PedidoServiceImpl implements PedidoService {
         definirItens(dto, pedido);
 
         Double valorFinal = arredondarParaDuasCasasDecimais(aplicarDesconto(pedido));
+        LOG.info("Valor final: " + valorFinal);
         if (!(dto.valorTotal().equals(valorFinal)))
             throw new ValidationException("valorTotal", "O valor fornecido não corresponde ao valor final do pedido!");
 
@@ -115,12 +120,29 @@ public class PedidoServiceImpl implements PedidoService {
     private void definirItens(PedidoRequestDTO dto, Pedido pedido) {
         for (ItemPedidoRequestDTO itemDTO : dto.itensPedidos()) {
             ItemPedido item = new ItemPedido();
+            item.setPreco(0.0);
             Lote lote = loteService.findByWhey(itemDTO.idProduto());
-            item.setLote(lote);
-            item.setPreco(itemDTO.preco());
-            item.setQuantidade(itemDTO.quantidade());
 
-            lote.setQuantidade(lote.getQuantidade() - itemDTO.quantidade());
+            int qtdeTotalEstoque = loteService.findByIdWheyQuantTotal(itemDTO.idProduto());
+            if (qtdeTotalEstoque < itemDTO.quantidade())
+                throw new ValidationException("quantidade", "quantidade em estoque insuficiente");
+
+            int qtdeRestante = itemDTO.quantidade();
+
+            while (qtdeRestante > 0) {
+                lote = loteService.findByWhey(itemDTO.idProduto());
+
+                int qtdeConsumida = Math.min(lote.getQuantidade(), qtdeRestante);
+                lote.setQuantidade(lote.getQuantidade() - qtdeConsumida);
+                LOG.info(lote.getQuantidade());
+                item.setPreco(item.getPreco() + (qtdeConsumida * lote.getWheyProtein().getPreco()));
+
+                qtdeRestante -= qtdeConsumida;
+            }
+            item.setQuantidade(itemDTO.quantidade());
+            item.setLote(lote);
+            item.setPreco(lote.getWheyProtein().getPreco());
+            item.setQuantidade(itemDTO.quantidade());
 
             pedido.getItensPedidos().add(item);
 
@@ -192,6 +214,43 @@ public class PedidoServiceImpl implements PedidoService {
         status.setSituacao(situacao);
         status.setDataAtualizacao(LocalDateTime.now());
         pedido.getStatusPedidos().add(status);
+    }
+
+    @Transactional
+    @Scheduled(every = "2m")
+    public void verifyIfPaymentIsNull() {
+        List<Pedido> pedidos = pedidoRepository.findPedidoWherePagamentoIsNullAndNotCanceled();
+
+        pedidos.forEach(p -> {
+            if (LocalDateTime.now().isAfter(p.getData().plusMinutes(10))) {
+                pedidoRepository.delete(p);
+            }
+           // devolverLote(p); Não está funcioando, toda vez que a rotina verifica ele incrementa o lote
+        });
+    }
+
+    @Override
+    @Transactional
+    public void cancelPedido(String username, Long id) {
+        Pedido pedido = pedidoRepository.findById(id);
+        Cliente cliente = clienteService.findByUsuario(username);
+        if (pedido == null || pedido.getCliente() != cliente) {
+            throw new EntidadeNotFoundException("id", "Pedido não encontrado");
+        }
+        Situacao situacaoAtual = pedido.getStatusPedidos().getLast().getSituacao();
+        if (situacaoAtual == Situacao.ENVIADO) {
+            throw new ValidationException("id", "O pedido já está com a transportadora, não é possivel cancelar");
+        }
+
+        updateStatusPedido(id, Situacao.CANCELADO);
+        devolverLote(pedido);
+    }
+
+    private void devolverLote(Pedido pedido) {
+        for (ItemPedido item : pedido.getItensPedidos()) {
+            Lote lote = item.getLote();
+            lote.setQuantidade(lote.getQuantidade() + item.getQuantidade());
+        }
     }
 
 }

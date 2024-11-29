@@ -80,4 +80,9 @@ public class LoteServiceImpl implements LoteService {
         return loteRepository.findByWhey(idWhey);
     }
 
+    @Override
+    public Integer findByIdWheyQuantTotal(Long idWhey) {
+        return loteRepository.findByIdWheyQtdeTotal(idWhey);
+    }
+
 }

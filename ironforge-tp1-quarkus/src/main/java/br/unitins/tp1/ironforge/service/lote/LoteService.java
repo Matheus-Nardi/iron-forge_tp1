@@ -17,6 +17,8 @@ public interface LoteService {
 
     Lote create(LoteRequestDTO dto);
 
+    Integer findByIdWheyQuantTotal(Long idWhey);
+
     void update(Long id, LoteRequestDTO dto);
 
     void delete(Long id);

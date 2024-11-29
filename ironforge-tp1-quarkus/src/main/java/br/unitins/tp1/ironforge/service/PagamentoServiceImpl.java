@@ -51,6 +51,9 @@ public class PagamentoServiceImpl implements PagamentoService {
         Pedido pedido = pedidoService.findById(idPedido);
         Cliente cliente = pedido.getCliente();
         validarCliente(username, cliente);
+        if (pedido.getStatusPedidos().stream().anyMatch(s -> s.getSituacao() == Situacao.CANCELADO)) {
+            throw new ValidationException("idPedido", "O pedido já foi cancelado, não é possível pagar");
+        }
 
         Pix pix = new Pix();
         pix.setChave(gerarUUIDPedidoCliente(idPedido, cliente.getId()));
@@ -73,6 +76,9 @@ public class PagamentoServiceImpl implements PagamentoService {
         Pedido pedido = pedidoService.findById(idPedido);
         Cliente cliente = pedido.getCliente();
         validarCliente(username, cliente);
+        if (pedido.getStatusPedidos().stream().anyMatch(s -> s.getSituacao() == Situacao.CANCELADO)) {
+            throw new ValidationException("idPedido", "O pedido já foi cancelado, não é possível pagar");
+        }
 
         Boleto boleto = new Boleto();
         boleto.setCodigoBarras(gerarUUIDPedidoCliente(idPedido, cliente.getId()));
@@ -144,6 +150,7 @@ public class PagamentoServiceImpl implements PagamentoService {
         cartaoPagamento.setPago(true);
         cartaoPagamento.setTipoPagamento(TipoPagamento.CARTAO);
         pedido.setPagamento(cartaoPagamento);
+        validarPagamentoPedido(idPedido, pedido, cartaoPagamento);
         pedidoService.updateStatusPedido(idPedido, Situacao.SEPARANDO_PEDIDO);
     }
 
@@ -160,6 +167,11 @@ public class PagamentoServiceImpl implements PagamentoService {
 
         if (pagamento.getPago()) {
             throw new ValidationException("identificador", "Pagamento já realizado");
+        }
+
+        // Adicionar uma lógica para caso o pedido ja esteja cancelado
+        if (pedido.getStatusPedidos().stream().anyMatch(s -> s.getSituacao() == Situacao.CANCELADO)) {
+            throw new ValidationException("idPedido", "O pedido já foi cancelado, não é possível pagar");
         }
 
     }

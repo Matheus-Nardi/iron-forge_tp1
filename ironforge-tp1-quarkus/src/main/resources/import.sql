@@ -123,8 +123,8 @@ VALUES
 
 -- Inserção de lotes
 INSERT INTO lote (quantidade, dataFabricacao, id_whey, codigo) VALUES
-    (100, '2024-01-10', 1, 'COD-WHEY-001'),
-    (150, '2024-01-12', 1, 'COD-WHEY-002'),
+    (1, '2024-01-10', 1, 'COD-WHEY-001'),
+    (1, '2024-01-12', 1, 'COD-WHEY-002'),
     (200, '2024-01-15', 2, 'COD-WHEY-003'),
     (180, '2024-01-20', 2, 'COD-WHEY-004'),
     (120, '2024-01-18', 3, 'COD-WHEY-005'),
