@@ -19,6 +19,7 @@ public interface WheyProteinService {
     List<WheyProtein> findByPreco(Double preco);
 
     List<WheyProtein> findByPrecoMinAndMax(Double precoMin, Double precoMax);
+    List<WheyProtein> findByMostRated();
 
     List<WheyProtein> findAll();
 

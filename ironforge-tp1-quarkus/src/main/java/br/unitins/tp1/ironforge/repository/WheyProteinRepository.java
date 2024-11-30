@@ -33,4 +33,8 @@ public class WheyProteinRepository implements PanacheRepository<WheyProtein> {
         return find("sabor.nome LIKE :sabor", Parameters.with("sabor", "%" + saborFormat + "%")).list();
     }
 
+    public List<WheyProtein> findMostRatedWheyProtein() {
+        return find("ORDER BY nota DESC").list();
+    }
+
 }

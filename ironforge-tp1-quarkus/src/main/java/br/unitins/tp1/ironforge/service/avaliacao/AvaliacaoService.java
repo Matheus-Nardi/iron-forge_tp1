@@ -17,6 +17,10 @@ public interface AvaliacaoService {
 
     void update(Long id, AvaliacaoRequestDTO dto, String username);
 
-    void delete(Long id);
+    Long getQtdReview(Long id);
+
+    boolean customerHasAlreadyReviewedProduct(Long idCliente, Long idWhey);
+
+    void delete(Long id, String username);
 
 }

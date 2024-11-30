@@ -88,6 +88,13 @@ public class WheyProteinResource {
         return Response.ok(wheys.stream().map(WheyProteinResponseDTO::valueOf).toList()).build();
     }
 
+    @GET
+    @Path("/search/nota")
+    public Response findMostRated() {
+        return Response.ok(wheyService.findByMostRated().stream().map(WheyProteinResponseDTO::valueOf).toList())
+                .build();
+    }
+
     @POST
     public Response create(WheyProteinRequestDTO wheyProteinDTO) {
         WheyProtein whey = wheyService.create(wheyProteinDTO);

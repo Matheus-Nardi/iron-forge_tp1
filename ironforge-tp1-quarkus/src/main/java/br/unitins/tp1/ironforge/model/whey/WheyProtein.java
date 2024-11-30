@@ -22,6 +22,7 @@ public class WheyProtein extends DefaultEntity {
     private String descricao;
     private Double preco;
     private Integer peso;
+    private Double nota;
 
     private TipoWhey tipoWhey;
 
@@ -120,6 +121,16 @@ public class WheyProtein extends DefaultEntity {
 
     public void setImagens(List<String> imagens) {
         this.imagens = imagens;
+    }
+
+    public Double getNota() {
+        if (nota == null)
+            return 0.0;
+        return nota;
+    }
+
+    public void setNota(Double nota) {
+        this.nota = nota;
     }
 
 }

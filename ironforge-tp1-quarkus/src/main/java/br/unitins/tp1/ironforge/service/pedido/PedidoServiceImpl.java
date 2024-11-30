@@ -225,7 +225,8 @@ public class PedidoServiceImpl implements PedidoService {
             if (LocalDateTime.now().isAfter(p.getData().plusMinutes(10))) {
                 pedidoRepository.delete(p);
             }
-           // devolverLote(p); Não está funcioando, toda vez que a rotina verifica ele incrementa o lote
+            // devolverLote(p); Não está funcioando, toda vez que a rotina verifica ele
+            // incrementa o lote
         });
     }
 
@@ -251,6 +252,23 @@ public class PedidoServiceImpl implements PedidoService {
             Lote lote = item.getLote();
             lote.setQuantidade(lote.getQuantidade() + item.getQuantidade());
         }
+    }
+
+    @Override
+    public Pedido detailsPedido(Long id, String username) {
+        Cliente cliente = clienteService.findByUsuario(username);
+        Pedido pedido = findById(id);
+
+        if (pedido.getCliente() != cliente) {
+            throw new EntidadeNotFoundException("id", "Pedido não encontrado");
+        }
+
+        return pedido;
+    }
+
+    @Override
+    public List<Pedido> eligbleReviews(Long idCliente, Long idWhey) {
+        return pedidoRepository.findEligibleReviews(idCliente, idWhey);
     }
 
 }

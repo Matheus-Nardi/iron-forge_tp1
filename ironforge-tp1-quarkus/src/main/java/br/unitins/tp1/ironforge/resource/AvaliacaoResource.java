@@ -71,7 +71,8 @@ public class AvaliacaoResource {
     @RolesAllowed({ "User" })
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {
-        avaliacaoService.delete(id);
+        String username = jsonWebToken.getSubject();
+        avaliacaoService.delete(id, username);
         return Response.noContent().build();
     }
 

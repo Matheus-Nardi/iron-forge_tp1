@@ -74,6 +74,7 @@ public class WheyProteinServiceImpl implements WheyProteinService {
         whey.setFabricante(fabricanteService.findById(dto.idFabricante()));
         whey.setTipoWhey(TipoWhey.valueOf(dto.idTipo()));
         whey.setFood(tabelaNutricionalService.getTabelaNutricional(dto.upc()));
+        whey.setNota(0.0);
 
         wheyRepository.persist(whey);
         return whey;
@@ -128,6 +129,11 @@ public class WheyProteinServiceImpl implements WheyProteinService {
         }
 
         whey.getImagens().add(nomeImagem);
+    }
+
+    @Override
+    public List<WheyProtein> findByMostRated() {
+        return wheyRepository.findMostRatedWheyProtein();
     }
 
 }

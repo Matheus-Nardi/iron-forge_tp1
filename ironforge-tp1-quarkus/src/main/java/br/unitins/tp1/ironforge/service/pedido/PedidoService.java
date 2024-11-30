@@ -14,6 +14,10 @@ public interface PedidoService {
 
     Pedido create(PedidoRequestDTO dto, String username);
 
+    Pedido detailsPedido(Long id, String username);
+
+    List<Pedido> eligbleReviews(Long idCliente, Long idWhey);
+
     // Implementar os patch's
 
     void updateStatusPedido(Long id, Situacao situacao);
