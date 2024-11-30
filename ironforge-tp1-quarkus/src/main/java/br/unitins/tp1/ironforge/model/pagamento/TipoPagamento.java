@@ -8,7 +8,7 @@ import br.unitins.tp1.ironforge.validation.EntidadeNotFoundException;
 @JsonFormat(shape = Shape.OBJECT)
 public enum TipoPagamento {
 
-    PIX(1, "Pix"), BOLETO(2, "Boleto"), CARTAO(3, "Cartão");
+    PIX(1, "Pix"), BOLETO(2, "Boleto"), CARTAO(3, "Cartão"), NAO_REALIZADO(4, "Não realizado");
 
     private final Integer id;
     private final String label;
@@ -35,6 +35,6 @@ public enum TipoPagamento {
         }
 
         throw new EntidadeNotFoundException("tipoPagamento", "Tipo de pagameto não encontrado!");
-    }
+    }   
 
 }

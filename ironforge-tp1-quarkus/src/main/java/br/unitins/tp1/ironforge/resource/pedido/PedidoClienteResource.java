@@ -6,6 +6,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import br.unitins.tp1.ironforge.dto.pedido.PedidoRequestDTO;
 import br.unitins.tp1.ironforge.dto.pedido.PedidoBasicoResponseDTO;
+import br.unitins.tp1.ironforge.dto.pedido.PedidoDetalhadoResponseDTO;
 import br.unitins.tp1.ironforge.model.pedido.Pedido;
 import br.unitins.tp1.ironforge.service.pedido.PedidoService;
 import jakarta.annotation.security.RolesAllowed;
@@ -34,15 +35,23 @@ public class PedidoClienteResource {
 
     @GET
     @Path("/historico")
-    @RolesAllowed({ "User"})
+    @RolesAllowed({ "User" })
     public Response findByUsername() {
         String username = jsonWebToken.getSubject();
         List<Pedido> pedidos = pedidoService.findByUsername(username);
         return Response.ok(pedidos.stream().map(PedidoBasicoResponseDTO::valueOf)).build();
     }
 
+    @GET
+    @Path("/{id}/detalhes")
+    @RolesAllowed({ "User" })
+    public Response findDetalhesByPedido(@PathParam("id") Long id) {
+        String username = jsonWebToken.getSubject();
+        return Response.ok(PedidoDetalhadoResponseDTO.valueOf(pedidoService.detailsPedido(id, username))).build();
+    }
+
     @POST
-    @RolesAllowed({ "User"})
+    @RolesAllowed({ "User" })
     public Response create(PedidoRequestDTO pedidoDTO) {
         String username = jsonWebToken.getSubject();
         Pedido pedido = pedidoService.create(pedidoDTO, username);

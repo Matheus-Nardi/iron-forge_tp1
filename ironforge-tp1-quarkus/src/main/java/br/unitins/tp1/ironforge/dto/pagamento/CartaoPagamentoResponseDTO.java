@@ -2,21 +2,25 @@ package br.unitins.tp1.ironforge.dto.pagamento;
 
 import java.time.LocalDate;
 
-import br.unitins.tp1.ironforge.model.pagamento.Cartao;
+import br.unitins.tp1.ironforge.model.pagamento.CartaoPagamento;
 import br.unitins.tp1.ironforge.model.pagamento.TipoCartao;
+import br.unitins.tp1.ironforge.model.pagamento.TipoPagamento;
 
-public record CartaoResponseDTO(
+public record CartaoPagamentoResponseDTO(
         Long id,
         String titular,
         String numero,
         LocalDate validade,
-        TipoCartao tipoCartao) {
+        TipoCartao tipoCartao,
+        TipoPagamento tipoPagamento,
+        String pago) {
 
-
-    public static CartaoResponseDTO valueOf(Cartao cartao) {
-        return new CartaoResponseDTO(cartao.getId(), cartao.getTitular(), mascararNumeroCartao(cartao.getNumero()),
+    public static CartaoPagamentoResponseDTO valueOf(CartaoPagamento cartao) {
+        return new CartaoPagamentoResponseDTO(cartao.getId(), cartao.getTitular(), mascararNumeroCartao(cartao.getNumero()),
                 cartao.getValidade(),
-                cartao.getTipoCartao());
+                cartao.getTipoCartao(),
+                cartao.getTipoPagamento(),
+                cartao.getPago() == true ? "Sim" : "Não");
     }
 
     private static String mascararNumeroCartao(String numero) {
