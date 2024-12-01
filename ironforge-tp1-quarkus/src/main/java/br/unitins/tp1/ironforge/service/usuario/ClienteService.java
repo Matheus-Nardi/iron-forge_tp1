@@ -6,6 +6,8 @@ import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
 import br.unitins.tp1.ironforge.dto.pessoafisica.ClienteRequestDTO;
 import br.unitins.tp1.ironforge.dto.pessoafisica.ClienteUpdateRequestDTO;
 import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
+import br.unitins.tp1.ironforge.model.Endereco;
+import br.unitins.tp1.ironforge.model.Telefone;
 import br.unitins.tp1.ironforge.model.usuario.Cliente;
 import br.unitins.tp1.ironforge.model.whey.WheyProtein;
 
@@ -27,7 +29,11 @@ public interface ClienteService {
 
     void updateTelefone(String username, Long idTelefone, TelefoneRequestDTO dto);
 
+    Telefone addTelefone(String username, TelefoneRequestDTO dto);
+
     void updateEndereco(String username, Long idEndereco, EnderecoRequestDTO dto);
+
+    Endereco addEndereco(String username, EnderecoRequestDTO dto);
 
     void updateNomeImagem(String username, String nomeImagem);
 

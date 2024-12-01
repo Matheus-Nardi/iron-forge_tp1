@@ -45,5 +45,22 @@ public class AuthResource {
                 .build();
 
     }
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response loginFuncionario(AuthRequestDTO authDTO) {
+        String hash = hashService.getHashSenha(authDTO.senha());
+        
+
+        Usuario usuario = usuarioService.findByUsernameAndSenha(authDTO.username(), hash);
+
+        if (usuario == null) {
+            return Response.status(Status.NO_CONTENT)
+                    .entity("Usuario não encontrado").build();
+        }
+        return Response.ok()
+                .header("Authorization", jwtService.generateJwt(UsuarioResponseDTO.valueOf(usuario)))
+                .build();
+
+    }
 
 }

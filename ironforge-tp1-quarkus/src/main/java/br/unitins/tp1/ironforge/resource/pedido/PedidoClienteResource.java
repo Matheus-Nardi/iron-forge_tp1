@@ -67,4 +67,13 @@ public class PedidoClienteResource {
         return Response.noContent().build();
     }
 
+    @PATCH
+    @Path("/devolucao/{id}")
+    @RolesAllowed("User")
+    public Response returnPedido(@PathParam("id") Long id) {
+        String username = jsonWebToken.getSubject();
+        pedidoService.returnPedido(username, id);
+        return Response.noContent().build();
+    }
+
 }

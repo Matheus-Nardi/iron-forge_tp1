@@ -13,8 +13,6 @@ public class Usuario extends DefaultEntity {
     @Column(unique = true)
     private String username;
 
-    private String cpf;
-
     private String senha;
 
     private Perfil perfil;
@@ -44,15 +42,7 @@ public class Usuario extends DefaultEntity {
     public void setPerfil(Perfil perfil) {
         this.perfil = perfil;
     }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
+    
     public LocalDate getDataCadastro() {
         return dataCadastro;
     }

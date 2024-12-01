@@ -15,7 +15,8 @@ public enum Situacao {
     ENTREGUE(5, "Pedido entregue"),
     CANCELADO(6, "Pedido cancelado"),
     DEVOLVIDO(7, "Devolução do pedido após a entrega"),
-    AGURARDANDO_PAGAMENTO(8, "Aguardando o pagamento do pedido");
+    AGURARDANDO_PAGAMENTO(8, "Aguardando o pagamento do pedido"),
+    PAGAMENTO_EXPIRADO(9, "O pagamento foi expirado");
 
     private final Integer id;
     private final String label;

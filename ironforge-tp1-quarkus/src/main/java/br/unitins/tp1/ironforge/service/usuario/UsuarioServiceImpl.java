@@ -48,7 +48,6 @@ public class UsuarioServiceImpl implements UsuarioService {
         if (existeUsername(dto.username())) {
             throw new ValidationException("username", "O username é invalido");
         }
-        usuario.setCpf(dto.cpf());
         usuario.setUsername(dto.username());
         usuario.setPerfil(dto.perfil());
         usuario.setSenha(hashService.getHashSenha(dto.senha()));

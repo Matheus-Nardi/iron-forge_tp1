@@ -118,13 +118,11 @@ public class ClienteServiceImpl implements ClienteService {
     @Transactional
     public void delete(Long clienteId) {
 
-        // Cliente cliente = clienteRepository.findById(clienteId);
-        // if (cliente == null) {
-        // throw new EntidadeNotFoundException("clienteId", "Cliente não encontrado");
-        // }
-        // usuarioRepository.delete(cliente.getPessoaFisica().getUsuario());
-        // pessoaFisicaRepository.delete(cliente.getPessoaFisica());
-        // clienteRepository.delete(cliente);
+        Cliente cliente = clienteRepository.findById(clienteId);
+        if (cliente == null) {
+            throw new EntidadeNotFoundException("clienteId", "Cliente não encontrado");
+        }
+        clienteRepository.delete(cliente);
     }
 
     @Override
@@ -240,6 +238,10 @@ public class ClienteServiceImpl implements ClienteService {
             throw new EntidadeNotFoundException("idWhey", "Whey Protein não encontrado");
         }
 
+        if (!listaDesejos.contains(wheyProtein)) {
+            throw new EntidadeNotFoundException("idWhey", "O produto não está na lista de desejo");
+        }
+
         listaDesejos.remove(wheyProtein);
     }
 
@@ -265,6 +267,33 @@ public class ClienteServiceImpl implements ClienteService {
 
     private boolean existeEmail(String email) {
         return clienteRepository.findClienteByEmail(email) == null ? false : true;
+    }
+
+    @Override
+    @Transactional
+    public Telefone addTelefone(String username, TelefoneRequestDTO dto) {
+        Cliente cliente = clienteRepository.findClienteByUsername(username);
+        Telefone telefone = new Telefone();
+        telefone.setCodigoArea(dto.codigoArea());
+        telefone.setNumero(dto.numero());
+        cliente.getPessoaFisica().getTelefones().add(telefone);
+        return telefone;
+    }
+
+    @Override
+    @Transactional
+    public Endereco addEndereco(String username, EnderecoRequestDTO dto) {
+        Cliente cliente = clienteRepository.findClienteByUsername(username);
+        Endereco endereco = new Endereco();
+        endereco.setBairro(dto.bairro());
+        endereco.setCep(dto.cep());
+        endereco.setComplemento(dto.complemento());
+        endereco.setLogradouro(dto.logradouro());
+        endereco.setNumero(dto.numero());
+        endereco.setCidade(cidadeService.findById(dto.idCidade()));
+
+        cliente.getPessoaFisica().getEnderecos().add(endereco);
+        return endereco;
     }
 
 }

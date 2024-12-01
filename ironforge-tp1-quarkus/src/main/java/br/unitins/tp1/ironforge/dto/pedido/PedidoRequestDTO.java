@@ -9,6 +9,7 @@ public record PedidoRequestDTO(
         @NotNull(message = "O campo valor total deve ser informado") Double valorTotal,
         List<ItemPedidoRequestDTO> itensPedidos,
         String cupom,
+        @NotNull(message = "O campo endereco deve ser informado")
         Long idEndereco)
 
 {

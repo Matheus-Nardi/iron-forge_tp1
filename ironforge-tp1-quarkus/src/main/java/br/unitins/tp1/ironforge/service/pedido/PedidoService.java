@@ -25,6 +25,8 @@ public interface PedidoService {
     void verifyIfPaymentIsNull();
 
     void cancelPedido(String username, Long id);
+
+    void returnPedido(String username, Long id);
     // pensar no cancelar
 
 }

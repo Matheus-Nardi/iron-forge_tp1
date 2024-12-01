@@ -1,26 +1,25 @@
-package br.unitins.tp1.ironforge.resource.usuario;
+package br.unitins.tp1.ironforge.resource.usuario.cliente;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
+import br.unitins.tp1.ironforge.dto.endereco.EnderecoResponseDTO;
 import br.unitins.tp1.ironforge.dto.pessoafisica.ClienteRequestDTO;
 import br.unitins.tp1.ironforge.dto.pessoafisica.ClienteResponseDTO;
 import br.unitins.tp1.ironforge.dto.pessoafisica.ClienteUpdateRequestDTO;
 import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
+import br.unitins.tp1.ironforge.dto.telefone.TelefoneResponseDTO;
 import br.unitins.tp1.ironforge.dto.whey.WheyProteinResponseDTO;
 import br.unitins.tp1.ironforge.form.ImageForm;
-import br.unitins.tp1.ironforge.model.usuario.Cliente;
 import br.unitins.tp1.ironforge.service.ClienteFileServiceImpl;
 import br.unitins.tp1.ironforge.service.usuario.ClienteService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
@@ -45,19 +44,6 @@ public class ClienteResource {
 
     @Inject
     public JsonWebToken jsonWebToken;
-
-    @GET
-    @Path("/{id}")
-    public Response findById(@PathParam("id") Long id) {
-        return Response.ok(ClienteResponseDTO.valueOf(clienteService.findById(id))).build();
-    }
-
-    @GET
-    @Path("/search/{nome}")
-    public Response findByNome(@PathParam("nome") String nome) {
-        List<Cliente> clientes = clienteService.findByNome(nome);
-        return Response.ok(clientes.stream().map(ClienteResponseDTO::valueOf).toList()).build();
-    }
 
     @PATCH
     @Path("/adicao/{idProduto}")
@@ -88,9 +74,11 @@ public class ClienteResource {
     }
 
     @GET
-    public Response findAll() {
-        List<Cliente> clientes = clienteService.findAll();
-        return Response.ok(clientes.stream().map(ClienteResponseDTO::valueOf).toList()).build();
+    @Path("/meu-perfil")
+    @RolesAllowed({ "User" })
+    public Response getPerfilCliente() {
+        String username = jsonWebToken.getSubject();
+        return Response.ok().entity(ClienteResponseDTO.valueOf(clienteService.findByUsuario(username))).build();
     }
 
     @POST
@@ -129,12 +117,6 @@ public class ClienteResource {
         return Response.noContent().build();
     }
 
-    @DELETE
-    public Response delete() {
-        //clienteService.delete(id);
-        return Response.noContent().build();
-    }
-
     @PATCH
     @Path("upload/imagens")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -164,6 +146,24 @@ public class ClienteResource {
         }
         response.header("Content-Disposition", "attachment; filename=" + nomeImagem);
         return response.build();
+    }
+
+    @POST
+    @Path("adicao/endereco")
+    @RolesAllowed({ "User" })
+    public Response addEndereco(@Valid EnderecoRequestDTO dto) {
+        String username = jsonWebToken.getSubject();
+        return Response.status(Status.CREATED)
+                .entity(EnderecoResponseDTO.valueOf(clienteService.addEndereco(username, dto))).build();
+    }
+
+    @POST
+    @Path("adicao/telefone")
+    @RolesAllowed({ "User" })
+    public Response addTelefone(@Valid TelefoneRequestDTO dto) {
+        String username = jsonWebToken.getSubject();
+        return Response.status(Status.CREATED)
+                .entity(TelefoneResponseDTO.valueOf(clienteService.addTelefone(username, dto))).build();
     }
 
 }

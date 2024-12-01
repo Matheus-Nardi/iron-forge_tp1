@@ -8,7 +8,7 @@ import br.unitins.tp1.ironforge.validation.EntidadeNotFoundException;
 @JsonFormat(shape = Shape.OBJECT)
 public enum Perfil {
 
-    ADM(1, "Adm"), USER(2, "User");
+    FUNCIONARIO(1, "Funcionario"), CLIENTE(2, "Cliente"), USER(3, "Usuario");
 
     private final Integer id;
     private final String label;
@@ -34,7 +34,7 @@ public enum Perfil {
                 return tipo;
         }
 
-        throw new EntidadeNotFoundException("perfil","Tipo de whey não encontrado!");
+        throw new EntidadeNotFoundException("perfil", "Tipo de whey não encontrado!");
     }
 
 }

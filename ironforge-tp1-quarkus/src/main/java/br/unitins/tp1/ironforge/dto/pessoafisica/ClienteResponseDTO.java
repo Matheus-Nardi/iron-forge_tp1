@@ -11,7 +11,7 @@ import br.unitins.tp1.ironforge.model.usuario.Cliente;
 public record ClienteResponseDTO(
         Long id,
         String nome,
-        String cnpj,
+        String cpf,
         String email,
         LocalDate dataNascimento,
         List<TelefoneResponseDTO> telefones,

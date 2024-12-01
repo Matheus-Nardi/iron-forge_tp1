@@ -7,6 +7,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
+import br.unitins.tp1.ironforge.dto.pessoafisica.FuncionarioBasicoRequestDTO;
 import br.unitins.tp1.ironforge.dto.pessoafisica.FuncionarioRequestDTO;
 import br.unitins.tp1.ironforge.dto.pessoafisica.FuncionarioResponseDTO;
 import br.unitins.tp1.ironforge.dto.pessoafisica.FuncionarioUpdateRequestDTO;
@@ -47,31 +48,49 @@ public class FuncionarioResource {
 
     @GET
     @Path("/{id}")
+    @RolesAllowed("Funcionario")
     public Response findById(@PathParam("id") Long id) {
         return Response.ok(FuncionarioResponseDTO.valueOf(funcionarioService.findById(id))).build();
     }
 
     @GET
     @Path("/search/{nome}")
+    @RolesAllowed("Funcionario")
     public Response findByNome(@PathParam("nome") String nome) {
         List<Funcionario> funcionarios = funcionarioService.findByNome(nome);
         return Response.ok(funcionarios.stream().map(FuncionarioResponseDTO::valueOf).toList()).build();
     }
 
     @GET
+    @RolesAllowed("Funcionario")
     public Response findAll() {
         List<Funcionario> funcionarios = funcionarioService.findAll();
         return Response.ok(funcionarios.stream().map(FuncionarioResponseDTO::valueOf).toList()).build();
     }
 
     @POST
+    @RolesAllowed("Funcionario")
     public Response create(@Valid FuncionarioRequestDTO dto) {
-        return Response.status(Status.CREATED).entity(FuncionarioResponseDTO.valueOf(funcionarioService.create(dto)))
+        String username = jsonWebToken.getSubject();
+        return Response.status(Status.CREATED)
+                .entity(FuncionarioResponseDTO.valueOf(funcionarioService.create(username, dto)))
+                .build();
+    }
+
+    @POST
+    @Path("/clientes/{clienteId}/transformar-em-funcionario")
+    @RolesAllowed("Funcionario")
+    public Response transformarClienteEmFuncionario(@PathParam("clienteId") Long clienteId,
+            @Valid FuncionarioBasicoRequestDTO dto) {
+        Funcionario funcionario = funcionarioService.transformarClienteEmFuncionario(clienteId, dto);
+        return Response.status(Status.CREATED)
+                .entity(FuncionarioResponseDTO.valueOf(funcionario))
                 .build();
     }
 
     @PATCH
     @Path("/{id}")
+    @RolesAllowed("Funcionario")
     public Response update(@PathParam("id") Long id, @Valid FuncionarioUpdateRequestDTO dto) {
         funcionarioService.update(id, dto);
         return Response.noContent().build();
@@ -79,6 +98,7 @@ public class FuncionarioResource {
 
     @PATCH
     @Path("/{id}/telefones/{idTelefone}")
+    @RolesAllowed("Funcionario")
     public Response updateTelefones(@PathParam("id") Long id, @PathParam("idTelefone") Long idTelefone,
             @Valid TelefoneRequestDTO telefone) {
         funcionarioService.updateTelefone(id, idTelefone, telefone);
@@ -87,6 +107,7 @@ public class FuncionarioResource {
 
     @PATCH
     @Path("/{id}/enderecos/{idEndereco}")
+    @RolesAllowed("Funcionario")
     public Response updateEnderecos(@PathParam("id") Long id, @PathParam("idEndereco") Long idEndereco,
             @Valid EnderecoRequestDTO endereco) {
         funcionarioService.updateEndereco(id, idEndereco, endereco);
@@ -95,6 +116,7 @@ public class FuncionarioResource {
 
     @DELETE
     @Path("/{id}")
+    @RolesAllowed("Funcionario")
     public Response delete(@PathParam("id") Long id) {
         funcionarioService.delete(id);
         return Response.noContent().build();
@@ -103,7 +125,7 @@ public class FuncionarioResource {
     @PATCH
     @Path("upload/imagens")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @RolesAllowed({ "Adm" })
+    @RolesAllowed({ "Funcionario" })
     public Response uploadImage(@MultipartForm ImageForm form) {
         String username = jsonWebToken.getSubject();
         try {
@@ -119,7 +141,7 @@ public class FuncionarioResource {
     @GET
     @Path("/download/image/{nomeImagem}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    @RolesAllowed({ "Adm" })
+    @RolesAllowed({ "Funcionario" })
     public Response downloadImage(@PathParam("nomeImagem") String nomeImagem) {
         ResponseBuilder response = null;
         try {

@@ -14,7 +14,7 @@ public class PedidoRepository implements PanacheRepository<Pedido> {
     }
 
     public List<Pedido> findPedidoWherePagamentoIsNullAndNotCanceled() {
-        return find("SELECT p FROM Pedido p JOIN p.statusPedidos s WHERE s.situacao != 6 AND p.pagamento IS NULL")
+        return find("SELECT p FROM Pedido p JOIN p.statusPedidos s WHERE s.situacao != 9 AND p.pagamento IS NULL")
                 .list();
     }
 

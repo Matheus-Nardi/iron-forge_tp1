@@ -4,17 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
+import br.unitins.tp1.ironforge.dto.pessoafisica.FuncionarioBasicoRequestDTO;
 import br.unitins.tp1.ironforge.dto.pessoafisica.FuncionarioRequestDTO;
 import br.unitins.tp1.ironforge.dto.pessoafisica.FuncionarioUpdateRequestDTO;
 import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
 import br.unitins.tp1.ironforge.model.Endereco;
 import br.unitins.tp1.ironforge.model.Telefone;
+import br.unitins.tp1.ironforge.model.usuario.Cliente;
 import br.unitins.tp1.ironforge.model.usuario.Funcionario;
 import br.unitins.tp1.ironforge.model.usuario.PessoaFisica;
 import br.unitins.tp1.ironforge.model.usuario.Usuario;
 import br.unitins.tp1.ironforge.repository.FuncionarioRepository;
 import br.unitins.tp1.ironforge.repository.PessoaFisicaRepository;
-import br.unitins.tp1.ironforge.repository.UsuarioRepository;
 import br.unitins.tp1.ironforge.service.cidade.CidadeService;
 import br.unitins.tp1.ironforge.service.hash.HashService;
 import br.unitins.tp1.ironforge.validation.EntidadeNotFoundException;
@@ -33,7 +34,10 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     public PessoaFisicaRepository pessoaFisicaRepository;
 
     @Inject
-    public UsuarioRepository usuarioRepository;
+    public ClienteService clienteService;
+
+    @Inject
+    public UsuarioService usuarioService;
 
     @Inject
     public CidadeService cidadeService;
@@ -63,23 +67,13 @@ public class FuncionarioServiceImpl implements FuncionarioService {
 
     @Override
     @Transactional
-    public Funcionario create(FuncionarioRequestDTO dto) {
+    public Funcionario create(String username, FuncionarioRequestDTO dto) {
         validarEntidade(dto);
+
         Funcionario funcionario = new Funcionario();
-        Usuario usuario = getUsuario(dto);
-
-        PessoaFisica pf = getPessoaFisica(dto, usuario);
-        funcionario.setPessoaFisica(pf); // Associando funcionario com pf
-        funcionario.setCargo(dto.cargo());
-        funcionario.setSalario(dto.salario());
-        funcionario.setDataContratacao(dto.dataContratacao());
-        funcionarioRepository.persist(funcionario);
-
-        return funcionario;
-    }
-
-    private PessoaFisica getPessoaFisica(FuncionarioRequestDTO dto, Usuario usuario) {
         PessoaFisica pf = new PessoaFisica();
+        Usuario usuario = usuarioService.findByUsername(username);
+
         pf.setUsuario(usuario); // Associando pessoa com usuario
 
         // Defenindo pessoa fisica
@@ -91,18 +85,41 @@ public class FuncionarioServiceImpl implements FuncionarioService {
         pf.setTelefones(getTelefones(dto));
 
         pessoaFisicaRepository.persist(pf);
-        return pf;
+        funcionario.setPessoaFisica(pf); // Associando funcionario com pf
+        funcionarioRepository.persist(funcionario);
+
+        return funcionario;
     }
 
-    private Usuario getUsuario(FuncionarioRequestDTO dto) {
-        Usuario usuario = new Usuario();
+    @Transactional
+    @Override
+    public Funcionario transformarClienteEmFuncionario(Long idCliente, FuncionarioBasicoRequestDTO dto) {
+        // Buscar cliente existente
+        Cliente cliente = clienteService.findById(idCliente);
+        if (cliente == null) {
+            throw new EntidadeNotFoundException("id", "Cliente não encontrado.");
+        }
 
-        // Definindo usuario
-        usuario.setUsername(dto.usuario().username());
-        usuario.setSenha(hashService.getHashSenha(dto.usuario().senha()));
-        usuario.setPerfil(dto.usuario().perfil());
-        usuarioRepository.persist(usuario);
-        return usuario;
+        PessoaFisica pessoaFisica = cliente.getPessoaFisica();
+        if (pessoaFisica == null) {
+            throw new ValidationException("idCliente", "Cliente não possui uma pessoa física associada.");
+        }
+
+        // Verificar se a pessoaFisica já está associada a um funcionario existente
+        // if (funcionarioRepository.existsByPessoaFisica(pessoaFisica)) {
+        // throw new IllegalStateException("Essa pessoa já é um funcionário.");
+        // }
+
+        Funcionario funcionario = new Funcionario();
+        funcionario.setPessoaFisica(pessoaFisica);
+        funcionario.setSalario(dto.salario()); // Defina valores padrão ou conforme necessário
+        funcionario.setDataContratacao(dto.dataContratacao());
+        funcionario.setCargo(dto.cargo());
+        funcionario.getPessoaFisica().getUsuario().setPerfil(null);
+
+        funcionarioRepository.persist(funcionario);
+
+        return funcionario;
     }
 
     @Override
@@ -140,8 +157,6 @@ public class FuncionarioServiceImpl implements FuncionarioService {
             throw new EntidadeNotFoundException("id", "Funcionario não encontrado");
         }
 
-        usuarioRepository.delete(funcionario.getPessoaFisica().getUsuario());
-        pessoaFisicaRepository.delete(funcionario.getPessoaFisica());
         funcionarioRepository.delete(funcionario);
     }
 

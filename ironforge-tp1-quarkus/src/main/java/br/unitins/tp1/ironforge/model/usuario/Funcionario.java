@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import br.unitins.tp1.ironforge.model.DefaultEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
@@ -11,7 +12,7 @@ import jakarta.persistence.OneToOne;
 @Entity
 public class Funcionario extends DefaultEntity {
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_pessoaFisica", unique = true)
     private PessoaFisica pessoaFisica;
     private BigDecimal salario;

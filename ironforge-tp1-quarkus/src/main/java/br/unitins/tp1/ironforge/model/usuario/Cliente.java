@@ -17,7 +17,7 @@ import jakarta.persistence.OneToOne;
 @Entity
 public class Cliente extends DefaultEntity {
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_pessoaFisica", unique = true)
     private PessoaFisica pessoaFisica;
 

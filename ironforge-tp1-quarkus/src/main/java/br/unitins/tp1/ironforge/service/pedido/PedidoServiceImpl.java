@@ -120,7 +120,7 @@ public class PedidoServiceImpl implements PedidoService {
     private void definirItens(PedidoRequestDTO dto, Pedido pedido) {
         for (ItemPedidoRequestDTO itemDTO : dto.itensPedidos()) {
             ItemPedido item = new ItemPedido();
-            item.setPreco(0.0);
+
             Lote lote = loteService.findByWhey(itemDTO.idProduto());
 
             int qtdeTotalEstoque = loteService.findByIdWheyQuantTotal(itemDTO.idProduto());
@@ -131,20 +131,20 @@ public class PedidoServiceImpl implements PedidoService {
 
             while (qtdeRestante > 0) {
                 lote = loteService.findByWhey(itemDTO.idProduto());
-
+                item.setPreco(0.0);
                 int qtdeConsumida = Math.min(lote.getQuantidade(), qtdeRestante);
                 lote.setQuantidade(lote.getQuantidade() - qtdeConsumida);
                 LOG.info(lote.getQuantidade());
                 item.setPreco(item.getPreco() + (qtdeConsumida * lote.getWheyProtein().getPreco()));
 
                 qtdeRestante -= qtdeConsumida;
-            }
-            item.setQuantidade(itemDTO.quantidade());
-            item.setLote(lote);
-            item.setPreco(lote.getWheyProtein().getPreco());
-            item.setQuantidade(itemDTO.quantidade());
+                item.setQuantidade(itemDTO.quantidade());
+                item.setLote(lote);
+                item.setPreco(lote.getWheyProtein().getPreco());
+                item.setQuantidade(itemDTO.quantidade());
 
-            pedido.getItensPedidos().add(item);
+                pedido.getItensPedidos().add(item);
+            }
 
         }
     }
@@ -221,13 +221,16 @@ public class PedidoServiceImpl implements PedidoService {
     public void verifyIfPaymentIsNull() {
         List<Pedido> pedidos = pedidoRepository.findPedidoWherePagamentoIsNullAndNotCanceled();
 
-        pedidos.forEach(p -> {
-            if (LocalDateTime.now().isAfter(p.getData().plusMinutes(10))) {
-                pedidoRepository.delete(p);
-            }
-            // devolverLote(p); Não está funcioando, toda vez que a rotina verifica ele
-            // incrementa o lote
-        });
+        pedidos.stream()
+                .filter(pedido -> pedido.getStatusPedidos()
+                        .stream()
+                        .anyMatch(status -> status.getSituacao() == Situacao.AGURARDANDO_PAGAMENTO &&
+                                status.getDataAtualizacao().plusHours(3L).plusMinutes(30L)
+                                        .isBefore(LocalDateTime.now())))
+                .forEach(pedido -> {
+                    updateStatusPedido(pedido.getId(), Situacao.PAGAMENTO_EXPIRADO);
+                    devolverLote(pedido);
+                });
     }
 
     @Override
@@ -235,22 +238,23 @@ public class PedidoServiceImpl implements PedidoService {
     public void cancelPedido(String username, Long id) {
         Pedido pedido = pedidoRepository.findById(id);
         Cliente cliente = clienteService.findByUsuario(username);
+
         if (pedido == null || pedido.getCliente() != cliente) {
             throw new EntidadeNotFoundException("id", "Pedido não encontrado");
         }
-        Situacao situacaoAtual = pedido.getStatusPedidos().getLast().getSituacao();
-        if (situacaoAtual == Situacao.ENVIADO) {
-            throw new ValidationException("id", "O pedido já está com a transportadora, não é possivel cancelar");
-        }
+
+        if (pedido.getStatusPedidos().stream().anyMatch(e -> e.getSituacao().equals(Situacao.ENVIADO)))
+            throw new ValidationException("id", "Nao é possivel cancelar, pois o pedido ja foi enviado");
 
         updateStatusPedido(id, Situacao.CANCELADO);
         devolverLote(pedido);
     }
 
     private void devolverLote(Pedido pedido) {
-        for (ItemPedido item : pedido.getItensPedidos()) {
+        for (ItemPedido item: pedido.getItensPedidos()) {
             Lote lote = item.getLote();
-            lote.setQuantidade(lote.getQuantidade() + item.getQuantidade());
+            Integer estoque = lote.getQuantidade();
+            lote.setQuantidade(estoque + item.getQuantidade());
         }
     }
 
@@ -269,6 +273,22 @@ public class PedidoServiceImpl implements PedidoService {
     @Override
     public List<Pedido> eligbleReviews(Long idCliente, Long idWhey) {
         return pedidoRepository.findEligibleReviews(idCliente, idWhey);
+    }
+
+    @Override
+    @Transactional
+    public void returnPedido(String username, Long id) {
+        Pedido pedido = findById(id);
+        Cliente cliente = clienteService.findByUsuario(username);
+        if (pedido.getCliente() != cliente) {
+            throw new EntidadeNotFoundException("id", "Pedido não encontrado");
+        }
+
+        if (!(pedido.getStatusPedidos().stream().anyMatch(e -> e.getSituacao().equals(Situacao.ENTREGUE))))
+            throw new ValidationException("id", "Nao é possivel devolver, pois o pedido ainda não foi entregue");
+
+        updateStatusPedido(id, Situacao.DEVOLVIDO);
+        devolverLote(pedido);
     }
 
 }
