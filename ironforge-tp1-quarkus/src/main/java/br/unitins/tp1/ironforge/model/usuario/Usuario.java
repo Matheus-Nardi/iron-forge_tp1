@@ -1,11 +1,16 @@
 package br.unitins.tp1.ironforge.model.usuario;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import br.unitins.tp1.ironforge.model.DefaultEntity;
 import br.unitins.tp1.ironforge.model.Perfil;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
 
 @Entity
 public class Usuario extends DefaultEntity {
@@ -15,7 +20,9 @@ public class Usuario extends DefaultEntity {
 
     private String senha;
 
-    private Perfil perfil;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "perfil_usuario", joinColumns = @JoinColumn(name = "id_usuario"))
+    private List<Perfil> listaPerfil;
 
     private LocalDate dataCadastro;
 
@@ -35,20 +42,20 @@ public class Usuario extends DefaultEntity {
         this.senha = senha;
     }
 
-    public Perfil getPerfil() {
-        return perfil;
-    }
-
-    public void setPerfil(Perfil perfil) {
-        this.perfil = perfil;
-    }
-    
     public LocalDate getDataCadastro() {
         return dataCadastro;
     }
 
     public void setDataCadastro(LocalDate dataCadastro) {
         this.dataCadastro = dataCadastro;
+    }
+
+    public List<Perfil> getListaPerfil() {
+        return listaPerfil;
+    }
+
+    public void setListaPerfil(List<Perfil> listaPerfil) {
+        this.listaPerfil = listaPerfil;
     }
 
 }

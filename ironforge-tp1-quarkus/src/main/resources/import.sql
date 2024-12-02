@@ -12,11 +12,21 @@ INSERT INTO cidade (nome, id_estado) VALUES
     ('São Paulo', 2);
 
 -- Inserção de usuários
-INSERT INTO usuario (username, senha, perfil) VALUES 
-    ('joao.silva', 'OaF4paP+SqLenJW8Rjrk5goXvajn1knmWXfupry55Kbkpll5xliVH9X3U8hMf6l4x/d2WnYf30xNVYTtLu7jmQ==', 2),  -- Senha é abacatecompimenta
-    ('wheyHot', '123456', 2),
-    ('maxuel', 'qOf0Qw7LIP5PqpJJMwKqcX6BZ+t+elaNZW+fBPY70EsAhd2deno3eb2KnjlTMC06GwBMhShPtQJM8k308HXQog==' , 1), -- Senha é flamengo
-    ('growthsuplementos', 'senhaSegura',2);
+INSERT INTO usuario (id, username, senha, dataCadastro) VALUES 
+    (1, 'joao.silva', 'OaF4paP+SqLenJW8Rjrk5goXvajn1knmWXfupry55Kbkpll5xliVH9X3U8hMf6l4x/d2WnYf30xNVYTtLu7jmQ==', '2024-01-01'),  -- Senha é abacatecompimenta
+    (2, 'wheyHot', '123456', '2024-02-01'),
+    (3, 'maxuel', 'qOf0Qw7LIP5PqpJJMwKqcX6BZ+t+elaNZW+fBPY70EsAhd2deno3eb2KnjlTMC06GwBMhShPtQJM8k308HXQog==', '2024-03-01'), -- Senha é flamengo
+    (4, 'growthsuplementos', 'senhaSegura', '2024-04-01'),
+    (5, 'adm', 'LMhb+caa8FQpEB8Z7vaIdH+yNDMA9f4KrJhXp2p8wsw38+5yu4t7ovC5R5Gko/0XcmacvwntPvzflwvxNiMXSQ==', '2024-05-01');  -- adm123
+
+
+INSERT INTO perfil_usuario (listaPerfil, id_usuario) VALUES
+    (2, 1),  -- joao.silva é CLIENTE
+    (4, 2),  -- wheyHot é FABRICANTE
+    (1, 3),  -- maxuel é FUNCIONÁRIO
+    (4, 4),  -- growthsuplementos é FABRICANTE
+    (3, 5);  -- adm é ADMINISTRADOR
+
 
 -- Inserção de pessoas
 INSERT INTO pessoa (id_usuario, email, nome) VALUES 

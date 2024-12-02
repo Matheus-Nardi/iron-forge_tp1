@@ -8,7 +8,8 @@ import br.unitins.tp1.ironforge.validation.EntidadeNotFoundException;
 @JsonFormat(shape = Shape.OBJECT)
 public enum Perfil {
 
-    FUNCIONARIO(1, "Funcionario"), CLIENTE(2, "Cliente"), USER(3, "Usuario");
+    FUNCIONARIO(1, "Funcionario"), CLIENTE(2, "Cliente"), ADMINISTRADOR(3, "Administrador"),
+    FABRICANTE(4, "Fabricante");
 
     private final Integer id;
     private final String label;

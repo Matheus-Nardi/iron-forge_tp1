@@ -44,12 +44,12 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     @Transactional
     public Usuario create(UsuarioRequestDTO dto) {
-        Usuario usuario = new Usuario();
         if (existeUsername(dto.username())) {
             throw new ValidationException("username", "O username é invalido");
         }
+        Usuario usuario = new Usuario();
         usuario.setUsername(dto.username());
-        usuario.setPerfil(dto.perfil());
+        usuario.setListaPerfil(List.of(dto.perfil()));
         usuario.setSenha(hashService.getHashSenha(dto.senha()));
         usuario.setDataCadastro(LocalDate.now());
         usuarioRepository.persist(usuario);

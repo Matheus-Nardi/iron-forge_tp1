@@ -7,7 +7,6 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
-import br.unitins.tp1.ironforge.dto.pessoafisica.FuncionarioBasicoRequestDTO;
 import br.unitins.tp1.ironforge.dto.pessoafisica.FuncionarioRequestDTO;
 import br.unitins.tp1.ironforge.dto.pessoafisica.FuncionarioResponseDTO;
 import br.unitins.tp1.ironforge.dto.pessoafisica.FuncionarioUpdateRequestDTO;
@@ -74,17 +73,6 @@ public class FuncionarioResource {
         String username = jsonWebToken.getSubject();
         return Response.status(Status.CREATED)
                 .entity(FuncionarioResponseDTO.valueOf(funcionarioService.create(username, dto)))
-                .build();
-    }
-
-    @POST
-    @Path("/clientes/{clienteId}/transformar-em-funcionario")
-    @RolesAllowed("Funcionario")
-    public Response transformarClienteEmFuncionario(@PathParam("clienteId") Long clienteId,
-            @Valid FuncionarioBasicoRequestDTO dto) {
-        Funcionario funcionario = funcionarioService.transformarClienteEmFuncionario(clienteId, dto);
-        return Response.status(Status.CREATED)
-                .entity(FuncionarioResponseDTO.valueOf(funcionario))
                 .build();
     }
 

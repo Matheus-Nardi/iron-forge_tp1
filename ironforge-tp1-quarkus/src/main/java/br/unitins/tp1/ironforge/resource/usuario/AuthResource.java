@@ -5,6 +5,7 @@ import br.unitins.tp1.ironforge.dto.usuario.UsuarioResponseDTO;
 import br.unitins.tp1.ironforge.model.usuario.Usuario;
 import br.unitins.tp1.ironforge.service.hash.HashService;
 import br.unitins.tp1.ironforge.service.jwt.JwtService;
+import br.unitins.tp1.ironforge.service.usuario.AdministradorService;
 import br.unitins.tp1.ironforge.service.usuario.UsuarioService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -27,6 +28,9 @@ public class AuthResource {
     UsuarioService usuarioService;
 
     @Inject
+    public AdministradorService administradorService;
+
+    @Inject
     JwtService jwtService;
 
     @POST
@@ -45,11 +49,11 @@ public class AuthResource {
                 .build();
 
     }
+
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     public Response loginFuncionario(AuthRequestDTO authDTO) {
         String hash = hashService.getHashSenha(authDTO.senha());
-        
 
         Usuario usuario = usuarioService.findByUsernameAndSenha(authDTO.username(), hash);
 

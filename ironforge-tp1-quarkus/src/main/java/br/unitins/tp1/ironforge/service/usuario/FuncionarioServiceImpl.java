@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
-import br.unitins.tp1.ironforge.dto.pessoafisica.FuncionarioBasicoRequestDTO;
 import br.unitins.tp1.ironforge.dto.pessoafisica.FuncionarioRequestDTO;
 import br.unitins.tp1.ironforge.dto.pessoafisica.FuncionarioUpdateRequestDTO;
 import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
 import br.unitins.tp1.ironforge.model.Endereco;
+import br.unitins.tp1.ironforge.model.Perfil;
 import br.unitins.tp1.ironforge.model.Telefone;
-import br.unitins.tp1.ironforge.model.usuario.Cliente;
 import br.unitins.tp1.ironforge.model.usuario.Funcionario;
 import br.unitins.tp1.ironforge.model.usuario.PessoaFisica;
 import br.unitins.tp1.ironforge.model.usuario.Usuario;
@@ -73,6 +72,7 @@ public class FuncionarioServiceImpl implements FuncionarioService {
         Funcionario funcionario = new Funcionario();
         PessoaFisica pf = new PessoaFisica();
         Usuario usuario = usuarioService.findByUsername(username);
+        usuario.getListaPerfil().add(Perfil.FUNCIONARIO);
 
         pf.setUsuario(usuario); // Associando pessoa com usuario
 
@@ -86,37 +86,6 @@ public class FuncionarioServiceImpl implements FuncionarioService {
 
         pessoaFisicaRepository.persist(pf);
         funcionario.setPessoaFisica(pf); // Associando funcionario com pf
-        funcionarioRepository.persist(funcionario);
-
-        return funcionario;
-    }
-
-    @Transactional
-    @Override
-    public Funcionario transformarClienteEmFuncionario(Long idCliente, FuncionarioBasicoRequestDTO dto) {
-        // Buscar cliente existente
-        Cliente cliente = clienteService.findById(idCliente);
-        if (cliente == null) {
-            throw new EntidadeNotFoundException("id", "Cliente não encontrado.");
-        }
-
-        PessoaFisica pessoaFisica = cliente.getPessoaFisica();
-        if (pessoaFisica == null) {
-            throw new ValidationException("idCliente", "Cliente não possui uma pessoa física associada.");
-        }
-
-        // Verificar se a pessoaFisica já está associada a um funcionario existente
-        // if (funcionarioRepository.existsByPessoaFisica(pessoaFisica)) {
-        // throw new IllegalStateException("Essa pessoa já é um funcionário.");
-        // }
-
-        Funcionario funcionario = new Funcionario();
-        funcionario.setPessoaFisica(pessoaFisica);
-        funcionario.setSalario(dto.salario()); // Defina valores padrão ou conforme necessário
-        funcionario.setDataContratacao(dto.dataContratacao());
-        funcionario.setCargo(dto.cargo());
-        funcionario.getPessoaFisica().getUsuario().setPerfil(null);
-
         funcionarioRepository.persist(funcionario);
 
         return funcionario;

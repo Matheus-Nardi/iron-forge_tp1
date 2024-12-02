@@ -9,6 +9,7 @@ import br.unitins.tp1.ironforge.dto.pessoajuridica.FabricanteUpdateRequestDTO;
 import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
 import br.unitins.tp1.ironforge.model.Endereco;
 import br.unitins.tp1.ironforge.model.Fabricante;
+import br.unitins.tp1.ironforge.model.Perfil;
 import br.unitins.tp1.ironforge.model.Telefone;
 import br.unitins.tp1.ironforge.model.usuario.PessoaJuridica;
 import br.unitins.tp1.ironforge.model.usuario.Usuario;
@@ -104,7 +105,7 @@ public class FabricanteServiceImpl implements FabricanteService {
         Usuario usuario = new Usuario();
         usuario.setUsername(dto.usuario().username());
         usuario.setSenha(dto.usuario().senha());
-        usuario.setPerfil(dto.usuario().perfil());
+        usuario.setListaPerfil(List.of(Perfil.FABRICANTE));
         usuarioRepository.persist(usuario);
         return usuario;
     }
