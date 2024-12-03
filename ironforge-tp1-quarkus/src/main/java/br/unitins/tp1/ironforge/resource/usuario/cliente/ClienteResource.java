@@ -47,7 +47,7 @@ public class ClienteResource {
 
     @PATCH
     @Path("/adicao/{idProduto}")
-    @RolesAllowed({ "User" })
+    @RolesAllowed({ "Cliente" })
     public Response adicionarListaDesejo(@PathParam("idProduto") Long idProduto) {
         String username = jsonWebToken.getSubject();
         System.out.println(username);
@@ -57,7 +57,7 @@ public class ClienteResource {
 
     @PATCH
     @Path("/remocao/{idProduto}")
-    @RolesAllowed({ "User" })
+    @RolesAllowed({ "Cliente" })
     public Response removerListaDesejo(@PathParam("idProduto") Long idProduto) {
         String username = jsonWebToken.getSubject();
         clienteService.removerListaDesejo(username, idProduto);
@@ -66,7 +66,7 @@ public class ClienteResource {
 
     @GET
     @Path("/desejos")
-    @RolesAllowed({ "User" })
+    @RolesAllowed({ "Cliente" })
     public Response getListaDesejos() {
         String username = jsonWebToken.getSubject();
         return Response.ok()
@@ -75,14 +75,14 @@ public class ClienteResource {
 
     @GET
     @Path("/meu-perfil")
-    @RolesAllowed({ "User" })
+    @RolesAllowed({ "Cliente" })
     public Response getPerfilCliente() {
         String username = jsonWebToken.getSubject();
         return Response.ok().entity(ClienteResponseDTO.valueOf(clienteService.findByUsuario(username))).build();
     }
 
     @POST
-    @RolesAllowed({ "User" })
+    @RolesAllowed({ "Usuario" })
     public Response create(@Valid ClienteRequestDTO dto) {
         String username = jsonWebToken.getSubject();
         return Response.status(Status.CREATED).entity(ClienteResponseDTO.valueOf(clienteService.create(username, dto)))
@@ -90,7 +90,7 @@ public class ClienteResource {
     }
 
     @PATCH
-    @RolesAllowed({ "User" })
+    @RolesAllowed({ "Cliente" })
     public Response update(@Valid ClienteUpdateRequestDTO dto) {
         String username = jsonWebToken.getSubject();
         clienteService.update(username, dto);
@@ -99,7 +99,7 @@ public class ClienteResource {
 
     @PATCH
     @Path("/telefones/{idTelefone}")
-    @RolesAllowed({ "User" })
+    @RolesAllowed({ "Cliente" })
     public Response updateTelefones(@PathParam("id") Long id, @PathParam("idTelefone") Long idTelefone,
             @Valid TelefoneRequestDTO telefone) {
         String username = jsonWebToken.getSubject();
@@ -109,7 +109,7 @@ public class ClienteResource {
 
     @PATCH
     @Path("/enderecos/{idEndereco}")
-    @RolesAllowed({ "User" })
+    @RolesAllowed({ "Cliente" })
     public Response updateEnderecos(@PathParam("id") Long id, @PathParam("idEndereco") Long idEndereco,
             @Valid EnderecoRequestDTO endereco) {
         String username = jsonWebToken.getSubject();
@@ -120,7 +120,7 @@ public class ClienteResource {
     @PATCH
     @Path("upload/imagens")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @RolesAllowed({ "User" })
+    @RolesAllowed({ "Cliente" })
     public Response uploadImage(@MultipartForm ImageForm form) {
         String username = jsonWebToken.getSubject();
         try {
@@ -136,7 +136,7 @@ public class ClienteResource {
     @GET
     @Path("/download/image/{nomeImagem}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    @RolesAllowed({ "User" })
+    @RolesAllowed({ "Cliente" })
     public Response downloadImage(@PathParam("nomeImagem") String nomeImagem) {
         ResponseBuilder response = null;
         try {
@@ -150,7 +150,7 @@ public class ClienteResource {
 
     @POST
     @Path("adicao/endereco")
-    @RolesAllowed({ "User" })
+    @RolesAllowed({ "Cliente" })
     public Response addEndereco(@Valid EnderecoRequestDTO dto) {
         String username = jsonWebToken.getSubject();
         return Response.status(Status.CREATED)
@@ -159,7 +159,7 @@ public class ClienteResource {
 
     @POST
     @Path("adicao/telefone")
-    @RolesAllowed({ "User" })
+    @RolesAllowed({ "Cliente" })
     public Response addTelefone(@Valid TelefoneRequestDTO dto) {
         String username = jsonWebToken.getSubject();
         return Response.status(Status.CREATED)

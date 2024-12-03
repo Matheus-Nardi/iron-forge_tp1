@@ -1,5 +1,7 @@
 package br.unitins.tp1.ironforge.service.usuario;
 
+import java.util.ArrayList;
+
 import br.unitins.tp1.ironforge.dto.pessoafisica.FuncionarioBasicoRequestDTO;
 import br.unitins.tp1.ironforge.model.Perfil;
 import br.unitins.tp1.ironforge.model.usuario.Cliente;
@@ -49,14 +51,17 @@ public class AdministradorServiceImpl implements AdministradorService {
             throw new ValidationException("idCliente", "Cliente não possui uma pessoa física associada.");
         }
 
-        // Verificar se a pessoaFisica já está associada a um funcionario existente
-        // if (funcionarioRepository.existsByPessoaFisica(pessoaFisica)) {
-        // throw new IllegalStateException("Essa pessoa já é um funcionário.");
-        // }
+        if (!pessoaFisica.getUsuario().getListaPerfil().contains(Perfil.FUNCIONARIO)) {
+            pessoaFisica.getUsuario().getListaPerfil().add(Perfil.FUNCIONARIO);
+        }
+
+        if (funcionarioService.existsByPessoaFisica(pessoaFisica.getId())) {
+            throw new ValidationException("idCLiente", "Essa pessoa já é um funcionario.");
+        }
 
         Funcionario funcionario = new Funcionario();
         funcionario.setPessoaFisica(pessoaFisica);
-        funcionario.setSalario(dto.salario()); // Defina valores padrão ou conforme necessário
+        funcionario.setSalario(dto.salario());
         funcionario.setDataContratacao(dto.dataContratacao());
         funcionario.setCargo(dto.cargo());
         funcionario.getPessoaFisica().getUsuario().getListaPerfil().add(Perfil.FUNCIONARIO);
@@ -70,7 +75,6 @@ public class AdministradorServiceImpl implements AdministradorService {
     @Override
     public Cliente transformarFuncionarioEmCliente(Long idFuncionario) {
 
-        // Buscar o funcionário pelo ID
         Funcionario funcionario = funcionarioRepository.findById(idFuncionario);
         if (funcionario == null) {
             throw new EntidadeNotFoundException("id", "Funcionário não encontrado.");
@@ -81,14 +85,21 @@ public class AdministradorServiceImpl implements AdministradorService {
             throw new ValidationException("idFuncionario", "Funcionário não possui uma pessoa física associada.");
         }
 
-        // Criar uma nova instância de Cliente
+        if (funcionarioService.existsByPessoaFisica(pessoaFisica.getId())) {
+            throw new ValidationException("idFuncionario", "Essa pessoa já é um cliente.");
+        }
+
+        if (!pessoaFisica.getUsuario().getListaPerfil().contains(Perfil.FUNCIONARIO)) {
+            pessoaFisica.getUsuario().getListaPerfil().add(Perfil.FUNCIONARIO);
+        }
+
         Cliente cliente = new Cliente();
         cliente.setPessoaFisica(pessoaFisica);
 
-        // Atualizar o perfil do usuário associado à PessoaFisica
         pessoaFisica.getUsuario().getListaPerfil().add(Perfil.CLIENTE);
+        cliente.setCartoes(new ArrayList<>());
+        cliente.setListaDesejos(new ArrayList<>());
 
-        // Persistir o novo cliente
         clienteRepository.persist(cliente);
 
         return cliente;

@@ -24,4 +24,10 @@ public class FuncionarioRepository implements PanacheRepository<Funcionario> {
     public Funcionario findFuncionarioByEmail(String email) {
         return find("pessoaFisica.email = ?1 ", email).firstResult();
     }
+
+    public Funcionario existsByPessoaFisica(Long idPessoaFisica) {
+        return find("pessoaFisica.id = ?1", idPessoaFisica).firstResult();
+    }
+
+    
 }

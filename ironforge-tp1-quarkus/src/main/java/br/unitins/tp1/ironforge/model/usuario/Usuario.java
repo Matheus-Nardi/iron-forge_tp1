@@ -18,6 +18,9 @@ public class Usuario extends DefaultEntity {
     @Column(unique = true)
     private String username;
 
+    @Column(unique = true)
+    private String email;
+
     private String senha;
 
     @ElementCollection(fetch = FetchType.EAGER)
@@ -56,6 +59,14 @@ public class Usuario extends DefaultEntity {
 
     public void setListaPerfil(List<Perfil> listaPerfil) {
         this.listaPerfil = listaPerfil;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
 }

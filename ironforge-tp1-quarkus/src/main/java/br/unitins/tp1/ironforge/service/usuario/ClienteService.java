@@ -43,4 +43,6 @@ public interface ClienteService {
 
     List<WheyProtein> getListaDesejos(String username);
 
+    boolean existsByPessoaFisica(Long idPessoaFisica);
+
 }

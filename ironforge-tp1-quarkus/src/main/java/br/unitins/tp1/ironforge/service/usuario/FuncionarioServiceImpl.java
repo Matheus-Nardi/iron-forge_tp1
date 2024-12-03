@@ -229,4 +229,9 @@ public class FuncionarioServiceImpl implements FuncionarioService {
         return funcionarioRepository.findFuncionarioByEmail(email) == null ? false : true;
     }
 
+    @Override
+    public boolean existsByPessoaFisica(Long idPessoaFisica) {
+        return funcionarioRepository.existsByPessoaFisica(idPessoaFisica) != null;
+    }
+
 }

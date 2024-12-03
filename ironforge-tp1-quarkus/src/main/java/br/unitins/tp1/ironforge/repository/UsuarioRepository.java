@@ -8,12 +8,15 @@ import jakarta.enterprise.context.ApplicationScoped;
 public class UsuarioRepository implements PanacheRepository<Usuario> {
 
     public Usuario findByUsernameAndSenha(String username, String senha) {
-        return find("username = ?1 AND senha = ?2" , username , senha).firstResult();
+        return find("username = ?1 AND senha = ?2", username, senha).firstResult();
     }
 
     public Usuario findByUsername(String username) {
-        return find("username = ?1" , username).firstResult();
+        return find("username = ?1", username).firstResult();
     }
 
+    public Usuario findByEmail(String email) {
+        return find("email = ?1", email).firstResult();
+    }
 
 }

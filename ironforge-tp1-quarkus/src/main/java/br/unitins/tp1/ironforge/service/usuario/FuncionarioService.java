@@ -30,4 +30,6 @@ public interface FuncionarioService {
 
     void updateNomeImagem(String username, String nomeImagem);
 
+    boolean existsByPessoaFisica(Long idPessoaFisica);
+
 }

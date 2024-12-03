@@ -9,7 +9,7 @@ import br.unitins.tp1.ironforge.validation.EntidadeNotFoundException;
 public enum Perfil {
 
     FUNCIONARIO(1, "Funcionario"), CLIENTE(2, "Cliente"), ADMINISTRADOR(3, "Administrador"),
-    FABRICANTE(4, "Fabricante");
+    FABRICANTE(4, "Fabricante"), USUARIO(5, "Usuario");
 
     private final Integer id;
     private final String label;
@@ -28,14 +28,12 @@ public enum Perfil {
     }
 
     public static Perfil valueOf(Integer id) {
-        if (id.equals(null))
-            return null;
         for (Perfil tipo : values()) {
-            if (tipo.getId().equals(id))
+            if (tipo.getId() == id)
                 return tipo;
         }
 
-        throw new EntidadeNotFoundException("perfil", "Tipo de whey não encontrado!");
+        throw new EntidadeNotFoundException("perfil", "Tipo de perfil não encontrado!");
     }
 
 }

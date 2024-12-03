@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.usuario.UsuarioRequestDTO;
+import br.unitins.tp1.ironforge.model.Perfil;
 import br.unitins.tp1.ironforge.model.usuario.Usuario;
 import br.unitins.tp1.ironforge.repository.UsuarioRepository;
 import br.unitins.tp1.ironforge.service.hash.HashService;
@@ -47,9 +48,13 @@ public class UsuarioServiceImpl implements UsuarioService {
         if (existeUsername(dto.username())) {
             throw new ValidationException("username", "O username é invalido");
         }
+        if (existeEmail(dto.email())) {
+            throw new ValidationException("email", "O email é invalido");
+        }
         Usuario usuario = new Usuario();
         usuario.setUsername(dto.username());
-        usuario.setListaPerfil(List.of(dto.perfil()));
+        usuario.setEmail(dto.email());
+        usuario.setListaPerfil(List.of(Perfil.CLIENTE));
         usuario.setSenha(hashService.getHashSenha(dto.senha()));
         usuario.setDataCadastro(LocalDate.now());
         usuarioRepository.persist(usuario);
@@ -64,6 +69,10 @@ public class UsuarioServiceImpl implements UsuarioService {
         }
 
         return false;
+    }
+
+    private boolean existeEmail(String email) {
+        return usuarioRepository.findByEmail(email) != null;
     }
 
 }

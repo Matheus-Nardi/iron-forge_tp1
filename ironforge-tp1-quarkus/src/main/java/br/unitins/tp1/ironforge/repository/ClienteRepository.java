@@ -25,4 +25,8 @@ public class ClienteRepository implements PanacheRepository<Cliente> {
         return find("pessoaFisica.email = ?1 ", email).firstResult();
     }
 
+    public Cliente existsByPessoaFisica(Long idPessoaFisica) {
+        return find("pessoaFisica.id = ?1", idPessoaFisica).firstResult();
+    }
+
 }

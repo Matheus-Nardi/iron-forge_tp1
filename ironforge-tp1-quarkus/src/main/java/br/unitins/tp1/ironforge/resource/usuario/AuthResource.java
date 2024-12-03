@@ -1,13 +1,17 @@
 package br.unitins.tp1.ironforge.resource.usuario;
 
+import br.unitins.tp1.ironforge.dto.usuario.AuthFuncionarioRequestDTO;
 import br.unitins.tp1.ironforge.dto.usuario.AuthRequestDTO;
 import br.unitins.tp1.ironforge.dto.usuario.UsuarioResponseDTO;
 import br.unitins.tp1.ironforge.model.usuario.Usuario;
+import br.unitins.tp1.ironforge.service.AuthService;
 import br.unitins.tp1.ironforge.service.hash.HashService;
 import br.unitins.tp1.ironforge.service.jwt.JwtService;
 import br.unitins.tp1.ironforge.service.usuario.AdministradorService;
 import br.unitins.tp1.ironforge.service.usuario.UsuarioService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -31,11 +35,14 @@ public class AuthResource {
     public AdministradorService administradorService;
 
     @Inject
+    public AuthService authService;
+
+    @Inject
     JwtService jwtService;
 
     @POST
     @Produces(MediaType.TEXT_PLAIN)
-    public Response login(AuthRequestDTO authDTO) {
+    public Response login(@Valid AuthRequestDTO authDTO) {
         String hash = hashService.getHashSenha(authDTO.senha());
 
         Usuario usuario = usuarioService.findByUsernameAndSenha(authDTO.username(), hash);
@@ -51,8 +58,10 @@ public class AuthResource {
     }
 
     @POST
+    @Path("/funcionario")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response loginFuncionario(AuthRequestDTO authDTO) {
+    @RolesAllowed("Funcionario")
+    public Response loginFuncionario(@Valid AuthFuncionarioRequestDTO authDTO) {
         String hash = hashService.getHashSenha(authDTO.senha());
 
         Usuario usuario = usuarioService.findByUsernameAndSenha(authDTO.username(), hash);
@@ -61,6 +70,8 @@ public class AuthResource {
             return Response.status(Status.NO_CONTENT)
                     .entity("Usuario não encontrado").build();
         }
+
+        authService.changeRole(usuario, authDTO.perfil());
         return Response.ok()
                 .header("Authorization", jwtService.generateJwt(UsuarioResponseDTO.valueOf(usuario)))
                 .build();

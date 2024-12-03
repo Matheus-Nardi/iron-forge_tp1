@@ -79,7 +79,7 @@ public class ClienteServiceImpl implements ClienteService {
 
         // Defenindo pessoa fisica
         pf.setNome(dto.nome());
-        pf.setEmail(dto.email());
+        pf.setEmail(usuario.getEmail());
         pf.setCpf(dto.cpf());
         pf.setDataNascimento(dto.dataNascimento());
         pf.setEnderecos(getEnderecos(dto));
@@ -112,6 +112,11 @@ public class ClienteServiceImpl implements ClienteService {
         pf.setCpf(dto.cpf());
         pf.setEmail(dto.email());
         pf.setDataNascimento(dto.dataNascimento());
+    }
+
+    @Override
+    public boolean existsByPessoaFisica(Long idPessoaFisica) {
+        return clienteRepository.existsByPessoaFisica(idPessoaFisica) != null;
     }
 
     @Override
