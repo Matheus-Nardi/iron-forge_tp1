@@ -35,50 +35,65 @@ public class EstadoResource {
 
     @GET
     @Path("/{id}")
-    @RolesAllowed({ "Adm", "User" })
+    @RolesAllowed({ "Administrador", "Funcionario" })
     public Response findById(@PathParam("id") Long id) {
-        LOG.infof("Execucao do metodo findById. Id: %d", id);
-        LOG.debug("DEBUG EXEMPLO");
-        return Response.ok(EstadoResponseDTO.valueOf(estadoService.findById(id))).build();
+        LOG.infof("Execução do método findById. ID do estado: %d", id);
+        Estado estado = estadoService.findById(id);
+        LOG.infof("Estado com ID %d encontrado.", id);
+        return Response.ok(EstadoResponseDTO.valueOf(estado)).build();
     }
 
     @GET
     @Path("/search/{nome}")
-    @RolesAllowed("Adm")
+    @RolesAllowed({ "Administrador", "Funcionario" })
     public Response findByNome(@PathParam("nome") String nome) {
+        LOG.infof("Execução do método findByNome. Nome do estado: %s", nome);
         List<Estado> estados = estadoService.findByNome(nome);
+
         return Response.ok(estados.stream().map(EstadoResponseDTO::valueOf).toList()).build();
     }
 
     @GET
     @Path("/search/{sigla}")
+    @RolesAllowed({ "Administrador", "Funcionario" })
     public Response findBySigla(@PathParam("sigla") String sigla) {
-        return Response.ok(estadoService.findBySigla(sigla)).build();
+        LOG.infof("Execução do método findBySigla. Sigla do estado: %s", sigla);
+        Estado estado = estadoService.findBySigla(sigla);
+        return Response.ok(EstadoResponseDTO.valueOf(estado)).build();
     }
 
     @GET
+    @RolesAllowed({ "Administrador", "Funcionario" })
     public Response findAll() {
+        LOG.info("Execução do método findAll. Buscando todos os estados.");
         List<Estado> estados = estadoService.findAll();
+
         return Response.ok(estados.stream().map(EstadoResponseDTO::valueOf).toList()).build();
     }
 
     @POST
-    public Response create(@Valid EstadoRequestDTO estado) {
-        return Response.status(Status.CREATED).entity(EstadoResponseDTO.valueOf(estadoService.create(estado))).build();
+    @RolesAllowed({ "Administrador" })
+    public Response create(@Valid EstadoRequestDTO estadoDTO) {
+        LOG.infof("Execução do método create. Dados do estado: %s", estadoDTO);
+        Estado estado = estadoService.create(estadoDTO);
+        return Response.status(Status.CREATED).entity(EstadoResponseDTO.valueOf(estado)).build();
     }
 
     @PUT
     @Path("/{id}")
-    public Response update(@PathParam("id") Long id, @Valid EstadoRequestDTO estado) {
-        estadoService.update(id, estado);
+    @RolesAllowed({ "Administrador" })
+    public Response update(@PathParam("id") Long id, @Valid EstadoRequestDTO estadoDTO) {
+        LOG.infof("Execução do método update. Atualizando estado com ID: %d. Dados: %s", id, estadoDTO);
+        estadoService.update(id, estadoDTO);
         return Response.noContent().build();
     }
 
     @DELETE
     @Path("/{id}")
+    @RolesAllowed({ "Administrador" })
     public Response delete(@PathParam("id") Long id) {
+        LOG.infof("Execução do método delete. Deletando estado com ID: %d", id);
         estadoService.delete(id);
         return Response.noContent().build();
     }
-
 }

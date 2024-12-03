@@ -261,9 +261,7 @@ public class ClienteServiceImpl implements ClienteService {
         if (existeCPF(dto.cpf())) {
             throw new ValidationException("cnpj", "Cnpj informado é inválido");
         }
-        if (existeEmail(dto.email())) {
-            throw new ValidationException("email", "Email informado é inválido");
-        }
+       
     }
 
     private boolean existeCPF(String cnpj) {

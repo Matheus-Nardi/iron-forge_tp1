@@ -2,7 +2,6 @@ package br.unitins.tp1.ironforge.dto.lote;
 
 import java.time.LocalDate;
 
-import br.unitins.tp1.ironforge.dto.whey.WheyLoteResponseDTO;
 import br.unitins.tp1.ironforge.model.Lote;
 
 public record LoteResponseDTO(
@@ -10,9 +9,9 @@ public record LoteResponseDTO(
         String codigo,
         Integer quantidade,
         LocalDate dataFabricacao,
-        WheyLoteResponseDTO wheyProtein) {
+        String wheyProtein) {
     public static LoteResponseDTO valueOf(Lote lote) {
         return new LoteResponseDTO(lote.getId(), lote.getCodigo(), lote.getQuantidade(), lote.getDataFabricacao(),
-                WheyLoteResponseDTO.valueOf(lote.getWheyProtein()));
+                lote.getWheyProtein().getNome());
     }
 }

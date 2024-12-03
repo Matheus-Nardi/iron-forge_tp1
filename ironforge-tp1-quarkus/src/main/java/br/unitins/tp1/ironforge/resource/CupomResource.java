@@ -2,6 +2,8 @@ package br.unitins.tp1.ironforge.resource;
 
 import java.util.List;
 
+import org.jboss.logging.Logger;
+
 import br.unitins.tp1.ironforge.dto.cupom.CupomRequestDTO;
 import br.unitins.tp1.ironforge.dto.cupom.CupomResponseDTO;
 import br.unitins.tp1.ironforge.model.Cupom;
@@ -27,67 +29,76 @@ import jakarta.ws.rs.core.Response.Status;
 @Produces(MediaType.APPLICATION_JSON)
 public class CupomResource {
 
+    private static final Logger LOG = Logger.getLogger(CupomResource.class);
+
     @Inject
     public CupomService cupomService;
 
     @GET
     @Path("/{id}")
-    @RolesAllowed("Adm")
+    @RolesAllowed({ "Funcionario", "Administrador" })
     public Response findById(@PathParam("id") Long id) {
+        LOG.infof("Execução do método findById. ID do cupom: %d", id);
         return Response.ok(CupomResponseDTO.valueOf(cupomService.findById(id))).build();
     }
 
     @GET
     @Path("/search/{codigo}")
-    @RolesAllowed("Adm")
+    @RolesAllowed({ "Funcionario", "Administrador" })
     public Response findByCodigo(@PathParam("codigo") String codigo) {
+        LOG.infof("Execução do método findByCodigo. Código do cupom: %s", codigo);
         List<Cupom> cupons = cupomService.findByCodigo(codigo);
         return Response.ok(cupons.stream().map(CupomResponseDTO::valueOf).toList()).build();
     }
 
     @GET
     @Path("/search/{idFabricante}")
-    @RolesAllowed("Adm")
+    @RolesAllowed({ "Funcionario", "Administrador" })
     public Response findByFabricante(@PathParam("idFabricante") Long idFabricante) {
+        LOG.infof("Execução do método findByFabricante. ID do fabricante: %d", idFabricante);
         List<Cupom> cupons = cupomService.findByFabricante(idFabricante);
         return Response.ok(cupons.stream().map(CupomResponseDTO::valueOf).toList()).build();
     }
 
     @GET
-    @RolesAllowed("Adm")
+    @RolesAllowed({ "Funcionario", "Administrador" })
     public Response findAll() {
+        LOG.info("Execução do método findAll. Buscando todos os cupons.");
         List<Cupom> cupons = cupomService.findAll();
         return Response.ok(cupons.stream().map(CupomResponseDTO::valueOf).toList()).build();
     }
 
     @POST
-    @RolesAllowed("Adm")
+    @RolesAllowed({ "Funcionario", "Administrador" })
     public Response create(@Valid CupomRequestDTO dto) {
+        LOG.infof("Execução do método create. Dados do cupom: %s", dto);
         return Response.status(Status.CREATED).entity(CupomResponseDTO.valueOf(cupomService.create(dto))).build();
     }
 
     @PUT
-    @RolesAllowed("Adm")
+    @RolesAllowed({ "Funcionario", "Administrador" })
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, @Valid CupomRequestDTO dto) {
+        LOG.infof("Execução do método update. Atualizando cupom com ID: %d. Dados: %s", id, dto);
         cupomService.update(id, dto);
         return Response.noContent().build();
     }
 
     @DELETE
-    @RolesAllowed("Adm")
+    @RolesAllowed({ "Funcionario", "Administrador" })
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {
+        LOG.infof("Execução do método delete. Deletando cupom com ID: %d", id);
         cupomService.delete(id);
         return Response.noContent().build();
     }
 
     @PATCH
-    @RolesAllowed("Adm")
+    @RolesAllowed({ "Funcionario", "Administrador" })
     @Path("/{id}")
     public Response deactive(@PathParam("id") Long id) {
+        LOG.infof("Execução do método deactive. Desativando cupom com ID: %d", id);
         cupomService.deactivate(id);
         return Response.noContent().build();
     }
-
 }

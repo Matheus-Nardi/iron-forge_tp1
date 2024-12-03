@@ -3,6 +3,8 @@ package br.unitins.tp1.ironforge.service.usuario;
 import java.time.LocalDate;
 import java.util.List;
 
+import br.unitins.tp1.ironforge.dto.usuario.EmailPatchDTO;
+import br.unitins.tp1.ironforge.dto.usuario.SenhaPatchDTO;
 import br.unitins.tp1.ironforge.dto.usuario.UsuarioRequestDTO;
 import br.unitins.tp1.ironforge.model.Perfil;
 import br.unitins.tp1.ironforge.model.usuario.Usuario;
@@ -73,6 +75,26 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     private boolean existeEmail(String email) {
         return usuarioRepository.findByEmail(email) != null;
+    }
+
+    @Override
+    @Transactional
+    public void updateEmail(Long id, EmailPatchDTO dto) {
+        Usuario usuario = findById(id);
+
+        if (existeEmail(dto.email())) {
+            throw new ValidationException("email", "O email é invalido");
+        }
+
+        usuario.setEmail(dto.email());
+
+    }
+
+    @Override
+    @Transactional
+    public void updateSenha(Long id, SenhaPatchDTO dto) {
+        Usuario usuario = findById(id);
+        usuario.setSenha(hashService.getHashSenha(dto.senha()));
     }
 
 }

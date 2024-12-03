@@ -1,6 +1,7 @@
 package br.unitins.tp1.ironforge.resource.pedido;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.jboss.logging.Logger;
 
 import br.unitins.tp1.ironforge.model.pedido.Situacao;
 import br.unitins.tp1.ironforge.service.pedido.PedidoService;
@@ -20,6 +21,8 @@ import jakarta.ws.rs.core.Response;
 @Consumes(MediaType.APPLICATION_JSON)
 public class PedidoAdministrativoResource {
 
+    private static final Logger LOG = Logger.getLogger(PedidoAdministrativoResource.class);
+
     @Inject
     public PedidoService pedidoService;
 
@@ -28,8 +31,9 @@ public class PedidoAdministrativoResource {
 
     @PATCH
     @Path("/{id}")
-    @RolesAllowed({ "User", "Adm" })
+    @RolesAllowed({ "Funcionario", "Administrador" })
     public Response updateStatusPedido(@PathParam("id") Long id, @QueryParam("situacao") Situacao situacao) {
+        LOG.infof("Atualizado status do pedido %d para %s", id, situacao.getLabel());
         pedidoService.updateStatusPedido(id, situacao);
         return Response.noContent().build();
     }

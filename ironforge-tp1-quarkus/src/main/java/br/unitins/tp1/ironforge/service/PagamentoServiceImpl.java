@@ -55,6 +55,10 @@ public class PagamentoServiceImpl implements PagamentoService {
             throw new ValidationException("idPedido", "O pedido já foi cancelado, não é possível pagar");
         }
 
+        if (pedido.getPagamento() != null) {
+            throw new ValidationException("idPedido", "O pedido já possui um método de pagamento");
+        }
+
         Pix pix = new Pix();
         pix.setChave(gerarUUIDPedidoCliente(idPedido, cliente.getId()));
         pix.setDestinatario("Iron Forge");
@@ -78,6 +82,10 @@ public class PagamentoServiceImpl implements PagamentoService {
         validarCliente(username, cliente);
         if (pedido.getStatusPedidos().stream().anyMatch(s -> s.getSituacao() == Situacao.CANCELADO)) {
             throw new ValidationException("idPedido", "O pedido já foi cancelado, não é possível pagar");
+        }
+
+        if (pedido.getPagamento() != null) {
+            throw new ValidationException("idPedido", "O pedido já possui um método de pagamento");
         }
 
         Boleto boleto = new Boleto();

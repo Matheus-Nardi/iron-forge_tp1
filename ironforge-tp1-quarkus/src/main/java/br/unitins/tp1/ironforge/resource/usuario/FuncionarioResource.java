@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.jboss.logging.Logger;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
@@ -13,6 +14,7 @@ import br.unitins.tp1.ironforge.dto.pessoafisica.FuncionarioUpdateRequestDTO;
 import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
 import br.unitins.tp1.ironforge.form.ImageForm;
 import br.unitins.tp1.ironforge.model.usuario.Funcionario;
+import br.unitins.tp1.ironforge.resource.LoteResource;
 import br.unitins.tp1.ironforge.service.FuncionarioFileServiceImpl;
 import br.unitins.tp1.ironforge.service.usuario.FuncionarioService;
 import jakarta.annotation.security.RolesAllowed;
@@ -45,32 +47,38 @@ public class FuncionarioResource {
     @Inject
     public FuncionarioFileServiceImpl fileService;
 
+    private static final Logger LOG = Logger.getLogger(LoteResource.class);
+
     @GET
     @Path("/{id}")
-    @RolesAllowed("Funcionario")
+    @RolesAllowed({ "Administrador", "Funcionario" })
     public Response findById(@PathParam("id") Long id) {
+        LOG.info("Buscando funcionário por ID: " + id);
         return Response.ok(FuncionarioResponseDTO.valueOf(funcionarioService.findById(id))).build();
     }
 
     @GET
     @Path("/search/{nome}")
-    @RolesAllowed("Funcionario")
+    @RolesAllowed({ "Administrador", "Funcionario" })
     public Response findByNome(@PathParam("nome") String nome) {
+        LOG.info("Buscando funcionários por nome: " + nome);
         List<Funcionario> funcionarios = funcionarioService.findByNome(nome);
         return Response.ok(funcionarios.stream().map(FuncionarioResponseDTO::valueOf).toList()).build();
     }
 
     @GET
-    @RolesAllowed("Funcionario")
+    @RolesAllowed({ "Administrador", "Funcionario" })
     public Response findAll() {
+        LOG.info("Buscando todos os funcionários");
         List<Funcionario> funcionarios = funcionarioService.findAll();
         return Response.ok(funcionarios.stream().map(FuncionarioResponseDTO::valueOf).toList()).build();
     }
 
     @POST
-    @RolesAllowed("Funcionario")
+    @RolesAllowed({ "Administrador", "Funcionario" })
     public Response create(@Valid FuncionarioRequestDTO dto) {
         String username = jsonWebToken.getSubject();
+        LOG.info("Criando funcionário pelo usuário: " + username);
         return Response.status(Status.CREATED)
                 .entity(FuncionarioResponseDTO.valueOf(funcionarioService.create(username, dto)))
                 .build();
@@ -78,34 +86,38 @@ public class FuncionarioResource {
 
     @PATCH
     @Path("/{id}")
-    @RolesAllowed("Funcionario")
+    @RolesAllowed({ "Administrador", "Funcionario" })
     public Response update(@PathParam("id") Long id, @Valid FuncionarioUpdateRequestDTO dto) {
+        LOG.info("Atualizando funcionário com ID: " + id);
         funcionarioService.update(id, dto);
         return Response.noContent().build();
     }
 
     @PATCH
     @Path("/{id}/telefones/{idTelefone}")
-    @RolesAllowed("Funcionario")
+    @RolesAllowed({ "Administrador", "Funcionario" })
     public Response updateTelefones(@PathParam("id") Long id, @PathParam("idTelefone") Long idTelefone,
             @Valid TelefoneRequestDTO telefone) {
+        LOG.info("Atualizando telefone com ID: " + idTelefone + " para funcionário com ID: " + id);
         funcionarioService.updateTelefone(id, idTelefone, telefone);
         return Response.noContent().build();
     }
 
     @PATCH
     @Path("/{id}/enderecos/{idEndereco}")
-    @RolesAllowed("Funcionario")
+    @RolesAllowed({ "Administrador", "Funcionario" })
     public Response updateEnderecos(@PathParam("id") Long id, @PathParam("idEndereco") Long idEndereco,
             @Valid EnderecoRequestDTO endereco) {
+        LOG.info("Atualizando endereço com ID: " + idEndereco + " para funcionário com ID: " + id);
         funcionarioService.updateEndereco(id, idEndereco, endereco);
         return Response.noContent().build();
     }
 
     @DELETE
     @Path("/{id}")
-    @RolesAllowed("Funcionario")
+    @RolesAllowed({ "Administrador", "Funcionario" })
     public Response delete(@PathParam("id") Long id) {
+        LOG.info("Deletando funcionário com ID: " + id);
         funcionarioService.delete(id);
         return Response.noContent().build();
     }
@@ -113,14 +125,16 @@ public class FuncionarioResource {
     @PATCH
     @Path("upload/imagens")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @RolesAllowed({ "Funcionario" })
+    @RolesAllowed({ "Administrador", "Funcionario" })
     public Response uploadImage(@MultipartForm ImageForm form) {
         String username = jsonWebToken.getSubject();
+        LOG.info("Usuário " + username + " está enviando uma imagem.");
         try {
             String nomeImagem = fileService.save(form.getNomeImagem(), form.getImagem());
             funcionarioService.updateNomeImagem(username, nomeImagem);
         } catch (IOException e) {
-            Response.status(Status.INTERNAL_SERVER_ERROR).encoding("Não foi possível salvar a imagem").build();
+            LOG.error("Erro ao salvar imagem: " + e.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Não foi possível salvar a imagem").build();
         }
 
         return Response.noContent().build();
@@ -129,16 +143,17 @@ public class FuncionarioResource {
     @GET
     @Path("/download/image/{nomeImagem}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    @RolesAllowed({ "Funcionario" })
+    @RolesAllowed({ "Administrador", "Funcionario" })
     public Response downloadImage(@PathParam("nomeImagem") String nomeImagem) {
-        ResponseBuilder response = null;
+        LOG.info("Baixando imagem: " + nomeImagem);
+        ResponseBuilder response;
         try {
             response = Response.ok(fileService.find(nomeImagem));
         } catch (IOException e) {
-            Response.status(Status.INTERNAL_SERVER_ERROR).encoding("Não foi possível baixar a imagem").build();
+            LOG.error("Erro ao baixar imagem: " + e.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Não foi possível baixar a imagem").build();
         }
         response.header("Content-Disposition", "attachment; filename=" + nomeImagem);
         return response.build();
     }
-
 }
