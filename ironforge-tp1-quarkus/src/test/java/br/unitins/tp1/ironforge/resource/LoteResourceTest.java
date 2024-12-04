@@ -1,114 +1,138 @@
 package br.unitins.tp1.ironforge.resource;
 
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.time.LocalDate;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import br.unitins.tp1.ironforge.dto.lote.LoteRequestDTO;
+import br.unitins.tp1.ironforge.model.pedido.Lote;
+import br.unitins.tp1.ironforge.service.lote.LoteService;
+import br.unitins.tp1.ironforge.validation.EntidadeNotFoundException;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
+import io.restassured.http.ContentType;
+import jakarta.inject.Inject;
 
 @QuarkusTest
 public class LoteResourceTest {
 
-    // @Inject
-    // public LoteService loteService;
+    @Inject
+    public LoteService loteService;
 
-    // @Test
-    // void testCreate() {
-    //     LoteRequestDTO dto = new LoteRequestDTO(100, LocalDate.now(), 1L);
+    @Test
+    @TestSecurity(user = "test", roles = { "Administrador", "Funcionario" })
+    @DisplayName("Deve retornar status code 201 para o metodo POST em /lotes")
+    void testCreate() {
+        LoteRequestDTO dto = new LoteRequestDTO("COD-TEST", 100, LocalDate.now(), 1L);
+        given()
+                .contentType(ContentType.JSON)
+                .body(dto)
+                .when()
+                .post("/lotes")
+                .then()
+                .statusCode(201)
+                .body("id", notNullValue())
+                .body("quantidade", is(100));
 
-    //     given()
-    //             .contentType(ContentType.JSON)
-    //             .body(dto)
-    //             .when()
-    //             .post("/lotes")
-    //             .then()
-    //             .statusCode(201)
-    //             .body("id", notNullValue())
-    //             .body("quantidade", is(100));
+        // Limpeza após o teste
+        loteService.delete(loteService.findByCodigo(dto.codigo()).getId());
+    }
 
-    //     loteService.delete(loteService.findByWhey(1L).get(1).getId());
+    @Test
+    @TestSecurity(user = "test", roles = { "Administrador", "Funcionario" })
+    @DisplayName("Deve retornar status code 204 para o metodo DELETE em /lotes/{id}")
+    void testDelete() {
+        LoteRequestDTO dto = new LoteRequestDTO("COD-TEST", 100, LocalDate.now(), 1L);
+        Long id = loteService.create(dto).getId();
 
-    // }
+        given()
+                .when()
+                .delete("/lotes/{id}", id)
+                .then()
+                .statusCode(204);
 
-    // @Test
-    // void testDelete() {
-    //     LoteRequestDTO dto = new LoteRequestDTO(10, LocalDate.now(), 1L);
-    //     Long id = loteService.create(dto).getId();
+        assertThrows(EntidadeNotFoundException.class, () -> loteService.findById(id));
+    }
 
-    //     given()
-    //             .when()
-    //             .delete("/lotes/{id}", id)
-    //             .then()
-    //             .statusCode(204);
+    @Test
+    @TestSecurity(user = "test", roles = { "Administrador", "Funcionario" })
+    @DisplayName("Deve retornar status code 200 para o metodo GET em /lotes/search/codigo")
+    void testFindByCodigo() {
+        given()
+                .queryParam("codigo", "COD-WHEY-001")
+                .when()
+                .get("/lotes/search/codigo")
+                .then()
+                .statusCode(200)
+                .body("id", is(1))
+                .body("quantidade", is(1));
+    }
 
-    //     Lote lote = loteService.findById(id);
-    //     assertNull(lote);
-    // }
+    @Test
+    @TestSecurity(user = "test", roles = { "Administrador", "Funcionario" })
+    @DisplayName("Deve retornar status code 200 para o metodo GET em /lotes/{id}")
+    void testFindById() {
+        Long idExistente = 1L;
+        given()
+                .when()
+                .get("/lotes/{id}", idExistente)
+                .then()
+                .statusCode(200);
+    }
 
-    // @Test
-    // void testFindByCodigo() {
+    @Test
+    @TestSecurity(user = "test", roles = { "Administrador", "Funcionario" })
+    @DisplayName("Deve retornar status code 200 para o metodo GET em /lotes/search/whey")
+    void testFindByWhey() {
+        given()
+                .queryParam("idWhey", 1)
+                .when()
+                .get("/lotes/search/whey")
+                .then()
+                .statusCode(200)
+                .body("id", is(1))
+                .body("quantidade", is(1));
+    }
 
-    //     given()
-    //             .queryParam("codigo", "COD-WHEY-001")
-    //             .when()
-    //             .get("/lotes/search/codigo")
-    //             .then()
-    //             .statusCode(200)
-    //             .body("[0].id", is(1))
-    //             .body("[0].quantidade", is(100))
-    //             .body("[0].wheyProtein.nome", is("Ultra Whey Supreme"));
+    @Test
+    @TestSecurity(user = "test", roles = { "Administrador", "Funcionario" })
+    @DisplayName("Deve retornar status code 200 para o metodo GET em /lotes")
+    void testGetAll() {
+        given()
+                .when()
+                .get("/lotes")
+                .then()
+                .statusCode(200);
+    }
 
-    // }
+    @Test
+    @TestSecurity(user = "test", roles = { "Administrador", "Funcionario" })
+    @DisplayName("Deve retornar status code 204 para o metodo PUT em /lotes/{id}")
+    void testUpdate() {
+        LoteRequestDTO dto = new LoteRequestDTO("COD-TEST", 100, LocalDate.now(), 1L);
+        Long id = loteService.create(dto).getId();
 
-    // @Test
-    // void testFindById() {
-    //     Long idExistente = 1L;
-    //     given()
-    //             .when()
-    //             .get("/lotes/{id}", idExistente)
-    //             .then()
-    //             .statusCode(200);
-    // }
+        LoteRequestDTO novoLote = new LoteRequestDTO("COD-TEST-NEW", 100, LocalDate.now(), 1L);
 
-    // @Test
-    // void testFindByWhey() {
-    //     given()
-    //             .queryParam("idWhey", 1)
-    //             .when()
-    //             .get("/lotes/search/whey")
-    //             .then()
-    //             .statusCode(200)
-    //             .body("[0].id", is(1))
-    //             .body("[0].quantidade", is(100))
-    //             .body("[0].wheyProtein.nome", is("Ultra Whey Supreme"));
-    // }
+        given()
+                .contentType(ContentType.JSON)
+                .body(novoLote)
+                .when()
+                .put("/lotes/{id}", id)
+                .then()
+                .statusCode(204);
 
-    // @Test
-    // void testGetAll() {
-    //     given()
-    //             .when()
-    //             .get("/lotes")
-    //             .then()
-    //             .statusCode(200);
-    // }
+        Lote lote = loteService.findById(id);
+        assertEquals(lote.getQuantidade(), novoLote.quantidade());
 
-    // @Test
-    // void testUpdate() {
-
-    //     LoteRequestDTO dto = new LoteRequestDTO(10, LocalDate.now(), 1L);
-
-    //     Long id = loteService.create(dto).getId();
-
-    //     LoteRequestDTO novoLote = new LoteRequestDTO(100, LocalDate.now(), 2L);
-
-    //     given()
-    //             .contentType(ContentType.JSON)
-    //             .body(novoLote)
-    //             .when()
-    //             .put("lotes/{id}", id)
-    //             .then()
-    //             .statusCode(204);
-
-    //     Lote lote = loteService.findById(id);
-    //     assertEquals(lote.getQuantidade(), novoLote.quantidade());
-    //     assertFalse(lote.getWheyProtein().getId().equals(dto.idWhey()));
-
-    //     loteService.delete(loteService.findById(id).getId());
-    // }
+        // Limpeza após o teste
+        loteService.delete(loteService.findById(id).getId());
+    }
 }

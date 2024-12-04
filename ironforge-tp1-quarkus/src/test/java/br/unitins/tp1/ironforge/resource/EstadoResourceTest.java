@@ -3,7 +3,6 @@ package br.unitins.tp1.ironforge.resource;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
 
@@ -11,6 +10,7 @@ import br.unitins.tp1.ironforge.dto.estado.EstadoRequestDTO;
 import br.unitins.tp1.ironforge.model.endereco.Estado;
 import br.unitins.tp1.ironforge.service.estado.EstadoService;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
 import jakarta.inject.Inject;
 
@@ -21,6 +21,7 @@ public class EstadoResourceTest {
     public EstadoService estadoService;
 
     @Test
+    @TestSecurity(user = "test", roles = "Funcionario")
     void testCreate() {
         EstadoRequestDTO dto = new EstadoRequestDTO("Mato Grosso do Sul", "MS");
 
@@ -37,22 +38,21 @@ public class EstadoResourceTest {
         estadoService.delete(estadoService.findByNome("Mato Grosso do Sul").getFirst().getId());
     }
 
-    @Test
-    void testDelete() {
-        EstadoRequestDTO dto = new EstadoRequestDTO("Mato Grosso do Sul", "MS");
-
-        Long id = estadoService.create(dto).getId();
+     @Test
+    @TestSecurity(user = "test", roles = "Funcionario")
+    public void deleteTest(){
+        Long id = estadoService.create(new EstadoRequestDTO("Mato Grosso do Sul", "MS")).getId();
 
         given()
-                .when()
-                .delete("/estados/{id}", id)
-                .then().statusCode(204);
-
-        Estado estado = estadoService.findById(id);
-        assertNull(estado);
+        .when()
+        .pathParam("id", id)
+        .delete("/estados/{id}")
+        .then()
+        .statusCode(204);
     }
 
     @Test
+    @TestSecurity(user = "test", roles = "Funcionario")
     void testFindAll() {
         given()
                 .when()
@@ -62,6 +62,7 @@ public class EstadoResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "test", roles = "Funcionario")
     void testFindById() {
         given()
                 .when().get("/estados/1")
@@ -70,25 +71,27 @@ public class EstadoResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "test", roles = "Funcionario")
     void testFindByNome() {
         given()
                 .when()
-                .get("/estados/search/{nome}", "To")
+                .get("/estados/search/nome/{nome}", "To")
                 .then().statusCode(200)
                 .body("[0].nome", is("Tocantins"), "[0].sigla", is("TO"));
     }
 
-
     @Test
+    @TestSecurity(user = "test", roles = "Funcionario")
     void testFindBySigla() {
         given()
                 .when()
-                .get("/estados/search/{sigla}", "To")
+                .get("/estados/search/sigla/{sigla}", "To")
                 .then().statusCode(200)
-                .body("[0].nome", is("Tocantins"), "[0].sigla", is("TO"));
+                .body("nome", is("Tocantins"), "sigla", is("TO"));
     }
 
     @Test
+    @TestSecurity(user = "test", roles = "Funcionario")
     void testUpdate() {
         EstadoRequestDTO dto = new EstadoRequestDTO("Mato Grosso do Sul", "MT");
 

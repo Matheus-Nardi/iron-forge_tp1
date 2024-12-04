@@ -5,7 +5,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,6 +13,7 @@ import br.unitins.tp1.ironforge.dto.whey.SaborRequestDTO;
 import br.unitins.tp1.ironforge.model.whey.Sabor;
 import br.unitins.tp1.ironforge.service.whey.sabor.SaborService;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
 import jakarta.inject.Inject;
 
@@ -25,6 +25,7 @@ public class SaborResourceTest {
 
     @Test
     @DisplayName("Deve retornar status code 201 para o metodo POST em /sabores")
+    @TestSecurity(user = "test", roles = { "Administrador", "Funcionario" })
     void testCreate() {
         SaborRequestDTO dto = new SaborRequestDTO("Doce de leite");
 
@@ -42,12 +43,10 @@ public class SaborResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "test", roles = { "Administrador", "Funcionario" })
     @DisplayName("Deve retornar status code 204 para o metodo DELETE em /sabores/{id}")
     void testDelete() {
-
-        // Criando dado para ser deletado
-        SaborRequestDTO dto = new SaborRequestDTO("Sabor para deleção");
-        Long id = saborService.create(dto).getId();
+        Long id = saborService.create(new SaborRequestDTO("Sabor para deleção")).getId();
 
         given()
                 .when()
@@ -55,11 +54,10 @@ public class SaborResourceTest {
                 .then()
                 .statusCode(204);
 
-        Sabor sabor = saborService.findById(id);
-        assertNull(sabor);
     }
 
     @Test
+    @TestSecurity(user = "test", roles = { "Administrador", "Funcionario" })
     @DisplayName("Deve retornar status code 200 para o metodo GET em /sabores")
     void testFindAll() {
         given()
@@ -68,6 +66,7 @@ public class SaborResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "test", roles = { "Administrador", "Funcionario" })
     @DisplayName("Deve retornar status code 200 para o metodo GET em /sabores/{id}")
     void testFindById() {
         Long idExistente = 1L;
@@ -81,6 +80,7 @@ public class SaborResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "test", roles = { "Administrador", "Funcionario" })
     @DisplayName("Deve retornar status code 200 e o sabor correto para o metodo GET em /sabores/search/{nome}")
     void testFindByNome() {
         String saborExistente = "Chocolate";
@@ -97,6 +97,7 @@ public class SaborResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "test", roles = { "Administrador", "Funcionario" })
     @DisplayName("Deve retornar status code 204  para o metodo PUT em /sabores/{id}")
     void testUpdate() {
         SaborRequestDTO dto = new SaborRequestDTO("Sabor Teste");

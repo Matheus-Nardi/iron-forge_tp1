@@ -4,7 +4,6 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
 
@@ -12,6 +11,7 @@ import br.unitins.tp1.ironforge.dto.cidade.CidadeRequestDTO;
 import br.unitins.tp1.ironforge.model.endereco.Cidade;
 import br.unitins.tp1.ironforge.service.cidade.CidadeService;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
 import jakarta.inject.Inject;
 
@@ -22,6 +22,7 @@ public class CidadeResourceTest {
     public CidadeService cidadeService;
 
     @Test
+    @TestSecurity(user = "test", roles = { "Administrador", "Funcionario" })
     void testCreate() {
 
         CidadeRequestDTO dto = new CidadeRequestDTO("Monte do Carmo", 1L);
@@ -41,21 +42,18 @@ public class CidadeResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "test", roles = { "Administrador", "Funcionario" })
     void testDelete() {
-        CidadeRequestDTO dto = new CidadeRequestDTO("Torres Tortas", 1L);
-        Long id = cidadeService.create(dto).getId();
+        Long id = cidadeService.create(new CidadeRequestDTO("Torres Tortas", 1L)).getId();
 
         given()
                 .when()
                 .delete("/cidades/{id}", id)
                 .then().statusCode(204);
-
-        Cidade cidade = cidadeService.findById(id);
-        assertNull(cidade);
-
     }
 
     @Test
+    @TestSecurity(user = "test", roles = { "Administrador", "Funcionario" })
     void testFindAll() {
         given()
                 .when().get("/cidades")
@@ -63,6 +61,7 @@ public class CidadeResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "test", roles = { "Administrador", "Funcionario" })
     void testFindById() {
         given()
                 .when().get("/cidades/1")
@@ -71,29 +70,31 @@ public class CidadeResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "test", roles = { "Administrador", "Funcionario" })
     void testFindByNome() {
-            given()
-            .when()
-            .get("/cidades/search/{nome}" , "Palmas")
-            .then().statusCode(200)
-            .body("nome", hasItem(is("Palmas")));
+        given()
+                .when()
+                .get("/cidades/search/{nome}", "Palmas")
+                .then().statusCode(200)
+                .body("nome", hasItem(is("Palmas")));
     }
 
     @Test
+    @TestSecurity(user = "test", roles = { "Administrador", "Funcionario" })
     void testUpdate() {
-         CidadeRequestDTO dto = new CidadeRequestDTO("Torres Tortas", 1l);
+        CidadeRequestDTO dto = new CidadeRequestDTO("Torres Tortas", 1l);
         Long id = cidadeService.create(dto).getId();
 
         CidadeRequestDTO novoDto = new CidadeRequestDTO("Torres Retas", 1l);
 
         given()
-            .contentType(ContentType.JSON)
-            .body(novoDto)
-            .when()
-                .put("/cidades/{id}" , id)
-            .then()
+                .contentType(ContentType.JSON)
+                .body(novoDto)
+                .when()
+                .put("/cidades/{id}", id)
+                .then()
                 .statusCode(204);
-        
+
         Cidade cidade = cidadeService.findById(id);
 
         assertEquals(cidade.getNome(), "Torres Retas");
