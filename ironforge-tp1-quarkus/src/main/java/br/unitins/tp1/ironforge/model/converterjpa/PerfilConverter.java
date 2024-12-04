@@ -1,6 +1,6 @@
 package br.unitins.tp1.ironforge.model.converterjpa;
 
-import br.unitins.tp1.ironforge.model.Perfil;
+import br.unitins.tp1.ironforge.model.usuario.Perfil;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 

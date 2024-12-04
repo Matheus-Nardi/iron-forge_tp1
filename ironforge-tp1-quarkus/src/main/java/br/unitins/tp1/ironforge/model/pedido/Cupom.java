@@ -1,7 +1,9 @@
-package br.unitins.tp1.ironforge.model;
+package br.unitins.tp1.ironforge.model.pedido;
 
 import java.time.LocalDateTime;
 
+import br.unitins.tp1.ironforge.model.DefaultEntity;
+import br.unitins.tp1.ironforge.model.usuario.Fabricante;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;

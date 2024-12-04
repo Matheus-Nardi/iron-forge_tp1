@@ -14,7 +14,7 @@ import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
 import br.unitins.tp1.ironforge.dto.telefone.TelefoneResponseDTO;
 import br.unitins.tp1.ironforge.dto.whey.WheyProteinResponseDTO;
 import br.unitins.tp1.ironforge.form.ImageForm;
-import br.unitins.tp1.ironforge.service.ClienteFileServiceImpl;
+import br.unitins.tp1.ironforge.service.file.ClienteFileServiceImpl;
 import br.unitins.tp1.ironforge.service.usuario.ClienteService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
@@ -82,7 +82,7 @@ public class ClienteResource {
     }
 
     @POST
-    @RolesAllowed({ "Usuario" })
+    @RolesAllowed("Usuario")
     public Response create(@Valid ClienteRequestDTO dto) {
         String username = jsonWebToken.getSubject();
         return Response.status(Status.CREATED).entity(ClienteResponseDTO.valueOf(clienteService.create(username, dto)))

@@ -4,12 +4,11 @@ import br.unitins.tp1.ironforge.dto.usuario.AuthFuncionarioRequestDTO;
 import br.unitins.tp1.ironforge.dto.usuario.AuthRequestDTO;
 import br.unitins.tp1.ironforge.dto.usuario.UsuarioResponseDTO;
 import br.unitins.tp1.ironforge.model.usuario.Usuario;
-import br.unitins.tp1.ironforge.service.AuthService;
+import br.unitins.tp1.ironforge.service.auth.AuthService;
 import br.unitins.tp1.ironforge.service.hash.HashService;
 import br.unitins.tp1.ironforge.service.jwt.JwtService;
 import br.unitins.tp1.ironforge.service.usuario.AdministradorService;
 import br.unitins.tp1.ironforge.service.usuario.UsuarioService;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
@@ -60,7 +59,6 @@ public class AuthResource {
     @POST
     @Path("/funcionario")
     @Produces(MediaType.TEXT_PLAIN)
-    @RolesAllowed("Funcionario")
     public Response loginFuncionario(@Valid AuthFuncionarioRequestDTO authDTO) {
         String hash = hashService.getHashSenha(authDTO.senha());
 

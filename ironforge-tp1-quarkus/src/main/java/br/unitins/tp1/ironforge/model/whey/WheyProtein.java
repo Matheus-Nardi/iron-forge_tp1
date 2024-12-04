@@ -3,7 +3,7 @@ package br.unitins.tp1.ironforge.model.whey;
 import java.util.List;
 
 import br.unitins.tp1.ironforge.model.DefaultEntity;
-import br.unitins.tp1.ironforge.model.Fabricante;
+import br.unitins.tp1.ironforge.model.usuario.Fabricante;
 import br.unitins.tp1.ironforge.model.whey.tabelanutricional.Food;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;

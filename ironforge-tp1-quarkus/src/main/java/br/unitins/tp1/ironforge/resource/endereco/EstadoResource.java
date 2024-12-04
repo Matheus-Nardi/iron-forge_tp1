@@ -1,4 +1,4 @@
-package br.unitins.tp1.ironforge.resource;
+package br.unitins.tp1.ironforge.resource.endereco;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import org.jboss.logging.Logger;
 
 import br.unitins.tp1.ironforge.dto.estado.EstadoRequestDTO;
 import br.unitins.tp1.ironforge.dto.estado.EstadoResponseDTO;
-import br.unitins.tp1.ironforge.model.Estado;
+import br.unitins.tp1.ironforge.model.endereco.Estado;
 import br.unitins.tp1.ironforge.service.estado.EstadoService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
@@ -44,7 +44,7 @@ public class EstadoResource {
     }
 
     @GET
-    @Path("/search/{nome}")
+    @Path("/search/nome/{nome}")
     @RolesAllowed({ "Administrador", "Funcionario" })
     public Response findByNome(@PathParam("nome") String nome) {
         LOG.infof("Execução do método findByNome. Nome do estado: %s", nome);
@@ -54,7 +54,7 @@ public class EstadoResource {
     }
 
     @GET
-    @Path("/search/{sigla}")
+    @Path("/search/sigla/{sigla}")
     @RolesAllowed({ "Administrador", "Funcionario" })
     public Response findBySigla(@PathParam("sigla") String sigla) {
         LOG.infof("Execução do método findBySigla. Sigla do estado: %s", sigla);
@@ -72,7 +72,7 @@ public class EstadoResource {
     }
 
     @POST
-    @RolesAllowed({ "Administrador" })
+    @RolesAllowed({ "Administrador", "Funcionario" })
     public Response create(@Valid EstadoRequestDTO estadoDTO) {
         LOG.infof("Execução do método create. Dados do estado: %s", estadoDTO);
         Estado estado = estadoService.create(estadoDTO);
@@ -81,7 +81,7 @@ public class EstadoResource {
 
     @PUT
     @Path("/{id}")
-    @RolesAllowed({ "Administrador" })
+    @RolesAllowed({ "Administrador", "Funcionario" })
     public Response update(@PathParam("id") Long id, @Valid EstadoRequestDTO estadoDTO) {
         LOG.infof("Execução do método update. Atualizando estado com ID: %d. Dados: %s", id, estadoDTO);
         estadoService.update(id, estadoDTO);
@@ -90,7 +90,7 @@ public class EstadoResource {
 
     @DELETE
     @Path("/{id}")
-    @RolesAllowed({ "Administrador" })
+    @RolesAllowed({ "Administrador", "Funcionario" })
     public Response delete(@PathParam("id") Long id) {
         LOG.infof("Execução do método delete. Deletando estado com ID: %d", id);
         estadoService.delete(id);

@@ -7,11 +7,11 @@ import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
 import br.unitins.tp1.ironforge.dto.pessoafisica.FuncionarioRequestDTO;
 import br.unitins.tp1.ironforge.dto.pessoafisica.FuncionarioUpdateRequestDTO;
 import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
-import br.unitins.tp1.ironforge.model.Endereco;
-import br.unitins.tp1.ironforge.model.Perfil;
-import br.unitins.tp1.ironforge.model.Telefone;
+import br.unitins.tp1.ironforge.model.endereco.Endereco;
 import br.unitins.tp1.ironforge.model.usuario.Funcionario;
+import br.unitins.tp1.ironforge.model.usuario.Perfil;
 import br.unitins.tp1.ironforge.model.usuario.PessoaFisica;
+import br.unitins.tp1.ironforge.model.usuario.Telefone;
 import br.unitins.tp1.ironforge.model.usuario.Usuario;
 import br.unitins.tp1.ironforge.repository.FuncionarioRepository;
 import br.unitins.tp1.ironforge.repository.PessoaFisicaRepository;
@@ -78,7 +78,7 @@ public class FuncionarioServiceImpl implements FuncionarioService {
 
         // Defenindo pessoa fisica
         pf.setNome(dto.nome());
-        pf.setEmail(dto.email());
+        pf.setEmail(usuario.getEmail());
         pf.setCpf(dto.cpf());
         pf.setDataNascimento(dto.dataNascimento());
         pf.setEnderecos(getEnderecos(dto));
@@ -104,16 +104,12 @@ public class FuncionarioServiceImpl implements FuncionarioService {
             throw new ValidationException("cpf", "CPF informado é inválido");
         }
 
-        if (existeEmail(dto.email())) {
-            throw new ValidationException("email", "Email informado é inválido");
-        }
         funcionario.setCargo(dto.cargo());
         funcionario.setSalario(dto.salario());
         funcionario.setDataContratacao(dto.dataContratacao());
         PessoaFisica pf = funcionario.getPessoaFisica();
         pf.setNome(dto.nome());
         pf.setCpf(dto.cpf());
-        pf.setEmail(dto.email());
         pf.setDataNascimento(dto.dataNascimento());
 
     }
@@ -205,27 +201,19 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     }
 
     private void validarEntidade(FuncionarioRequestDTO dto) {
-        if (existeUsuario(dto.usuario().username())) {
-            throw new ValidationException("usuario.username", "Username inválido");
-        }
 
         if (existeCPF(dto.cpf())) {
-            throw new ValidationException("cnpj", "Cnpj informado é inválido");
+            throw new ValidationException("cpf", "cpf informado é inválido");
         }
-        if (existeEmail(dto.email())) {
-            throw new ValidationException("email", "Email informado é inválido");
-        }
-    }
 
-    private boolean existeUsuario(String username) {
-        return funcionarioRepository.findFuncionarioByUsername(username) == null ? false : true;
     }
 
     private boolean existeCPF(String cnpj) {
         return funcionarioRepository.findFuncionarioByCpf(cnpj) == null ? false : true;
     }
 
-    private boolean existeEmail(String email) {
+    @Override
+    public boolean existeEmail(String email) {
         return funcionarioRepository.findFuncionarioByEmail(email) == null ? false : true;
     }
 

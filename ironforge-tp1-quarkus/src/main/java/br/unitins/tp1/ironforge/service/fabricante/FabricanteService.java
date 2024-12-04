@@ -6,7 +6,7 @@ import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
 import br.unitins.tp1.ironforge.dto.pessoajuridica.FabricanteRequestDTO;
 import br.unitins.tp1.ironforge.dto.pessoajuridica.FabricanteUpdateRequestDTO;
 import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
-import br.unitins.tp1.ironforge.model.Fabricante;
+import br.unitins.tp1.ironforge.model.usuario.Fabricante;
 
 public interface FabricanteService {
 

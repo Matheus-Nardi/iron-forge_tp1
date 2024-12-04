@@ -1,4 +1,4 @@
-package br.unitins.tp1.ironforge.resource;
+package br.unitins.tp1.ironforge.resource.whey;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import org.jboss.logging.Logger;
 import br.unitins.tp1.ironforge.dto.whey.WheyProteinResponseDTO;
 import br.unitins.tp1.ironforge.model.whey.TipoWhey;
 import br.unitins.tp1.ironforge.model.whey.WheyProtein;
-import br.unitins.tp1.ironforge.service.WheyProteinFileServiceImpl;
+import br.unitins.tp1.ironforge.service.file.WheyProteinFileServiceImpl;
 import br.unitins.tp1.ironforge.service.whey.WheyProteinService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;

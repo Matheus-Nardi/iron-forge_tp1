@@ -6,9 +6,9 @@ import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
 import br.unitins.tp1.ironforge.dto.pessoafisica.ClienteRequestDTO;
 import br.unitins.tp1.ironforge.dto.pessoafisica.ClienteUpdateRequestDTO;
 import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
-import br.unitins.tp1.ironforge.model.Endereco;
-import br.unitins.tp1.ironforge.model.Telefone;
+import br.unitins.tp1.ironforge.model.endereco.Endereco;
 import br.unitins.tp1.ironforge.model.usuario.Cliente;
+import br.unitins.tp1.ironforge.model.usuario.Telefone;
 import br.unitins.tp1.ironforge.model.whey.WheyProtein;
 
 public interface ClienteService {

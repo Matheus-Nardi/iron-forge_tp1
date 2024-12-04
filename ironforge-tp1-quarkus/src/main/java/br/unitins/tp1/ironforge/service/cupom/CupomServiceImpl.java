@@ -3,8 +3,8 @@ package br.unitins.tp1.ironforge.service.cupom;
 import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.cupom.CupomRequestDTO;
-import br.unitins.tp1.ironforge.model.Cupom;
-import br.unitins.tp1.ironforge.model.Fabricante;
+import br.unitins.tp1.ironforge.model.pedido.Cupom;
+import br.unitins.tp1.ironforge.model.usuario.Fabricante;
 import br.unitins.tp1.ironforge.repository.CupomRepository;
 import br.unitins.tp1.ironforge.service.fabricante.FabricanteService;
 import br.unitins.tp1.ironforge.validation.EntidadeNotFoundException;

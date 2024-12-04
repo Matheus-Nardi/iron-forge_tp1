@@ -1,6 +1,6 @@
 package br.unitins.tp1.ironforge.dto.estado;
 
-import br.unitins.tp1.ironforge.model.Estado;
+import br.unitins.tp1.ironforge.model.endereco.Estado;
 
 public record EstadoResponseDTO(
         Long id,

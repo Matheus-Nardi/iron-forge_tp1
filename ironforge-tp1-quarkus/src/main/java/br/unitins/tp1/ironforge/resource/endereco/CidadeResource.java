@@ -1,4 +1,4 @@
-package br.unitins.tp1.ironforge.resource;
+package br.unitins.tp1.ironforge.resource.endereco;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import org.jboss.logging.Logger;
 
 import br.unitins.tp1.ironforge.dto.cidade.CidadeRequestDTO;
 import br.unitins.tp1.ironforge.dto.cidade.CidadeResponseDTO;
-import br.unitins.tp1.ironforge.model.Cidade;
+import br.unitins.tp1.ironforge.model.endereco.Cidade;
 import br.unitins.tp1.ironforge.service.cidade.CidadeService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;

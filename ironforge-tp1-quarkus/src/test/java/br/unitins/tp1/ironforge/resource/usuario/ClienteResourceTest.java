@@ -1,26 +1,6 @@
 package br.unitins.tp1.ironforge.resource.usuario;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
-import java.time.LocalDate;
-import java.util.List;
-
-import org.junit.jupiter.api.Test;
-
-import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
-import br.unitins.tp1.ironforge.dto.pessoafisica.ClienteRequestDTO;
-import br.unitins.tp1.ironforge.dto.pessoafisica.ClienteUpdateRequestDTO;
-import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
-import br.unitins.tp1.ironforge.dto.usuario.UsuarioRequestDTO;
-import br.unitins.tp1.ironforge.model.usuario.Cliente;
-import br.unitins.tp1.ironforge.service.usuario.ClienteService;
 import io.quarkus.test.junit.QuarkusTest;
-import io.restassured.http.ContentType;
-import jakarta.inject.Inject;
 
 @QuarkusTest
 public class ClienteResourceTest {

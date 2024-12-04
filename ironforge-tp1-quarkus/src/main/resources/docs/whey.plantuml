@@ -5,6 +5,7 @@ class WheyProtein{
     - descricao: String
     - preco: Double
     - peso: Integer
+    - nota: Double
 }
 
 class Lote{
@@ -52,7 +53,19 @@ class Cliente {
 class Usuario {
     - username: String
     - senha: String
+    - email: String
+    - dataCadastro: LocalDate
 }
+
+enum Perfil{
+    + FUNCIONARIO : int
+    + CLIENTE : int
+    + USUARIO : int
+    + FABRICANTE : int
+    + ADMINISTRADOR : int
+}
+
+Usuario"*" --> "*" Perfil
 
 abstract class Pessoa {
     - nome: String
@@ -74,7 +87,7 @@ PessoaFisica --|> Pessoa
 PessoaJuridica --|> Pessoa
 
 Pessoa "1" --> "1" Usuario
-Cliente --> PessoaFisica
+Cliente -right-> PessoaFisica
 Funcionario --> PessoaFisica
 Fabricante --> PessoaJuridica
 
@@ -101,8 +114,10 @@ enum Situacao {
     + ENVIADO: int
     + EM_TRANSITO:int
     + ENTREGUE:int
-    + DESISTIDO:int
+    + CANCELADO:int
     + DEVOLVIDO:int
+    + AGUARDANDO_PAGAMENTO:int
+    + PAGAMENTO_EXPIRADO:int
 
 }
 
@@ -154,11 +169,7 @@ abstract class Pagamento {
     - dataVencimento: LocalDateTime
 }
 
-enum Status {
-    + PENDENTE: int
-    + PAGO: int
-    + VENCIDO: int
-}
+
 
 class PIX {
     - chave: String
@@ -168,8 +179,15 @@ class Boleto {
     - codigoBarras: String
 }
 
-class Cartao {
+class CartaoPagamento {
     - nomeTitular: String
+    - numero: String
+    - codigoSeguranca: String
+    - validade: LocalDate
+}
+
+class Cartao{
+     - nomeTitular: String
     - numero: String
     - codigoSeguranca: String
     - validade: LocalDate
@@ -187,12 +205,23 @@ class Cupom {
     - ativo: Boolean
 }
 
-Pedido *--> Pagamento
-Pagamento "*" -down-> "1" Status
+enum TipoPagamento{
+    + PIX: int
+    + BOLETO : int
+    + CARTAO : int
+}
+
+Pedido "1" *--> "1" Pagamento
+
+
+Pagamento "*" --> "1" TipoPagamento
+CartaoPagamento "*" -up-> "1" TipoCartao
 Cartao "*" --> "1" TipoCartao
 PIX --|> Pagamento
 Boleto --|> Pagamento
-Cartao --|> Pagamento
+CartaoPagamento --|> Pagamento
+
+Cliente --> Cartao :listaCartoes
 
 Pedido "1" *--> "*" ItemPedido
 ItemPedido "*" --> "1" Lote
@@ -212,9 +241,9 @@ Lote "*" --> "1" WheyProtein
 
 Cliente "*" --> "*" WheyProtein : listaDesejos
 Cupom "*" o--> "1" Fabricante
-Avaliacao "*" --> "1" Cliente
+Avaliacao "*" -down-> "1" Cliente
 Avaliacao "*" --> "1" WheyProtein
-Avaliacao "*" --> "1" Nota
+Avaliacao "*" -right-> "1" Nota
 
 note left of WheyProtein: Peso em gramas
 

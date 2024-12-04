@@ -1,4 +1,4 @@
-package br.unitins.tp1.ironforge.service;
+package br.unitins.tp1.ironforge.service.pagamento;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -13,6 +13,7 @@ import br.unitins.tp1.ironforge.model.pedido.Pedido;
 import br.unitins.tp1.ironforge.model.pedido.Situacao;
 import br.unitins.tp1.ironforge.model.usuario.Cliente;
 import br.unitins.tp1.ironforge.repository.PagamentoRepository;
+import br.unitins.tp1.ironforge.service.cartao.CartaoService;
 import br.unitins.tp1.ironforge.service.pedido.PedidoService;
 import br.unitins.tp1.ironforge.service.usuario.ClienteService;
 import br.unitins.tp1.ironforge.validation.EntidadeNotFoundException;

@@ -1,7 +1,8 @@
-package br.unitins.tp1.ironforge.model;
+package br.unitins.tp1.ironforge.model.pedido;
 
 import java.time.LocalDate;
 
+import br.unitins.tp1.ironforge.model.DefaultEntity;
 import br.unitins.tp1.ironforge.model.whey.WheyProtein;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

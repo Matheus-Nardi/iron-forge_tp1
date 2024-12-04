@@ -1,4 +1,4 @@
-package br.unitins.tp1.ironforge.resource;
+package br.unitins.tp1.ironforge.resource.whey;
 
 import java.io.IOException;
 import java.util.List;
@@ -10,7 +10,7 @@ import br.unitins.tp1.ironforge.dto.whey.WheyProteinRequestDTO;
 import br.unitins.tp1.ironforge.dto.whey.WheyProteinResponseDTO;
 import br.unitins.tp1.ironforge.form.ImageForm;
 import br.unitins.tp1.ironforge.model.whey.WheyProtein;
-import br.unitins.tp1.ironforge.service.WheyProteinFileServiceImpl;
+import br.unitins.tp1.ironforge.service.file.WheyProteinFileServiceImpl;
 import br.unitins.tp1.ironforge.service.whey.WheyProteinService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;

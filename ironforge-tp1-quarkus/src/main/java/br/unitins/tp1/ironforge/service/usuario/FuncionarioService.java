@@ -32,4 +32,6 @@ public interface FuncionarioService {
 
     boolean existsByPessoaFisica(Long idPessoaFisica);
 
+    boolean existeEmail(String email);
+
 }

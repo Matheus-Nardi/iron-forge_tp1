@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 
 import br.unitins.tp1.ironforge.dto.cupom.CupomRequestDTO;
-import br.unitins.tp1.ironforge.model.Cupom;
+import br.unitins.tp1.ironforge.model.pedido.Cupom;
 import br.unitins.tp1.ironforge.service.cupom.CupomService;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;

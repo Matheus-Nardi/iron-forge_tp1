@@ -15,7 +15,7 @@ import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
 import br.unitins.tp1.ironforge.form.ImageForm;
 import br.unitins.tp1.ironforge.model.usuario.Funcionario;
 import br.unitins.tp1.ironforge.resource.LoteResource;
-import br.unitins.tp1.ironforge.service.FuncionarioFileServiceImpl;
+import br.unitins.tp1.ironforge.service.file.FuncionarioFileServiceImpl;
 import br.unitins.tp1.ironforge.service.usuario.FuncionarioService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;

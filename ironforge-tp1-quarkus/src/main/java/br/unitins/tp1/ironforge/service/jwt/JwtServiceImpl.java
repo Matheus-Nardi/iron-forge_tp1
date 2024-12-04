@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import br.unitins.tp1.ironforge.dto.usuario.UsuarioResponseDTO;
-import br.unitins.tp1.ironforge.model.Perfil;
+import br.unitins.tp1.ironforge.model.usuario.Perfil;
 import io.smallrye.jwt.build.Jwt;
 import jakarta.enterprise.context.ApplicationScoped;
 

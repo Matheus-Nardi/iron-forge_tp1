@@ -1,5 +1,6 @@
-package br.unitins.tp1.ironforge.model;
+package br.unitins.tp1.ironforge.model.pedido;
 
+import br.unitins.tp1.ironforge.model.DefaultEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;

@@ -7,10 +7,11 @@ import br.unitins.tp1.ironforge.dto.endereco.EnderecoRequestDTO;
 import br.unitins.tp1.ironforge.dto.pessoafisica.ClienteRequestDTO;
 import br.unitins.tp1.ironforge.dto.pessoafisica.ClienteUpdateRequestDTO;
 import br.unitins.tp1.ironforge.dto.telefone.TelefoneRequestDTO;
-import br.unitins.tp1.ironforge.model.Endereco;
-import br.unitins.tp1.ironforge.model.Telefone;
+import br.unitins.tp1.ironforge.model.endereco.Endereco;
 import br.unitins.tp1.ironforge.model.usuario.Cliente;
+import br.unitins.tp1.ironforge.model.usuario.Perfil;
 import br.unitins.tp1.ironforge.model.usuario.PessoaFisica;
+import br.unitins.tp1.ironforge.model.usuario.Telefone;
 import br.unitins.tp1.ironforge.model.usuario.Usuario;
 import br.unitins.tp1.ironforge.model.whey.WheyProtein;
 import br.unitins.tp1.ironforge.repository.ClienteRepository;
@@ -74,6 +75,8 @@ public class ClienteServiceImpl implements ClienteService {
         Cliente cliente = new Cliente();
         PessoaFisica pf = new PessoaFisica();
         Usuario usuario = usuarioService.findByUsername(username);
+        usuario.getListaPerfil().add(Perfil.CLIENTE);
+        usuario.getListaPerfil().add(Perfil.USUARIO);
 
         pf.setUsuario(usuario); // Associando pessoa com usuario
 
@@ -104,13 +107,9 @@ public class ClienteServiceImpl implements ClienteService {
             throw new ValidationException("cpf", "CPF informado é inválido");
         }
 
-        if (existeEmail(dto.email())) {
-            throw new ValidationException("email", "Email informado é inválido");
-        }
         PessoaFisica pf = cliente.getPessoaFisica();
         pf.setNome(dto.nome());
         pf.setCpf(dto.cpf());
-        pf.setEmail(dto.email());
         pf.setDataNascimento(dto.dataNascimento());
     }
 
@@ -259,17 +258,13 @@ public class ClienteServiceImpl implements ClienteService {
     private void validarEntidade(ClienteRequestDTO dto) {
 
         if (existeCPF(dto.cpf())) {
-            throw new ValidationException("cnpj", "Cnpj informado é inválido");
+            throw new ValidationException("cpf", "Cpf informado é inválido");
         }
-       
+
     }
 
-    private boolean existeCPF(String cnpj) {
-        return clienteRepository.findClienteByCpf(cnpj) == null ? false : true;
-    }
-
-    private boolean existeEmail(String email) {
-        return clienteRepository.findClienteByEmail(email) == null ? false : true;
+    private boolean existeCPF(String cpf) {
+        return clienteRepository.findClienteByCpf(cpf) == null ? false : true;
     }
 
     @Override

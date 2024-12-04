@@ -3,7 +3,7 @@ package br.unitins.tp1.ironforge.service.cidade;
 import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.cidade.CidadeRequestDTO;
-import br.unitins.tp1.ironforge.model.Cidade;
+import br.unitins.tp1.ironforge.model.endereco.Cidade;
 import br.unitins.tp1.ironforge.repository.CidadeRepository;
 import br.unitins.tp1.ironforge.service.estado.EstadoService;
 import br.unitins.tp1.ironforge.validation.EntidadeNotFoundException;

@@ -1,7 +1,7 @@
 package br.unitins.tp1.ironforge.model.pedido;
 
-import br.unitins.tp1.ironforge.model.Cidade;
 import br.unitins.tp1.ironforge.model.DefaultEntity;
+import br.unitins.tp1.ironforge.model.endereco.Cidade;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;

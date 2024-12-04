@@ -6,7 +6,7 @@ import java.util.List;
 import br.unitins.tp1.ironforge.dto.usuario.EmailPatchDTO;
 import br.unitins.tp1.ironforge.dto.usuario.SenhaPatchDTO;
 import br.unitins.tp1.ironforge.dto.usuario.UsuarioRequestDTO;
-import br.unitins.tp1.ironforge.model.Perfil;
+import br.unitins.tp1.ironforge.model.usuario.Perfil;
 import br.unitins.tp1.ironforge.model.usuario.Usuario;
 import br.unitins.tp1.ironforge.repository.UsuarioRepository;
 import br.unitins.tp1.ironforge.service.hash.HashService;
@@ -56,7 +56,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         Usuario usuario = new Usuario();
         usuario.setUsername(dto.username());
         usuario.setEmail(dto.email());
-        usuario.setListaPerfil(List.of(Perfil.CLIENTE));
+        usuario.setListaPerfil(List.of(Perfil.USUARIO));
         usuario.setSenha(hashService.getHashSenha(dto.senha()));
         usuario.setDataCadastro(LocalDate.now());
         usuarioRepository.persist(usuario);

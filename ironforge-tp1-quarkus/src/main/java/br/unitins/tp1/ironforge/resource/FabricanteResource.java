@@ -7,7 +7,7 @@ import org.jboss.logging.Logger;
 import br.unitins.tp1.ironforge.dto.pessoajuridica.FabricanteRequestDTO;
 import br.unitins.tp1.ironforge.dto.pessoajuridica.FabricanteResponseDTO;
 import br.unitins.tp1.ironforge.dto.pessoajuridica.FabricanteUpdateRequestDTO;
-import br.unitins.tp1.ironforge.model.Fabricante;
+import br.unitins.tp1.ironforge.model.usuario.Fabricante;
 import br.unitins.tp1.ironforge.service.fabricante.FabricanteService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;

@@ -1,4 +1,4 @@
-package br.unitins.tp1.ironforge.service;
+package br.unitins.tp1.ironforge.service.auth;
 
 import br.unitins.tp1.ironforge.model.usuario.Usuario;
 

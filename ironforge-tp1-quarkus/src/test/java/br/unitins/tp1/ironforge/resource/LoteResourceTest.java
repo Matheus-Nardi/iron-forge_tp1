@@ -1,22 +1,6 @@
 package br.unitins.tp1.ironforge.resource;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
-import java.time.LocalDate;
-
-import org.junit.jupiter.api.Test;
-
-import br.unitins.tp1.ironforge.dto.lote.LoteRequestDTO;
-import br.unitins.tp1.ironforge.model.Lote;
-import br.unitins.tp1.ironforge.service.lote.LoteService;
 import io.quarkus.test.junit.QuarkusTest;
-import io.restassured.http.ContentType;
-import jakarta.inject.Inject;
 
 @QuarkusTest
 public class LoteResourceTest {

@@ -1,4 +1,4 @@
-package br.unitins.tp1.ironforge.service;
+package br.unitins.tp1.ironforge.service.cartao;
 
 import java.util.ArrayList;
 import java.util.List;

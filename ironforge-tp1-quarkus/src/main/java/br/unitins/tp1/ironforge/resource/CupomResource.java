@@ -6,7 +6,7 @@ import org.jboss.logging.Logger;
 
 import br.unitins.tp1.ironforge.dto.cupom.CupomRequestDTO;
 import br.unitins.tp1.ironforge.dto.cupom.CupomResponseDTO;
-import br.unitins.tp1.ironforge.model.Cupom;
+import br.unitins.tp1.ironforge.model.pedido.Cupom;
 import br.unitins.tp1.ironforge.service.cupom.CupomService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
@@ -43,7 +43,7 @@ public class CupomResource {
     }
 
     @GET
-    @Path("/search/{codigo}")
+    @Path("/search/codigo/{codigo}")
     @RolesAllowed({ "Funcionario", "Administrador" })
     public Response findByCodigo(@PathParam("codigo") String codigo) {
         LOG.infof("Execução do método findByCodigo. Código do cupom: %s", codigo);
@@ -52,7 +52,7 @@ public class CupomResource {
     }
 
     @GET
-    @Path("/search/{idFabricante}")
+    @Path("/search/fabricante/{idFabricante}")
     @RolesAllowed({ "Funcionario", "Administrador" })
     public Response findByFabricante(@PathParam("idFabricante") Long idFabricante) {
         LOG.infof("Execução do método findByFabricante. ID do fabricante: %d", idFabricante);
@@ -95,7 +95,7 @@ public class CupomResource {
 
     @PATCH
     @RolesAllowed({ "Funcionario", "Administrador" })
-    @Path("/{id}")
+    @Path("/{id}/desativacao")
     public Response deactive(@PathParam("id") Long id) {
         LOG.infof("Execução do método deactive. Desativando cupom com ID: %d", id);
         cupomService.deactivate(id);

@@ -6,7 +6,7 @@ import org.jboss.logging.Logger;
 import br.unitins.tp1.ironforge.dto.pagamento.BoletoResponseDTO;
 import br.unitins.tp1.ironforge.dto.pagamento.PixResponseDTO;
 import br.unitins.tp1.ironforge.model.pagamento.TipoPagamento;
-import br.unitins.tp1.ironforge.service.PagamentoService;
+import br.unitins.tp1.ironforge.service.pagamento.PagamentoService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;

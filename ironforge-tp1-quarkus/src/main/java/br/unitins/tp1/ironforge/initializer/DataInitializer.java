@@ -1,21 +1,5 @@
 package br.unitins.tp1.ironforge.initializer;
 
-import java.time.LocalDate;
-
-import br.unitins.tp1.ironforge.model.Lote;
-import br.unitins.tp1.ironforge.model.whey.TipoWhey;
-import br.unitins.tp1.ironforge.model.whey.WheyProtein;
-import br.unitins.tp1.ironforge.repository.FabricanteRepository;
-import br.unitins.tp1.ironforge.repository.LoteRepository;
-import br.unitins.tp1.ironforge.repository.SaborRepository;
-import br.unitins.tp1.ironforge.repository.WheyProteinRepository;
-import br.unitins.tp1.ironforge.service.whey.tabelanutricional.TabelaNutricionalService;
-import io.quarkus.runtime.StartupEvent;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.event.Observes;
-import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
-
 // @ApplicationScoped
 // public class DataInitializer {
 

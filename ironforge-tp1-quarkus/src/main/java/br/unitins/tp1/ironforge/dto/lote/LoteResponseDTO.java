@@ -2,7 +2,7 @@ package br.unitins.tp1.ironforge.dto.lote;
 
 import java.time.LocalDate;
 
-import br.unitins.tp1.ironforge.model.Lote;
+import br.unitins.tp1.ironforge.model.pedido.Lote;
 
 public record LoteResponseDTO(
         Long id,

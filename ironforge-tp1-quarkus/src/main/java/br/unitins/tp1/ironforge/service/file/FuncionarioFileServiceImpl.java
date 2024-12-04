@@ -1,4 +1,4 @@
-package br.unitins.tp1.ironforge.service;
+package br.unitins.tp1.ironforge.service.file;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,13 +14,13 @@ import java.util.UUID;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class WheyProteinFileServiceImpl implements FileService {
+public class FuncionarioFileServiceImpl implements FileService {
 
-    private final String PATH_WHEYPROTEIN = System.getProperty("user.home")
+    private final String PATH_FUNCIONARIO = System.getProperty("user.home")
             + File.separator + "quarkus"
             + File.separator + "ironforge"
             + File.separator + "images"
-            + File.separator + "wheyprotein"
+            + File.separator + "funcionario"
             + File.separator;
 
     private static final List<String> SUPPORTED_MIME_TYPES = Arrays.asList("image/jpeg", "image/jpg", "image/png",
@@ -36,8 +36,8 @@ public class WheyProteinFileServiceImpl implements FileService {
         String mimeType = Files.probeContentType(Paths.get(nomeArquivo));
         verificarTipoArquivo(mimeType);
 
-        Path diretorio = Paths.get(PATH_WHEYPROTEIN);
-        if (!new File(PATH_WHEYPROTEIN).exists())
+        Path diretorio = Paths.get(PATH_FUNCIONARIO);
+        if (!new File(PATH_FUNCIONARIO).exists())
             Files.createDirectory(diretorio);
 
         String novoNomeArquivo = existeArquivo(nomeArquivo, diretorio);
@@ -84,7 +84,7 @@ public class WheyProteinFileServiceImpl implements FileService {
 
     @Override
     public File find(String nomeArquivo) throws FileNotFoundException {
-        File file = new File(PATH_WHEYPROTEIN + nomeArquivo);
+        File file = new File(PATH_FUNCIONARIO + nomeArquivo);
 
         if (!file.exists()) {
             throw new FileNotFoundException("Arquivo não encontrado: " + nomeArquivo);

@@ -8,7 +8,7 @@ import org.jboss.logging.Logger;
 import br.unitins.tp1.ironforge.dto.pagamento.CartaoRequestDTO;
 import br.unitins.tp1.ironforge.dto.pagamento.CartaoResponseDTO;
 import br.unitins.tp1.ironforge.model.pagamento.Cartao;
-import br.unitins.tp1.ironforge.service.CartaoService;
+import br.unitins.tp1.ironforge.service.cartao.CartaoService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;

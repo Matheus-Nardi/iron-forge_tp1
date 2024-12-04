@@ -3,7 +3,7 @@ package br.unitins.tp1.ironforge.service.lote;
 import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.lote.LoteRequestDTO;
-import br.unitins.tp1.ironforge.model.Lote;
+import br.unitins.tp1.ironforge.model.pedido.Lote;
 import br.unitins.tp1.ironforge.repository.LoteRepository;
 import br.unitins.tp1.ironforge.service.whey.WheyProteinService;
 import br.unitins.tp1.ironforge.validation.EntidadeNotFoundException;

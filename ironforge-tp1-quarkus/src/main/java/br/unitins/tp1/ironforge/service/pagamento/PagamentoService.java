@@ -1,4 +1,4 @@
-package br.unitins.tp1.ironforge.service;
+package br.unitins.tp1.ironforge.service.pagamento;
 
 import br.unitins.tp1.ironforge.model.pagamento.Boleto;
 import br.unitins.tp1.ironforge.model.pagamento.Pagamento;

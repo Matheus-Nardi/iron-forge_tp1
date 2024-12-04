@@ -3,9 +3,9 @@ package br.unitins.tp1.ironforge.service.usuario;
 import java.util.ArrayList;
 
 import br.unitins.tp1.ironforge.dto.pessoafisica.FuncionarioBasicoRequestDTO;
-import br.unitins.tp1.ironforge.model.Perfil;
 import br.unitins.tp1.ironforge.model.usuario.Cliente;
 import br.unitins.tp1.ironforge.model.usuario.Funcionario;
+import br.unitins.tp1.ironforge.model.usuario.Perfil;
 import br.unitins.tp1.ironforge.model.usuario.PessoaFisica;
 import br.unitins.tp1.ironforge.repository.ClienteRepository;
 import br.unitins.tp1.ironforge.repository.FuncionarioRepository;

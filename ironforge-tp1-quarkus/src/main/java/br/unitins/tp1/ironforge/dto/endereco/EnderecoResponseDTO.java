@@ -1,7 +1,7 @@
 package br.unitins.tp1.ironforge.dto.endereco;
 
 import br.unitins.tp1.ironforge.dto.cidade.CidadeResponseDTO;
-import br.unitins.tp1.ironforge.model.Endereco;
+import br.unitins.tp1.ironforge.model.endereco.Endereco;
 import br.unitins.tp1.ironforge.model.pedido.EnderecoEntrega;
 
 public record EnderecoResponseDTO(

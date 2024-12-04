@@ -5,7 +5,7 @@ import java.util.List;
 import br.unitins.tp1.ironforge.dto.endereco.EnderecoResponseDTO;
 import br.unitins.tp1.ironforge.dto.telefone.TelefoneResponseDTO;
 import br.unitins.tp1.ironforge.dto.usuario.UsuarioResponseDTO;
-import br.unitins.tp1.ironforge.model.Fabricante;
+import br.unitins.tp1.ironforge.model.usuario.Fabricante;
 
 public record FabricanteResponseDTO(
         Long id,

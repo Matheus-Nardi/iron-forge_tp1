@@ -26,4 +26,9 @@ public class ValidationError extends Error {
         errors.add(new FieldError(fieldName, message));
     }
 
+    @Override
+    public String toString() {
+        return errors.toString();
+    }
+
 }

@@ -1,6 +1,6 @@
 package br.unitins.tp1.ironforge.dto.itempedido;
 
-import br.unitins.tp1.ironforge.model.ItemPedido;
+import br.unitins.tp1.ironforge.model.pedido.ItemPedido;
 
 public record ItemPedidoResponseDTO(
         Long idProduto,

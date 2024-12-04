@@ -2,7 +2,7 @@ package br.unitins.tp1.ironforge.dto.cupom;
 
 import java.time.LocalDateTime;
 
-import br.unitins.tp1.ironforge.model.Cupom;
+import br.unitins.tp1.ironforge.model.pedido.Cupom;
 
 public record CupomResponseDTO(
         Long id,

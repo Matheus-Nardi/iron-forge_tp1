@@ -1,4 +1,4 @@
-package br.unitins.tp1.ironforge.model;
+package br.unitins.tp1.ironforge.model.usuario;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;

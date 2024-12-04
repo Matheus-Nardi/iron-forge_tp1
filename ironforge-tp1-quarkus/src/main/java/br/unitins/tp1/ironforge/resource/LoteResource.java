@@ -6,7 +6,7 @@ import org.jboss.logging.Logger;
 
 import br.unitins.tp1.ironforge.dto.lote.LoteRequestDTO;
 import br.unitins.tp1.ironforge.dto.lote.LoteResponseDTO;
-import br.unitins.tp1.ironforge.model.Lote;
+import br.unitins.tp1.ironforge.model.pedido.Lote;
 import br.unitins.tp1.ironforge.service.lote.LoteService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;

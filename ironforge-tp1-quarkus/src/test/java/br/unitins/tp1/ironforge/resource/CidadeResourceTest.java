@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.Test;
 
 import br.unitins.tp1.ironforge.dto.cidade.CidadeRequestDTO;
-import br.unitins.tp1.ironforge.model.Cidade;
+import br.unitins.tp1.ironforge.model.endereco.Cidade;
 import br.unitins.tp1.ironforge.service.cidade.CidadeService;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;

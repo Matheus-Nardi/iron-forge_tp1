@@ -3,7 +3,7 @@ package br.unitins.tp1.ironforge.service.estado;
 import java.util.List;
 
 import br.unitins.tp1.ironforge.dto.estado.EstadoRequestDTO;
-import br.unitins.tp1.ironforge.model.Estado;
+import br.unitins.tp1.ironforge.model.endereco.Estado;
 
 public interface EstadoService {
 

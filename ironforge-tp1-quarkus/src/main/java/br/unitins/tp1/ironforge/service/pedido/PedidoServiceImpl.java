@@ -8,11 +8,11 @@ import org.jboss.logging.Logger;
 
 import br.unitins.tp1.ironforge.dto.itempedido.ItemPedidoRequestDTO;
 import br.unitins.tp1.ironforge.dto.pedido.PedidoRequestDTO;
-import br.unitins.tp1.ironforge.model.Cupom;
-import br.unitins.tp1.ironforge.model.Endereco;
-import br.unitins.tp1.ironforge.model.ItemPedido;
-import br.unitins.tp1.ironforge.model.Lote;
+import br.unitins.tp1.ironforge.model.endereco.Endereco;
+import br.unitins.tp1.ironforge.model.pedido.Cupom;
 import br.unitins.tp1.ironforge.model.pedido.EnderecoEntrega;
+import br.unitins.tp1.ironforge.model.pedido.ItemPedido;
+import br.unitins.tp1.ironforge.model.pedido.Lote;
 import br.unitins.tp1.ironforge.model.pedido.Pedido;
 import br.unitins.tp1.ironforge.model.pedido.Situacao;
 import br.unitins.tp1.ironforge.model.pedido.StatusPedido;

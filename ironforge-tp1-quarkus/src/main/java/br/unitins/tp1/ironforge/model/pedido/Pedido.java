@@ -3,9 +3,7 @@ package br.unitins.tp1.ironforge.model.pedido;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import br.unitins.tp1.ironforge.model.Cupom;
 import br.unitins.tp1.ironforge.model.DefaultEntity;
-import br.unitins.tp1.ironforge.model.ItemPedido;
 import br.unitins.tp1.ironforge.model.pagamento.Pagamento;
 import br.unitins.tp1.ironforge.model.usuario.Cliente;
 import jakarta.persistence.CascadeType;

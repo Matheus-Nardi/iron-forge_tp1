@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.Test;
 
 import br.unitins.tp1.ironforge.dto.estado.EstadoRequestDTO;
-import br.unitins.tp1.ironforge.model.Estado;
+import br.unitins.tp1.ironforge.model.endereco.Estado;
 import br.unitins.tp1.ironforge.service.estado.EstadoService;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
