@@ -86,7 +86,7 @@ public class FuncionarioResource {
 
     @PATCH
     @Path("/{id}")
-    @RolesAllowed({ "Administrador", "Funcionario" })
+    @RolesAllowed({ "Administrador" })
     public Response update(@PathParam("id") Long id, @Valid FuncionarioUpdateRequestDTO dto) {
         LOG.info("Atualizando funcionário com ID: " + id);
         funcionarioService.update(id, dto);

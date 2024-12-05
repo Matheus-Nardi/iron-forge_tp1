@@ -123,6 +123,10 @@ public class PagamentoServiceImpl implements PagamentoService {
                 throw new IllegalArgumentException("Tipo de pagamento inválido");
         }
 
+        if (pagamento == null) {
+            throw new ValidationException("identificador","Pagamento não encontrado para o identificador fornecido.");
+        }
+
         validarPagamentoPedido(idPedido, pedido, pagamento);
         pagamento.setDataPagamento(LocalDateTime.now());
         pagamento.setPago(true);
@@ -148,6 +152,7 @@ public class PagamentoServiceImpl implements PagamentoService {
 
         CartaoPagamento cartaoPagamento = new CartaoPagamento();
 
+        validarPagamentoPedido(idPedido, pedido, cartaoPagamento);
         cartaoPagamento.setCpf(cartao.getCpf());
         cartaoPagamento.setCvc(cartao.getCvc());
         cartaoPagamento.setValidade(cartao.getValidade());
@@ -156,10 +161,10 @@ public class PagamentoServiceImpl implements PagamentoService {
         cartaoPagamento.setValor(pedido.getValorTotal());
         cartaoPagamento.setTipoCartao(cartao.getTipoCartao());
         cartaoPagamento.setDataPagamento(LocalDateTime.now());
-        cartaoPagamento.setPago(true);
+        cartaoPagamento.setDataVencimento(LocalDateTime.now().plusMinutes(30));
         cartaoPagamento.setTipoPagamento(TipoPagamento.CARTAO);
         pedido.setPagamento(cartaoPagamento);
-        validarPagamentoPedido(idPedido, pedido, cartaoPagamento);
+        cartaoPagamento.setPago(true);
         pedidoService.updateStatusPedido(idPedido, Situacao.SEPARANDO_PEDIDO);
     }
 

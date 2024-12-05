@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jboss.logging.Logger;
-
 import br.unitins.tp1.ironforge.dto.itempedido.ItemPedidoRequestDTO;
 import br.unitins.tp1.ironforge.dto.pedido.PedidoRequestDTO;
 import br.unitins.tp1.ironforge.model.endereco.Endereco;
@@ -35,7 +33,6 @@ import jakarta.transaction.Transactional;
 @ApplicationScoped
 public class PedidoServiceImpl implements PedidoService {
 
-    private static final Logger LOG = Logger.getLogger(PedidoServiceImpl.class);
     @Inject
     public PedidoRepository pedidoRepository;
 
@@ -83,11 +80,11 @@ public class PedidoServiceImpl implements PedidoService {
         definirItens(dto, pedido);
 
         Double valorFinal = arredondarParaDuasCasasDecimais(aplicarDesconto(pedido));
-        LOG.info("Valor final: " + valorFinal);
         if (!(dto.valorTotal().equals(valorFinal)))
             throw new ValidationException("valorTotal", "O valor fornecido não corresponde ao valor final do pedido!");
 
         pedido.setValorTotal(valorFinal);
+        pedido.setPagamento(null);
         getStatusPedido(pedido);
 
         pedidoRepository.persist(pedido);
@@ -119,33 +116,26 @@ public class PedidoServiceImpl implements PedidoService {
 
     private void definirItens(PedidoRequestDTO dto, Pedido pedido) {
         for (ItemPedidoRequestDTO itemDTO : dto.itensPedidos()) {
-            ItemPedido item = new ItemPedido();
-
-            Lote lote = loteService.findByWhey(itemDTO.idProduto());
-
-            int qtdeTotalEstoque = loteService.findByIdWheyQuantTotal(itemDTO.idProduto());
-            if (qtdeTotalEstoque < itemDTO.quantidade())
-                throw new ValidationException("quantidade", "quantidade em estoque insuficiente");
-
             int qtdeRestante = itemDTO.quantidade();
-
+            double precoTotalItem = 0.0; 
+    
             while (qtdeRestante > 0) {
-                lote = loteService.findByWhey(itemDTO.idProduto());
-                item.setPreco(0.0);
+                Lote lote = loteService.findByWhey(itemDTO.idProduto());
+                if (lote == null || lote.getQuantidade() <= 0) {
+                    throw new ValidationException("estoque", "Estoque insuficiente para o produto com ID " + itemDTO.idProduto());
+                }
                 int qtdeConsumida = Math.min(lote.getQuantidade(), qtdeRestante);
+                double precoLote = qtdeConsumida * lote.getWheyProtein().getPreco();
                 lote.setQuantidade(lote.getQuantidade() - qtdeConsumida);
-                LOG.info(lote.getQuantidade());
-                item.setPreco(item.getPreco() + (qtdeConsumida * lote.getWheyProtein().getPreco()));
-
+                
+                precoTotalItem += precoLote;
                 qtdeRestante -= qtdeConsumida;
-                item.setQuantidade(itemDTO.quantidade());
-                item.setLote(lote);
-                item.setPreco(lote.getWheyProtein().getPreco());
-                item.setQuantidade(itemDTO.quantidade());
-
-                pedido.getItensPedidos().add(item);
             }
 
+            ItemPedido item = new ItemPedido();
+            item.setQuantidade(itemDTO.quantidade());
+            item.setPreco(precoTotalItem);
+            pedido.getItensPedidos().add(item);
         }
     }
 
@@ -155,6 +145,7 @@ public class PedidoServiceImpl implements PedidoService {
             return;
         } else {
             List<Cupom> cupons = cupomService.findByCodigo(dto.cupom());
+            System.out.println(cupons.get(0).getCodigo());
             if (cupons.isEmpty()) {
                 throw new ValidationException("cupom", "Cupom não encontrado ou inválido");
             }
@@ -173,9 +164,8 @@ public class PedidoServiceImpl implements PedidoService {
         }
         Double total = 0.0;
         for (ItemPedido itemPedido : itensPedidos) {
-            total = total + itemPedido.getPreco() * itemPedido.getQuantidade();
+            total += itemPedido.getPreco();
         }
-
         return total;
     }
 
@@ -251,7 +241,7 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     private void devolverLote(Pedido pedido) {
-        for (ItemPedido item: pedido.getItensPedidos()) {
+        for (ItemPedido item : pedido.getItensPedidos()) {
             Lote lote = item.getLote();
             Integer estoque = lote.getQuantidade();
             lote.setQuantidade(estoque + item.getQuantidade());

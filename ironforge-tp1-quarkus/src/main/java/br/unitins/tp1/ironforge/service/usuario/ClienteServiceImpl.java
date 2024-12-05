@@ -76,7 +76,6 @@ public class ClienteServiceImpl implements ClienteService {
         PessoaFisica pf = new PessoaFisica();
         Usuario usuario = usuarioService.findByUsername(username);
         usuario.getListaPerfil().add(Perfil.CLIENTE);
-        usuario.getListaPerfil().add(Perfil.USUARIO);
 
         pf.setUsuario(usuario); // Associando pessoa com usuario
 

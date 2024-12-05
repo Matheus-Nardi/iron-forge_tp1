@@ -53,8 +53,8 @@ public class CartaoServiceImpl implements CartaoService {
         Cartao cartao = new Cartao();
         cartao.setCpf(dto.cpf());
         cartao.setTitular(dto.titular());
-        cartao.setNumero(dto.numero());
-        cartao.setCvc(dto.cvc());
+        cartao.setNumero(mascararNumeroCartao(dto.numero()));
+        cartao.setCvc(hashService.getHashSenha(dto.cvc()));
         cartao.setValidade(dto.validade());
         cartao.setTipoCartao(dto.tipoCartao());
         cartaoRepository.persist(cartao);
@@ -97,6 +97,24 @@ public class CartaoServiceImpl implements CartaoService {
             throw new EntidadeNotFoundException("id", "Cartão não encontrado");
         }
         cliente.getCartoes().remove(cartao);
+    }
+
+    private static String mascararNumeroCartao(String numero) {
+        if (numero == null || numero.length() < 4) {
+            return "****";
+        }
+        int length = numero.length();
+
+        StringBuilder mascarado = new StringBuilder();
+        for (int i = 0; i < length - 4; i++) {
+            if (i > 0 && i % 4 == 0) {
+                mascarado.append(" ");
+            }
+            mascarado.append("*");
+        }
+
+        mascarado.append(" ").append(numero.substring(length - 4));
+        return mascarado.toString().trim();
     }
 
 }
